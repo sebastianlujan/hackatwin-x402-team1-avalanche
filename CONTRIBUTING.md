@@ -7,8 +7,10 @@
 ## Branches (gitflow)
 
 - `main`: releases, tagged. `develop`: integration. No direct pushes to either.
-- `feature/<issue>-<slug>`, `release/x.y.z`, `hotfix/<issue>-<slug>`.
-- PRs target `develop`. Release and hotfix branches merge into `main`.
+- `feature/<name>` (kebab-case) from `develop` → PR into `develop`.
+- `release/x.y.z` from `develop` → PR into `main`, then back into `develop`.
+- `hotfix/<name>` from `main` → PR into `main`, then back into `develop`.
+- CI must be green before merging. Branch names are checked in CI.
 
 ## Commits
 

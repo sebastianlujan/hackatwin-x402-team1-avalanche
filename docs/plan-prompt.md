@@ -23,8 +23,9 @@ with the Avalanche MCP or official docs before writing it into the plan, and mar
 3. Load the local skill `.claude/skills/avalanche/SKILL.md`.
 4. Read https://build.avax.network/docs/tooling/ai-llm.md and skim https://build.avax.network/llms.txt for the
    sections you need (L1s, ICM, ICTT, x402 academy). Pull pages as `/{path}.md`.
-5. Read the reference repos: https://github.com/federiconardelli7/x402-starter-kit (Demo 1) and
-   https://github.com/smartcontractkit/ccip-icm (Demo 2).
+5. Read the reference repos: https://github.com/federiconardelli7/x402-starter-kit (Demo 1),
+   https://github.com/smartcontractkit/ccip-icm (Demo 2), and
+   https://github.com/defi-wonderland/solidity-foundry-boilerplate (contracts template).
 6. Read `docs/references/twin-finance-contracts.md`. Verify its addresses on Arbiscan, and find Twin's official
    registry, especially any **Avalanche** deployments of ARGt and the other stables (does the token support
    ERC-3009 or ERC-2612?). Record the verified/unverified status for each row.
@@ -155,10 +156,16 @@ shows the active config and lets the presenter toggle adapters live.
 
 ## Smart contracts — Foundry only
 
-- `forge`, `cast`, `anvil`, `forge-std`. No Hardhat. One Foundry project per demo `contracts/`, sharing remappings
-  and libraries.
-- Tests: unit, fuzz, and invariant tests (payment accounting), plus fork tests against Fuji. Use Chainlink Local's
-  CCIP simulator and a mock ICM messenger for local cross-chain tests. Verify the current package names.
+- **Template**: scaffold each demo's `contracts/` from Wonderland's
+  https://github.com/defi-wonderland/solidity-foundry-boilerplate. Keep its conventions: `src/` with
+  `src/interfaces/`, Foundry profiles, `forge fmt`, solhint, lintspec (NatSpec checks), the Bulloak branched-tree
+  unit tests (`.tree` → `pnpm test:bulloak:scaffold`), and the deploy scripts with encrypted keystores.
+- DRY across the template copies: keep git hooks, commitlint, and CI at the repo root once. Drop the template's
+  per-project `.husky/`, `commitlint.config.js`, and `.github/`. Share remappings and libraries.
+- `forge`, `cast`, `anvil`, `forge-std`. No Hardhat.
+- Tests follow the template's layout: unit (Bulloak trees), integration (Fuji fork), fuzz, and symbolic. Add invariant
+  tests for payment accounting. Use Chainlink Local's CCIP simulator and a mock ICM messenger for local cross-chain
+  tests. Verify the current package names.
 - Deploy via `forge script` with encrypted keystores (`cast wallet import`), never raw keys. Verify contracts on the explorer.
 - Run ethskills `security` and `audit` checklists before any Fuji deploy.
 
@@ -179,18 +186,39 @@ Summary:
 
 - **Flow: issue → branch → commits → PR → merge.** Every task in the plan maps to exactly one issue.
 - **Issues are tiny**: the `Task` form (What · Done when) or the `Bug` form (What happened · Expected). Less is more.
-- **Gitflow**: `main` (tagged releases) and `develop` (integration); `feature/<issue>-<slug>`, `release/x.y.z`,
-  `hotfix/<issue>-<slug>`. No direct pushes to `main` or `develop`.
+- **Gitflow**: `main` (production, tagged releases), `develop` (integration), `feature/<name>` (kebab-case, from
+  `develop`), `release/x.y.z` (from `develop`), and `hotfix/<name>` (from `main`). Release and hotfix branches merge
+  into `main` and back into `develop`. No direct pushes to `main` or `develop`.
 - **Conventional Commits v1.0.0** (https://www.conventionalcommits.org/en/v1.0.0/): `<type>(<scope>)[!]: <description>`.
   `feat` → MINOR, `fix` → PATCH, and `!` or a `BREAKING CHANGE:` footer → MAJOR. Scope = module; the footer is
   `Refs #<issue>`. Enforce with commitlint + a commit-msg hook; generate the changelog and SemVer tags from commits.
 - **PRs**: English, one issue each, small; the body uses the template with `Closes #<issue>`; squash into `develop`.
 - **English everywhere**: code, comments, identifiers, docs, commits, issues, PRs.
 - **No AI attribution anywhere**: no `Co-Authored-By`, no "Generated with ..." footers, no AI credits in code or docs.
-- **Branch protection** on `main` and `develop`: PR required and CI green.
-- **CI (GitHub Actions)**: per-workspace lint, typecheck, Vitest, `forge fmt --check` + `forge build` + `forge test`,
-  protocol E2E against anvil, Playwright E2E, frontend build. Path filters so each demo only runs its own jobs;
-  Demo 3 also runs when Demo 1, Demo 2, or the shared packages change.
+- **Branch protection** (rulesets) on `main` and `develop`: PR required, required checks green, no force push, no deletion.
+
+## CI/CD (best practices, non-negotiable)
+
+`.github/workflows/ci.yml` already checks PR titles, commit messages, branch names (gitflow), and workflow files.
+Extend it; do not create a parallel pipeline.
+
+- **CI per workspace** as code lands: lint, typecheck, Vitest, `forge fmt --check` + `forge build` + `forge test`,
+  lintspec, protocol E2E against anvil, Playwright E2E, builds. Use path filters so each demo runs only its own
+  jobs; Demo 3 also runs when Demo 1, Demo 2, or the shared packages change. Fast checks gate every PR; slow suites
+  (testnet smoke, deep fuzz) run nightly or on demand.
+- **Hygiene**: least-privilege `permissions` per workflow, actions pinned to commit SHAs (Dependabot keeps them
+  updated), `concurrency` with cancel-in-progress, `timeout-minutes` on every job, pnpm and Foundry caches, and
+  reproducible installs (`--frozen-lockfile`).
+- **Secrets**: only in GitHub Environments, never in the repo. Use OIDC instead of long-lived cloud tokens where
+  supported. Deployer keys are encrypted keystores, scoped to an environment.
+- **CD by branch**:
+  - PR → preview deploys (frontend and docs).
+  - `develop` → staging (web + docs) automatically. Contract deploys to Fuji or the L1 run only via
+    `workflow_dispatch` on a `testnet` environment with a required reviewer; verify on the explorer and record the
+    addresses in `packages/chains`.
+  - `main` → production (the talk build). Merging `release/x.y.z` tags `vX.Y.Z` and publishes a GitHub Release with
+    a changelog generated from Conventional Commits. Docusaurus deploys to GitHub Pages.
+  - Rollback = redeploy the previous tag. Deploys are idempotent and never depend on a developer's machine.
 
 ## Proposed structure (validate or improve; justify changes)
 
@@ -201,13 +229,13 @@ hackatwin-x402-team1-avalanche/
 ├── apps/docs/                  # Docusaurus site; docs.path → ../../docs (content stays in docs/)
 ├── demos/
 │   ├── 01-x402-twin/
-│   │   ├── contracts/          # Foundry: MockARGt (ERC-20 + ERC-3009), deploy scripts
+│   │   ├── contracts/          # Foundry (Wonderland template): MockARGt (ERC-20 + ERC-3009), deploy scripts
 │   │   ├── seller-api/         # x402-protected API (own composition root)
 │   │   ├── buyer-agent/        # agent: ERC-8004 identity + x402 client (own composition root)
 │   │   └── module.ts           # registerX402Module(container, config): public entry for Demo 3
 │   ├── 02-l1-crosschain/
 │   │   ├── l1/                 # platform-cli scripts, genesis, L1 config
-│   │   ├── contracts/          # Foundry: CCIP sender, Fuji broker (CCIP→ICM), L1 settlement
+│   │   ├── contracts/          # Foundry (Wonderland template): CCIP sender, Fuji broker (CCIP→ICM), L1 settlement
 │   │   ├── payment-agent/      # cross-chain payment agent (own composition root)
 │   │   └── module.ts           # registerCrossChainModule(container, config)
 │   └── 03-agentic-crosschain-commerce/
