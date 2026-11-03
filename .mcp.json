@@ -1,0 +1,5 @@
+{
+  "mcpServers": {
+    "avalanche-mcp": { "type": "http", "url": "https://build.avax.network/api/mcp" }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "extraKnownMarketplaces": {
+    "ethskills": { "source": { "source": "github", "repo": "austintgriffith/ethskills" } }
+  },
+  "enabledPlugins": { "ethskills@ethskills": true }
+}
