@@ -86,10 +86,10 @@ Spec: payment-hub. Each PR is tree, RED, GREEN, per the conventions above.
 
 Spec: ccip-payment-broker.
 
-- [ ] 13.1 (PR 13, ~350) Tree and RED: Non-router caller; No public entry; Allowed pair; Pair not mixed; Removed pair; Matching payer; Foreign payer (`Rejected`, `PayerMismatch`, no revert); Rebinding is not retroactive; Duplicate; Independent messages; Tokens attached; Malformed data; Accept; Budget spent; Rejected is final; Dispatch fails after pay (`Accepted` plus `DispatchFailed`); Too little gas; Within the limit (gas snapshot).
-- [ ] 13.2 (PR 13, GREEN) `src/contracts/PaymentBroker.sol` (no `getCCVsAndFinalityConfig` override, `setAllowedSender(selector, sender, payer)`).
-- [ ] 14.1 (PR 14a, ~170) `test/integration/BrokerSimulator.t.sol` with `CCIPLocalSimulator`: accept, simulator reject (outer `ReceiverError`), duplicate. Tests: Simulator reject; Duplicate; Accept.
-- [ ] 14.2 (PR 14b, ~150) `test/invariants/PaymentBrokerHandler.sol`: payer binding, final statuses, zero broker balance, coverage asserts. Tests: Payer binding holds; Coverage not vacuous.
+- [x] 13.1 (PR 13, ~350) Tree and RED: Non-router caller; No public entry; Allowed pair; Pair not mixed; Removed pair; Matching payer; Foreign payer (`Rejected`, `PayerMismatch`, no revert); Rebinding is not retroactive; Duplicate; Independent messages; Tokens attached; Malformed data; Accept; Budget spent; Rejected is final; Dispatch fails after pay (`Accepted` plus `DispatchFailed`); Too little gas; Within the limit (gas snapshot).
+- [x] 13.2 (PR 13, GREEN) `src/contracts/PaymentBroker.sol` (no `getCCVsAndFinalityConfig` override, `setAllowedSender(selector, sender, payer)`).
+- [x] 14.1 (PR 14a, ~170) `test/integration/BrokerSimulator.t.sol` with `CCIPLocalSimulator`: accept, simulator reject (outer `ReceiverError`), duplicate. Tests: Simulator reject; Duplicate; Accept.
+- [x] 14.2 (PR 14b, ~150) `test/invariants/PaymentBrokerHandler.sol`: payer binding, final statuses, zero broker balance, coverage asserts. Tests: Payer binding holds; Coverage not vacuous.
 
 ## Phase 6: Deployment (PR 15, PR 16)
 

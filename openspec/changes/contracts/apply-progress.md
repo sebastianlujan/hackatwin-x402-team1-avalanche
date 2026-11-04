@@ -2,6 +2,39 @@
 
 Mode: Strict TDD (forge test; Vitest for TypeScript). Store: hybrid. Chain: stacked-to-main, every PR targets `develop`.
 
+## Batch 4 (PR 13 to PR 14b): tasks 13.1, 13.2, 14.1, 14.2 complete (28 of 33 task rows)
+
+PR 13 split at named seams into 13, 13b and 13c (own issues, later numbering unchanged). All PRs target `develop`, stacked from `feature/settlement-receiver-invariants`.
+
+| PR | Branch | PR / issue | Authored lines | Commits (tree, red, green) |
+|---|---|---|---|---|
+| 13 | `feature/broker-allowlist` | #150 / #149 | 340 | tree 91efaee, red fbb1715, green 7ab0b3c |
+| 13b | `feature/broker-message` | #152 / #151 | 252 added (273 changed) | tree 21cd003, red 396d6ad, green b54523e |
+| 13c | `feature/broker-refusal` | #154 / #153 | 268 | tree ce71c8a, red 27ed876, green 0bac43d |
+| 14a | `feature/broker-simulator` | #156 / #155 | 117 | tree 81616a2, red d243701, green 89f5e23 |
+| 14b | `feature/broker-invariants` | #158 / #157 | 253 | red f126b68, green bb4c9f7 |
+
+All five PRs: CI green (12 checks each). Full forge suite at the stack tip: 170 tests.
+
+| Task | Test file | Layer | Safety net | RED | GREEN | TRIANGULATE | REFACTOR |
+|---|---|---|---|---|---|---|---|
+| 13.1, 13.2 (PR 13) | `test/unit/PaymentBrokerEntry.t.sol`, `scripts/broker-abi.test.ts` | Unit and ABI | N/A (new) | Written, build fails (broker missing); vitest fails | 10/10 forge, 2/2 vitest | 2 non-router callers, 1 and 2 tokens, 4 bad sizes, mixed and unknown pairs with tokens attached | None needed |
+| 13.1, 13.2 (PR 13b) | `test/unit/PaymentBrokerMessage.t.sol` | Unit | 10/10 PR 13 baseline | Written, build fails (`statusOf` missing) | 17/17 | 2 matching pairs, both foreign directions, replay with tokens and bad data, replay after removal, rebinding, 2 dirty-bit words; 2 mutations killed | None needed |
+| 13.1, 13.2 (PR 13c) | `test/unit/PaymentBrokerRefusal.t.sol`, `test/gas/PaymentBrokerGas.t.sol` | Unit and gas | 17/17 baseline | Written, build fails (`DispatchFailed`, `MIN_RELAY_GAS` missing) | 25/25; snapshot check exits 0 after refresh | 5 hub refusals, failed dispatch recovered and refunded, starved call and redelivery; 2 mutations killed | None needed |
+| 14.1 (PR 14a) | `test/integration/BrokerSimulator.t.sol` | Integration | 25/25 baseline | Written, build fails (`SimulatorFixture` missing) | 3/3 | reject (not allowlisted and malformed), router replay, accept; 3 mutations killed | None needed |
+| 14.2 (PR 14b) | `test/invariants/PaymentBroker.invariants.t.sol` | Invariant | N/A (new) | Written, build fails (handler missing) | 4 invariants, 64 runs, 0 reverts; deep 512 runs | 3 pairs, 3 payers, forced accept, mismatch, refusal and failed dispatch; 5 mutations killed | None needed |
+
+### Batch 4 deviations and notes
+
+- Splits: PR 13 into allowlist and payload checks (13), message guard, payer binding and accept path (13b) and hub refusal, dispatch failure, gas floor and gas test (13c), because the full unit measured well above 400 authored lines. In 13 the broker accepts a valid message without side effects; 13b adds the hub calls plainly and 13c wraps them in `try`.
+- Contracts live in `src/` (`PaymentBroker.sol`, `interfaces/IPaymentBroker.sol`). The interface was grown per PR (events, errors and functions are declared with the code that uses them).
+- "No public entry" is asserted by a Vitest test over the exported ABI (the only state-changing entries are `ccipReceive` and the owner functions), because Foundry cannot enumerate selectors on chain and `fs_permissions` does not allow reading `out/`.
+- `MIN_RELAY_GAS` is 500000 and the documented CCIP `gasLimit` is 800000 (accept path measured at 313450 with the test messenger). The real ICTT send is not in the measured number; M8 must re-measure with the real messenger.
+- The decoded payer word is checked for dirty high bits (`PaymentBroker_InvalidPayload`), as the receiver does, because `abi.decode` of a dirty address would revert without data.
+- The simulator assigns a fresh message ID to every send, so the duplicate scenario replays through the router's `routeMessage` with the processed ID.
+- `PaymentBrokerHandler` reuses `BrokerFixture`; invariant 4 is checked as `granted == paid + remaining` (stricter than `paid <= granted`) because the broker is the only spender of the budgets.
+- The invariant suite has no Bulloak tree (as in batch 3). Nightly already runs the whole suite under the `deep` profile.
+
 ## Batch 3 (PR 9 to PR 12b): tasks 9.1, 10.1, 10.2, 11.1, 12.1 complete (24 of 33 task rows)
 
 Every task row split at a seam, each with its own issue, later numbering unchanged. All PRs target `develop`, stacked from `feature/hub-dispatch`.
@@ -127,4 +160,4 @@ Totals: forge 23 tests, Vitest 44 tests in `packages/contracts`.
 
 ## Remaining
 
-Task 13.1 onward (PR 13 PaymentBroker). Next PR starts from `feature/settlement-receiver-invariants`.
+Task 15.1 onward (PR 15 deployment). Next PR starts from `feature/broker-invariants`.
