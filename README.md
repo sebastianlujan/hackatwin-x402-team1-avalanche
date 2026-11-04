@@ -14,9 +14,9 @@ by Twin × team1. The repo itself is built by agents with MCP servers and skills
 
 | Demo | What the audience sees | Runs on | Mode |
 |---|---|---|---|
-| 1 · x402 + Twin | An agent pays an API in real ARGt over HTTP 402 | Local anvil fork of Avalanche C-Chain mainnet | Live |
-| 2 · TwinPay L1 | A payment travels Sepolia → Fuji → TwinPay L1 with CCIP and ICTT | Sepolia, Fuji, TwinPay L1 | Live + recorded fallback |
-| 3 · Composed | The agent, funded via Demo 2, pays an API on the L1 with x402 | TwinPay L1 (Fuji) | Live + recorded fallback |
+| 1: x402 + Twin | An agent pays an API in real ARGt over HTTP 402 | Local anvil fork of Avalanche C-Chain mainnet | Live |
+| 2: TwinPay L1 | A payment travels Sepolia → Fuji → TwinPay L1 with CCIP and ICTT | Sepolia, Fuji, TwinPay L1 | Live + recorded fallback |
+| 3: Composed | The agent, funded via Demo 2, pays an API on the L1 with x402 | TwinPay L1 (Fuji) | Live + recorded fallback |
 
 Runbooks: [`docs/demos.md`](docs/demos.md).
 
@@ -84,7 +84,7 @@ If Twin deploys official ARGt on Fuji, Demos 2 and 3 switch their asset to ARGt 
 
 ## Runtime flows
 
-### Demo 1 · x402 + Twin
+### Demo 1: x402 + Twin
 
 ![Demo 1 flow](docs/diagrams/demo-1.svg)
 
@@ -100,7 +100,7 @@ Edit: `docs/diagrams/demo-1.excalidraw`
 All of it happens on a local fork with the real ARGt contract. The agent's ARGt comes from the real `mint`, called
 while impersonating Twin's LayerZero adapter.
 
-### Demos 2 and 3 · TwinPay L1
+### Demos 2 and 3: TwinPay L1
 
 ![Demos 2 and 3 flow](docs/diagrams/demo-2-3.svg)
 
@@ -124,8 +124,8 @@ Edit: `docs/diagrams/state-machines.excalidraw`
 
 | Contract | States |
 |---|---|
-| `PaymentHub` (source) | `None → Pending → Settled` (local lane) · `Dispatched` (cross-chain) · `Refunded` (after deadline) |
-| `SettlementReceiver` (L1) | `None → Received → Settled` · `Rejected` |
+| `PaymentHub` (source) | `None → Pending`, then `Settled` (local lane), `Dispatched` (cross-chain), or `Refunded` (after deadline) |
+| `SettlementReceiver` (L1) | `None → Received`, then `Settled` or `Rejected` |
 
 Every change goes through one `_transition` function, validated by a pure transition table, and emits one
 `StatusChanged` event. Terminal states never change, and there are no acknowledgements back to the source, so a
@@ -192,7 +192,7 @@ hackatwin-x402-team1-avalanche/
 ## Conventions
 
 Issue → branch → commits → PR → merge, gitflow with `feature/<name>`, Conventional Commits, English everywhere, and
-no AI attribution. Details in [`CONTRIBUTING.md`](CONTRIBUTING.md). KISS · DRY · YAGNI.
+no AI attribution. Details in [`CONTRIBUTING.md`](CONTRIBUTING.md). KISS, DRY, YAGNI.
 
 ## License
 

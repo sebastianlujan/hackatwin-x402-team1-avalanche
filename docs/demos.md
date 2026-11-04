@@ -10,14 +10,14 @@ Runbooks for the three talk demos. Why each choice was made: [Decisions](decisio
 
 | Demo | Shows | Runs on | Mode |
 |---|---|---|---|
-| [1 · x402 + Twin](#demo-1--x402--twin) | An agent pays an API in real ARGt over HTTP 402 | Local anvil fork of C-Chain mainnet | Live |
-| [2 · TwinPay L1](#demo-2--twinpay-l1) | A payment travels Sepolia → Fuji → TwinPay L1 | Sepolia, Fuji, TwinPay L1 | Live + recorded fallback |
-| [3 · Composed](#demo-3--composed) | The agent, funded via Demo 2, pays an API on the L1 | TwinPay L1 | Live + recorded fallback |
+| [1: x402 + Twin](#demo-1-x402--twin) | An agent pays an API in real ARGt over HTTP 402 | Local anvil fork of C-Chain mainnet | Live |
+| [2: TwinPay L1](#demo-2-twinpay-l1) | A payment travels Sepolia → Fuji → TwinPay L1 | Sepolia, Fuji, TwinPay L1 | Live + recorded fallback |
+| [3: Composed](#demo-3-composed) | The agent, funded via Demo 2, pays an API on the L1 | TwinPay L1 | Live + recorded fallback |
 
 **Prerequisites:** Foundry (`anvil`, `cast`, `forge`), Node.js with pnpm, and Docker (Demos 2 and 3). Exact versions
 are pinned during implementation.
 
-## Demo 1 · x402 + Twin
+## Demo 1: x402 + Twin
 
 **What it shows.** An AI agent with an ERC-8004 identity buys an API response autonomously. The API is priced in
 USD, quoted in ARGt from live market data, and paid in the real ARGt token over x402. No custom contract (Q4).
@@ -59,7 +59,7 @@ Edit: `docs/diagrams/demo-1.excalidraw`
    - Start the facilitator and the seller API (scripts added during implementation).
 3. On stage
    - `pnpm quote` (script added during implementation) prints the live rate, for example
-     `1 USD = 1658.3 ARGt (Curve, block N) · Chainlink 1657.9 · Δ 0.02% ✓`.
+     `1 USD = 1658.3 ARGt (Curve, block N) | Chainlink 1657.9 | Δ 0.02% ✓`.
    - Run the agent and narrate `402 → policy check → Permit2 signature → 200`.
    - Show the ARGt balances and the settlement transaction in the UI. The fork is local, so there is no public
      explorer link.
@@ -68,7 +68,7 @@ Edit: `docs/diagrams/demo-1.excalidraw`
    - Start the fork before the talk and keep it running. If the public RPC fails at startup, try the backup RPC
      (unverified). If Curve drifts more than 2% from Chainlink, `GuardedOracle` uses Chainlink and the UI flags it.
 
-## Demo 2 · TwinPay L1
+## Demo 2: TwinPay L1
 
 **What it shows.** The infrastructure side: a dedicated Avalanche L1 for agent payments, reached from Ethereum
 through Chainlink CCIP and Avalanche ICM/ICTT (Q7).
@@ -115,7 +115,7 @@ Edit: `docs/diagrams/demo-2-3.excalidraw`
 
 CCIP lane values (routers, selectors, LINK): [Decisions › CCIP](decisions.md#ccip-sepolia--fuji-active).
 
-## Demo 3 · Composed
+## Demo 3: Composed
 
 **What it shows.** Demos 1 and 2 compose with no new domain logic: the same agent code pays an x402 API on
 TwinPay L1, and a config profile switch moves it to Fuji C-Chain (Q13).

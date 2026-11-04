@@ -131,7 +131,7 @@ shows the active config and lets the presenter switch profiles live.
 
 ## Engineering principles (non-negotiable)
 
-- **KISS · DRY · YAGNI. Less is more.** Prefer deleting over adding; no abstraction without a second use.
+- **KISS, DRY, YAGNI. Less is more.** Prefer deleting over adding; no abstraction without a second use.
 - Lean, modular, clear separation of concerns. Hexagonal: domain (payment intent, pricing, agent policy) →
   ports (`PaymentGateway`, `AgentIdentity`, `AgentPolicy`, `ChainClient`, `LLM`, `CrossChainMessenger`,
   `PriceOracle`) → adapters (x402 client and facilitator, viem, ERC-8004 registries, CCIP/ICTT, Anthropic SDK,
@@ -194,7 +194,7 @@ pattern, Wonderland code standards, pinned dependencies, and the ccip-icm lesson
 Summary:
 
 - **Flow: issue → branch → commits → PR → merge.** Every task in the plan maps to exactly one issue.
-- **Issues are tiny**: the `Task` form (What · Done when) or the `Bug` form (What happened · Expected). Less is more.
+- **Issues are tiny**: the `Task` form (What, Done when) or the `Bug` form (What happened, Expected). Less is more.
 - **Gitflow**: `main` (production, tagged releases), `develop` (integration), `feature/<name>` (kebab-case, from
   `develop`), `release/x.y.z` (from `develop`), and `hotfix/<name>` (from `main`). Release and hotfix branches merge
   into `main` and back into `develop`. No direct pushes to `main` or `develop`.
@@ -278,10 +278,10 @@ hackatwin-x402-team1-avalanche/
   (no official Avalanche skill package exists). `.claude/skills/chainlink-ccip-skill/` and
   `.claude/skills/chainlink-data-feeds-skill/` → vendored from `smartcontractkit/chainlink-agent-skills`.
   `AGENTS.md` → the same pointers for other agents.
-- Avalanche docs for LLMs: https://build.avax.network/docs/tooling/ai-llm · https://build.avax.network/llms.txt ·
+- Avalanche docs for LLMs: https://build.avax.network/docs/tooling/ai-llm, https://build.avax.network/llms.txt,
   https://build.avax.network/llms-full.txt
-- ICM / ICTT: https://build.avax.network/docs/cross-chain/icm-contracts/deep-dive.md ·
-  https://build.avax.network/console/icm/setup · https://build.avax.network/console/ictt/setup
+- ICM / ICTT: https://build.avax.network/docs/cross-chain/icm-contracts/deep-dive.md,
+  https://build.avax.network/console/icm/setup, https://build.avax.network/console/ictt/setup
 - Platform CLI: `curl -sSfL https://build.avax.network/install/platform-cli | sh` then `platform-cli --help`
   (releases: https://github.com/ava-labs/platform-cli/releases)
 - ethskills (https://ethskills.com/): `/plugin marketplace add austintgriffith/ethskills` and
@@ -296,11 +296,11 @@ plan depends on most:
 
 | Item | Value | Status |
 |---|---|---|
-| Chain IDs | C-Chain 43114 · Fuji 43113 · Arbitrum 42161 | official |
+| Chain IDs | C-Chain 43114, Fuji 43113, Arbitrum 42161 | official |
 | ARGt on Avalanche C-Chain | `0x2E4e93eCA2E16E4989b894e188B7F7fC0175703B` (not in Twin's registry; no permit, no ERC-3009) | verified |
 | ARGt on testnets | none | verified |
 | Fuji USDC (Circle) | `0x5425890298aed601595a70AB815c96711a31Bc65` | verified |
-| ERC-8004 (Fuji) | Identity `0x8004A818BFB912233c491871b3d84c89A494BD9e` · Reputation `0x8004B663056A597Dffe9eCcC1965A193B7388713` | verified (official repo) |
+| ERC-8004 (Fuji) | Identity `0x8004A818BFB912233c491871b3d84c89A494BD9e`, Reputation `0x8004B663056A597Dffe9eCcC1965A193B7388713` | verified (official repo) |
 | x402 facilitator | `@x402/core@2.29.0` + `@x402/evm@2.29.0`, self-hosted; Permit2 + x402 proxy on C-Chain and Fuji | verified |
 | CCIP Sepolia → Fuji | selectors `16015286601757825753` → `14767482510784806043`; `@chainlink/contracts-ccip@2.0.0` | verified |
 | ARGt pricing | Curve ARGt/USD₮0 (Arbitrum) guarded by Chainlink ARS/USD (Base) | verified |

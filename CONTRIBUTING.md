@@ -34,7 +34,7 @@ no AI credits.
 
 ## Principles
 
-KISS · DRY · YAGNI. Less is more.
+KISS, DRY, YAGNI. Less is more.
 
 ## Comments
 
