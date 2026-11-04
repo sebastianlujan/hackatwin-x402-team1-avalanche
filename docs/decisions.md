@@ -59,13 +59,13 @@ Verified as of 2026-11-04. Re-check on-chain values before a deploy or a talk re
 
 | Fact | Value | Source |
 |---|---|---|
-| Official registry chains | Base, Polygon, Arbitrum, Ethereum. No Avalanche, no testnets. | https://docs.twin.finance/stablecoins/supported-chains · https://docs.twin.finance/stablecoins/contracts |
+| Official registry chains | Base, Polygon, Arbitrum, Ethereum. No Avalanche, no testnets. | https://docs.twin.finance/stablecoins/supported-chains, https://docs.twin.finance/stablecoins/contracts |
 | ARGt on Avalanche C-Chain (not in the registry) | `0x2E4e93eCA2E16E4989b894e188B7F7fC0175703B` (BeaconProxy; beacon `0x59863989d080b22476db95656d0c3cc18be92214`; deployer `0x3f5c58f0b2400cd82ea7ea6c3b5794a1228f3df9`) | https://snowtrace.io/address/0x2E4e93eCA2E16E4989b894e188B7F7fC0175703B |
 | ARGt interface | `TwinToken` = ERC20Upgradeable + AccessControlUpgradeable + ERC2771Context. No permit, no ERC-3009. | Verified source on the explorer above |
 | ERC-2771 forwarder (C-Chain, OpenGSN) | `0x2e3e3c36a5d01ccf4637cf9624c9d1033e337ea1` | https://snowtrace.io/address/0x2e3e3c36a5d01ccf4637cf9624c9d1033e337ea1 |
 | Minter on C-Chain | Twin's LayerZero adapter `0x4821FBf47B261F0D52Ba0F941CF67b8648f82691` holds `MINTER_BURNER_ROLE` | https://snowtrace.io/address/0x4821FBf47B261F0D52Ba0F941CF67b8648f82691 |
 | ARGt on testnets | None. Twin's deployer has nonce 0 on Sepolia, Arbitrum Sepolia, Base Sepolia, Amoy, and Fuji. | Explorers for each network |
-| Lookalikes **not** issued by Twin | Sepolia `0x5bC627379b6b961A8c8480bC4C32b98c12a9373B` · Base Sepolia `0xaA4C6c348566e4A1EF947aCe1C37b5de4416D285` | Explorers; Twin's registry |
+| Lookalikes **not** issued by Twin | Sepolia `0x5bC627379b6b961A8c8480bC4C32b98c12a9373B`, Base Sepolia `0xaA4C6c348566e4A1EF947aCe1C37b5de4416D285` | Explorers; Twin's registry |
 | Address reuse | Twin's Arbitrum token addresses on Avalanche hold different symbols with zero supply. Never reuse an address across chains. | Explorers |
 
 More context: [Twin Finance contracts](references/twin-finance-contracts.md).
@@ -74,7 +74,7 @@ More context: [Twin Finance contracts](references/twin-finance-contracts.md).
 
 | Fact | Value | Source |
 |---|---|---|
-| Facilitator packages | `@x402/core@2.29.0` + `@x402/evm@2.29.0`. `x402Facilitator` from `@x402/core/facilitator`, `ExactEvmScheme` from `@x402/evm/exact/facilitator`. | https://github.com/coinbase/x402 · https://www.npmjs.com/package/@x402/core · https://www.npmjs.com/package/@x402/evm |
+| Facilitator packages | `@x402/core@2.29.0` + `@x402/evm@2.29.0`. `x402Facilitator` from `@x402/core/facilitator`, `ExactEvmScheme` from `@x402/evm/exact/facilitator`. | https://github.com/coinbase/x402, https://www.npmjs.com/package/@x402/core, https://www.npmjs.com/package/@x402/evm |
 | Permit2 (C-Chain and Fuji) | `0x000000000022D473030F116dDEE9F6B43aC78BA3` (hardcoded in `@x402/evm`) | https://github.com/Uniswap/permit2 |
 | x402 exact Permit2 proxy (C-Chain and Fuji) | `0x402085c248EeA27D92E8b30b2C58ed07f9E20001` (hardcoded in `@x402/evm`) | https://github.com/coinbase/x402 |
 | Fallback facilitator | x402-rs (Docker) | https://github.com/x402-rs/x402-rs (to be verified) |

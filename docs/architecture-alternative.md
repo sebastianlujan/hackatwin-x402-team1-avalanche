@@ -30,7 +30,7 @@ flowchart LR
     WEB[apps/web]
   end
   subgraph Surface
-    MCP["apps/twinpay-mcp<br/>quote · pay · status · authorize"]
+    MCP["apps/twinpay-mcp<br/>quote, pay, status, authorize"]
     SELLER[x402 seller facade]
   end
   CORE["core + scenarios/*.ts<br/>config profiles"]

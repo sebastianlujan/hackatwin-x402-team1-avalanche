@@ -51,7 +51,7 @@ official sources.
 
 - ICM contracts deep dive: https://build.avax.network/docs/cross-chain/icm-contracts/deep-dive.md
   (take contract addresses from the docs, never from memory).
-- Console setup: ICM https://build.avax.network/console/icm/setup · ICTT https://build.avax.network/console/ictt/setup
+- Console setup: ICM https://build.avax.network/console/icm/setup, ICTT https://build.avax.network/console/ictt/setup
 - CCIP→ICM pattern (https://github.com/smartcontractkit/ccip-icm, Foundry, unaudited): Sepolia `MessageSender`
   →(CCIP)→ Fuji `MessageBroker` →(ICM)→ L1 `MessageReceiver`. CCIP does not reach custom L1s directly; the Fuji
   broker bridges that gap (verify).
