@@ -82,6 +82,8 @@ path.
   alone.
 - `SettlementReceiver.receiveTokens` validates the sender pair before anything else (see
   [section 5](#5-lessons-from-ccip-icm)). A rejection is recorded, not reverted, so the outcome is visible on-chain.
+  On `Rejected` the receiver does not pull the tokens; ICTT sends the unused allowance to `fallbackRecipient`, so no
+  refund function is needed on the L1.
 
 ```solidity
 library PaymentStateLib {
