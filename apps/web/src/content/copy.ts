@@ -70,8 +70,76 @@ export const copy = {
   },
   path: {
     nav: { label: 'Talk path', previous: 'Previous', next: 'Next' },
+    screens: {
+      avalanche: {
+        title: 'Avalanche primer',
+        lead: 'One network of networks, and the chain this talk starts on.',
+        items: [
+          {
+            term: 'Primary Network',
+            text: 'Three built-in chains: the C-Chain runs EVM smart contracts, the P-Chain tracks validators and L1s, and the X-Chain moves assets.',
+          },
+          {
+            term: 'L1s',
+            text: 'A sovereign blockchain with its own validators, token and rules. Demo 2 pays into one.',
+          },
+          {
+            term: 'Avalanche9000 and ACP-77',
+            text: 'Launching an L1 no longer needs a Primary Network stake: its validators pay a continuous fee instead.',
+          },
+        ],
+      },
+      production: {
+        title: 'Production path',
+        lead: 'How real ARGt moves across chains.',
+        items: [
+          {
+            term: 'In the demos',
+            text: 'No LayerZero code runs here. Demo 1 mints ARGt on a local fork of the C-Chain.',
+          },
+          {
+            term: 'In production',
+            text: 'Twin moves ARGt between chains with a LayerZero OFT adapter that holds the minter and burner role.',
+          },
+          {
+            term: 'Next',
+            text: 'If Twin deploys official ARGt on Fuji, Demos 2 and 3 switch to it by configuration.',
+          },
+        ],
+      },
+      builtByAgents: {
+        title: 'Built by agents',
+        lead: 'This repository is written by agents, with guard rails.',
+        items: [
+          {
+            term: '.mcp.json',
+            text: 'Avalanche docs and read-only chain lookups, plus OpenZeppelin contract scaffolding.',
+          },
+          {
+            term: 'Skills',
+            text: 'Avalanche, Chainlink CCIP and Chainlink Data Feeds skills, and the ethskills plugin for x402, ERC-8004, security and testing.',
+          },
+          {
+            term: 'Issue, branch, pull request',
+            text: 'Every change starts as an issue, lands on a branch and passes CI in a pull request before it merges.',
+          },
+        ],
+      },
+    },
+    placeholders: {
+      badge: 'Placeholder',
+      demo2: { title: 'Demo 2', lead: 'The TwinPay L1 payment is not built yet.', items: [] },
+      demo3: { title: 'Demo 3', lead: 'The config switch between chains is not built yet.', items: [] },
+      identity: { title: 'Agents with identity', lead: 'The identity card is not built yet.', items: [] },
+      firstTx: { title: 'First transaction on Fuji', lead: 'The wallet screen is not built yet.', items: [] },
+    },
   },
 } as const;
 
 export type Demo1Copy = typeof copy.demo1;
 export type PathCopy = typeof copy.path;
+export interface TalkScreenCopy {
+  readonly title: string;
+  readonly lead: string;
+  readonly items: readonly { readonly term: string; readonly text: string }[];
+}
