@@ -8,5 +8,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hackatwin/demo-01-x402-twin": "workspace:*"
   }
 }
