@@ -81,10 +81,7 @@ contract UnitSettlementReceiverValidation is Test {
     _deliver(_transferrer, _SOURCE, _originTransferrer, _originSender, _token, 0, _payload());
   }
 
-  function test_GivenAPayloadThatIsNotSixtyFourBytesOrHasADirtyMerchantWord()
-    external
-    whenTheTransferrerDeliversTokens
-  {
+  function test_GivenAPayloadThatIsNot64BytesOrHasADirtyMerchantWord() external whenTheTransferrerDeliversTokens {
     // it reverts with SettlementReceiver_InvalidPayload
     bytes[4] memory _payloads = [
       new bytes(0),
