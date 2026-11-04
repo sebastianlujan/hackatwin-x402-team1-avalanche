@@ -18,7 +18,7 @@ const intent: PaymentIntent = { id: 'p1', payer: addr, payee: addr, amount: big,
 const base = { version: 1, at: 1 } as const;
 
 const events: AgentEvent[] = [
-  { ...base, type: 'run.started', agent: 'buyer', profile: 'fuji-cchain' },
+  { ...base, type: 'run.started', agent: 'buyer', profile: 'fuji-cchain', llm: 'scripted' },
   { ...base, type: 'llm.reasoning', text: 'thinking' },
   { ...base, type: 'llm.tool-call', tool: 'pay', input: { units: 'not-a-bigint', agentId: 'x' } },
   { ...base, type: 'policy.decision', amount: big, allowed: true, reason: 'ok' },
@@ -54,6 +54,11 @@ describe('rejection', () => {
 
   it('rejects an unknown type', () => {
     expect(() => decodeAgentEvent('{"version":1,"type":"nope"}')).toThrow(/Unknown AgentEvent type: nope/);
+  });
+
+  it.each(['gpt', undefined])('rejects run.started with llm %s', (llm) => {
+    const bad = { version: 1, type: 'run.started', agent: 'a', profile: 'p', at: 1, llm };
+    expect(() => decodeAgentEvent(JSON.stringify(bad))).toThrow(/run.started llm must be claude or scripted/);
   });
 
   it('rejects non-JSON and non-object input', () => {

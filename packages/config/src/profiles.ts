@@ -2,7 +2,10 @@ import { money, token } from '@hackatwin/core';
 import { z } from 'zod';
 import { type EnvVariable, envSchemas } from './env.ts';
 
-const llm = { provider: 'claude', model: 'claude-sonnet-5-5' } as const;
+export type LlmConfig = { readonly provider: 'claude'; readonly model: string } | { readonly provider: 'scripted' };
+export type LlmProvider = LlmConfig['provider'];
+
+const claude = { provider: 'claude', model: 'claude-sonnet-5-5' } as const;
 const budget = { perPayment: money(1_000_000n, 6, 'USD'), total: money(5_000_000n, 6, 'USD') } as const;
 
 const pick = <K extends EnvVariable>(keys: readonly K[]) =>
@@ -10,8 +13,13 @@ const pick = <K extends EnvVariable>(keys: readonly K[]) =>
 
 const define = <const S, const K extends EnvVariable>(statics: S, keys: readonly K[]) => ({
   statics,
-  schema: pick(['ANTHROPIC_API_KEY', ...keys]),
+  schema: pick(['KEYSTORE_DIR', ...keys]),
 });
+
+// The pinned executed block N of the C-Chain fork, printed by `pnpm demo1:fork-block`.
+export const CCHAIN_FORK_BLOCK = 99_388_000n;
+
+export const forkStaticsSchema = z.object({ forkBlock: z.bigint().positive() });
 
 const roles = ['AGENT_KEYSTORE', 'AGENT_KEYSTORE_PASSWORD_FILE'] as const;
 const withSeller = [
@@ -23,13 +31,15 @@ const withSeller = [
 ] as const;
 
 export const definitions = {
-  'cchain-fork': define({ asset: 'ARGt', x402: 'permit2', facilitator: 'x402-ts' }, [
-    'CCHAIN_FORK_RPC_URL',
-    'CCHAIN_RPC_URL',
-    'ARBITRUM_RPC_URL',
-    'BASE_RPC_URL',
-    ...withSeller,
-  ]),
+  'cchain-fork': define(
+    {
+      asset: 'ARGt',
+      x402: 'permit2',
+      facilitator: 'x402-ts',
+      ...forkStaticsSchema.parse({ forkBlock: CCHAIN_FORK_BLOCK }),
+    },
+    ['CCHAIN_FORK_RPC_URL', 'CCHAIN_RPC_URL', 'ARBITRUM_RPC_URL', 'BASE_RPC_URL', ...withSeller],
+  ),
   'fuji-crosschain': define({ asset: 'USDC', x402: 'none' }, [
     'SEPOLIA_RPC_URL',
     'FUJI_RPC_URL',
@@ -61,12 +71,13 @@ export const PROFILE_NAMES = Object.keys(definitions) as ProfileName[];
 export type Profile<N extends ProfileName = ProfileName> = N extends ProfileName
   ? {
       readonly name: N;
-      readonly llm: typeof llm;
+      readonly llm?: LlmConfig;
       readonly budget: typeof budget;
-      readonly env: z.output<(typeof definitions)[N]['schema']>;
+      readonly env: z.output<(typeof definitions)[N]['schema']> & { readonly ANTHROPIC_API_KEY?: string };
     } & (typeof definitions)[N]['statics']
   : never;
 
 export const ProfileToken = token<Profile>('Profile');
 
-export const staticValues = { llm, budget } as const;
+export const staticValues = { budget } as const;
+export const llmConfig = (provider: LlmProvider): LlmConfig => (provider === 'claude' ? claude : { provider });

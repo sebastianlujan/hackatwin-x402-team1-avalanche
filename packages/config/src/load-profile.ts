@@ -1,6 +1,14 @@
 import { ConfigError, type ConfigIssue } from './config-error.ts';
-import { isRpcUrl } from './env.ts';
-import { definitions, PROFILE_NAMES, type Profile, type ProfileName, staticValues } from './profiles.ts';
+import { envSchemas, isRpcUrl } from './env.ts';
+import {
+  definitions,
+  type LlmProvider,
+  llmConfig,
+  PROFILE_NAMES,
+  type Profile,
+  type ProfileName,
+  staticValues,
+} from './profiles.ts';
 
 export type Env = Readonly<Record<string, string | undefined>>;
 
@@ -22,9 +30,13 @@ const rawKeyIssues = (env: Env): ConfigIssue[] => {
 
 const isProfileName = (name: string): name is ProfileName => (PROFILE_NAMES as readonly string[]).includes(name);
 
-export function loadProfile<N extends ProfileName>(name: N, env?: Env): Profile<N>;
-export function loadProfile(name: string, env?: Env): Profile;
-export function loadProfile(name: string, env: Env = process.env): Profile {
+export interface LoadProfileOptions {
+  readonly llm?: LlmProvider;
+}
+
+export function loadProfile<N extends ProfileName>(name: N, env?: Env, options?: LoadProfileOptions): Profile<N>;
+export function loadProfile(name: string, env?: Env, options?: LoadProfileOptions): Profile;
+export function loadProfile(name: string, env: Env = process.env, options: LoadProfileOptions = {}): Profile {
   if (!isProfileName(name)) {
     throw new ConfigError([
       { variable: 'profile', message: `unknown profile "${name}", use one of: ${PROFILE_NAMES.join(', ')}` },
@@ -32,7 +44,10 @@ export function loadProfile(name: string, env: Env = process.env): Profile {
   }
   const present = Object.fromEntries(Object.entries(env).filter(([, value]) => value !== undefined && value !== ''));
   const { statics, schema } = definitions[name];
-  const result = schema.safeParse(present);
+  const needsKey = options.llm === 'claude';
+  const result = (needsKey ? schema.extend({ ANTHROPIC_API_KEY: envSchemas.ANTHROPIC_API_KEY }) : schema).safeParse(
+    present,
+  );
   const guarded = rawKeyIssues(present);
   if (guarded.length > 0 || !result.success) {
     const rest = result.success
@@ -41,7 +56,8 @@ export function loadProfile(name: string, env: Env = process.env): Profile {
     const seen = new Set(guarded.map((issue) => issue.variable));
     throw new ConfigError([...guarded, ...rest.filter((issue) => !seen.has(issue.variable))]);
   }
-  return { name, ...statics, ...staticValues, env: result.data } as unknown as Profile;
+  const llm = options.llm === undefined ? {} : { llm: llmConfig(options.llm) };
+  return { name, ...statics, ...staticValues, ...llm, env: result.data } as unknown as Profile;
 }
 
 // Maps each needed registry key to its RPC URL: env `<KEY>_RPC_URL` wins, else the registry default.

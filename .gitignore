@@ -153,3 +153,6 @@ vite.config.ts.timestamp-*
 
 # Docusaurus build output
 apps/docs/build/
+
+# Demo 1 fork state and throwaway keystores
+.demo1/

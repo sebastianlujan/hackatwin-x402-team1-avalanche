@@ -17,7 +17,7 @@ interface Base<T extends string> {
 }
 
 export type AgentEvent =
-  | (Base<'run.started'> & { readonly agent: string; readonly profile: string })
+  | (Base<'run.started'> & { readonly agent: string; readonly profile: string; readonly llm: 'claude' | 'scripted' })
   | (Base<'llm.reasoning'> & { readonly text: string })
   | (Base<'llm.tool-call'> & { readonly tool: string; readonly input: unknown })
   | (Base<'policy.decision'> & { readonly amount: Money; readonly allowed: boolean; readonly reason: string })
@@ -109,6 +109,11 @@ export const decodeAgentEvent = (text: string): AgentEvent => {
         intent: { ...intent, amount: reviveMoney(intent.amount, 'intent.amount') },
       } as unknown as AgentEvent;
     }
+    case 'run.started':
+      if (event.llm !== 'claude' && event.llm !== 'scripted') {
+        throw new AgentEventError(`run.started llm must be claude or scripted, got ${String(event.llm)}`);
+      }
+      return event as unknown as AgentEvent;
     case 'identity.feedback':
       return { ...event, agentId: bigintOf(event.agentId, 'agentId') } as unknown as AgentEvent;
     default:
