@@ -310,6 +310,9 @@ importers:
       '@hackatwin/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@hackatwin/pricing':
+        specifier: workspace:*
+        version: link:../../packages/pricing
       viem:
         specifier: 'catalog:'
         version: 2.57.16(typescript@7.0.2)(zod@4.6.7)
