@@ -1,0 +1,26 @@
+UnitPaymentHubPay
+└── when a payment is escrowed
+    ├── given the payer pays for itself
+    │   └── it escrows the amount and consumes no budget
+    ├── given an authorized broker with enough budget
+    │   └── it escrows the amount, drops the budget and emits one StatusChanged
+    ├── given an amount above the remaining budget
+    │   └── it reverts with PaymentHub_BudgetExceeded and moves no tokens
+    ├── given a budget that was already spent in full
+    │   └── it reverts with PaymentHub_Unauthorized
+    ├── given a caller without an authorization
+    │   └── it reverts with PaymentHub_Unauthorized
+    ├── given an unknown lane
+    │   └── it reverts with PaymentHub_LaneNotFound
+    ├── given a zero amount
+    │   └── it reverts with PaymentHub_ZeroAmount
+    ├── given a deadline that is not in the future
+    │   └── it reverts with PaymentHub_InvalidDeadline
+    ├── given a fee-on-transfer token
+    │   └── it records the delivered delta as the escrow
+    ├── given a token that delivers nothing
+    │   └── it reverts with PaymentHub_ZeroAmount
+    ├── given two payments
+    │   └── it returns distinct payment ids
+    └── given a payment that is not None
+        └── it rejects the None to Pending transition
