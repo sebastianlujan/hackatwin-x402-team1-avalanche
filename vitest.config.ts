@@ -1,6 +1,9 @@
+import { resolve } from 'node:path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  oxc: { jsx: { runtime: 'automatic' } },
+  resolve: { alias: { 'server-only': resolve(import.meta.dirname, 'test/stubs/server-only.ts') } },
   test: {
     passWithNoTests: true,
     projects: [
