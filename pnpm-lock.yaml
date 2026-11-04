@@ -341,7 +341,15 @@ importers:
 
   packages/core: {}
 
-  packages/pricing: {}
+  packages/pricing:
+    dependencies:
+      '@hackatwin/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@hackatwin/chains':
+        specifier: workspace:*
+        version: link:../chains
 
   packages/ui: {}
 
