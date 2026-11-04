@@ -61,8 +61,8 @@ Notes: roles by `eth_accounts` index (1 Fuji deployer and owner, 2 L1 receiver d
 
 | Task PR | Branch | Issue | PR | Red | Green | Authored lines |
 |---|---|---|---|---|---|---|
-| 10a guards | `feature/local-crosschain-deploy` | #243 | #245 | de8284e | 56c48a8, 379f4d0 | about 270 added, 22 removed |
-| 10b scripts | `feature/local-crosschain-up` | #244 | #246 | d447570 | 117cc6a | about 217 added, 2 removed |
+| 10a guards | `feature/local-crosschain-deploy` | #243 | #245 | de8284e | 56c48a8, 379f4d0 | 233 added, 6 removed |
+| 10b scripts | `feature/local-crosschain-up` | #244 | #246 | d447570 | 117cc6a | 254 added, 2 removed |
 
 Tasks 10.1 and 10.2 are marked `[x]`. 10a: `forge.ts` `runForgeScript` (`--unlocked --sender` only after loopback check and `probeAnvil`, fixed argv, `shell: false`), `childEnv` in `load-profile.ts` (task 4.2 deferral closed; R6 allows only the loader), the script diff guard pinned to the queue start commit `3a5c8c4`, and it runs in the `local` project (full history; the shallow `test` job cannot see the base). CI passed on #245 and #246 including `local`. 10b: `deploy.ts` (steps 6 and 7), `up.ts`, `world.ts` returns `roles`, root `demo2:local:up`.
 Notes: `origin/develop` is a single initial commit, so the script diff guard compares with `3a5c8c4` (parent of the first demo-2 commit) and must be dropped at archive. `up` refuses to start when a node already answers on the local RPC ports, leaves detached anvils running on success and kills them on failure.
