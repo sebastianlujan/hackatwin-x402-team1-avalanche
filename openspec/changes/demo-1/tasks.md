@@ -44,23 +44,23 @@ Split seams if a PR passes 400: PR 4 and 5 put fork test in a follow-up; PR 7 sp
 ## Phase 1: Foundation (PRs 1, 2a, 2b, 3)
 
 PR 1
-- [ ] 1.1 RED then GREEN: `KEYSTORE_DIR` schema, `forkStaticsSchema` + `CCHAIN_FORK_BLOCK`, `loadProfile(..., { llm })` in `packages/config/src/{env,profiles,load-profile}.ts`. Test `load-profile.test.ts`: abs path carried, `.demo1` rejected; forkBlock missing/0/-1 rejected; Claude without key names `ANTHROPIC_API_KEY`, scripted passes, model default `claude-sonnet-5-5` (config-profiles). ~90
-- [ ] 1.2 `run.started` gains `llm`: `packages/core/src/domain/agent-event.ts` + codec test (core-domain-ports). ~30
-- [ ] 1.3 `.env.example`, `.gitignore` (`.demo1/`), `pnpm-workspace.yaml` catalog pins (@x402 2.29.0, hono 4.13.16, @hono/node-server 2.1.6, @anthropic-ai/sdk 1.4.0, viem 2.57.16), ADR 0008. ~80
+- [x] 1.1 RED then GREEN: `KEYSTORE_DIR` schema, `forkStaticsSchema` + `CCHAIN_FORK_BLOCK`, `loadProfile(..., { llm })` in `packages/config/src/{env,profiles,load-profile}.ts`. Test `load-profile.test.ts`: abs path carried, `.demo1` rejected; forkBlock missing/0/-1 rejected; Claude without key names `ANTHROPIC_API_KEY`, scripted passes, model default `claude-sonnet-5-5` (config-profiles). ~90
+- [x] 1.2 `run.started` gains `llm`: `packages/core/src/domain/agent-event.ts` + codec test (core-domain-ports). ~30
+- [x] 1.3 `.env.example`, `.gitignore` (`.demo1/`), `pnpm-workspace.yaml` catalog pins (@x402 2.29.0, hono 4.13.16, @hono/node-server 2.1.6, @anthropic-ai/sdk 1.4.0, viem 2.57.16), ADR 0008 (ADR 0008 moved to the scripted-LLM PR). ~80
 
 PR 2a
-- [ ] 2.1 RED: guard tests in `packages/chains` (allowlist when refused, local accounts refuse to sign, cheats refused off loopback anvil). 2.2 GREEN `guarded-clients.ts` (`GuardedClients`, `AnvilCheats`); rebuild `chain-client.ts`. ~150
-- [ ] 2.3 R9 in `test/dependency-rule.ts`: viem client construction banned outside `packages/chains`; ADR 0007. ~100 (chain-client)
+- [x] 2.1 RED: guard tests in `packages/chains` (allowlist when refused, local accounts refuse to sign, cheats refused off loopback anvil). 2.2 GREEN `guarded-clients.ts` (`GuardedClients`, `AnvilCheats`); rebuild `chain-client.ts`. ~150
+- [x] 2.3 R9 in `test/dependency-rule.ts`: viem client construction banned outside `packages/chains`; ADR 0007. ~100 (chain-client)
 
 PR 2b
-- [ ] 2.4 RED: `anvilArgs` (non-http upstream and bad port rejected, host loopback, spaces stay one argv element, `shell: false`). GREEN `anvil.ts`. ~90 (Threat: subprocess)
-- [ ] 2.5 RED: keystore round trip, modes 0700/0600, `wx` no overwrite, output has no 64-hex key; GREEN `keystore/encrypt.ts`, `state.ts`. ~110 (Threat: state files)
-- [ ] 2.6 `scripts/fork.ts` and `fork-block.ts` (no-op at `N`, exit 1 naming `N`, `syncClock`, `demo1.env`); `fork` Vitest project, CI `fork` job with RPC cache `foundry-rpc-43114-<N>`, pinned Foundry, SIGINT stop; scripts in `package.json`. ~120 (fork-environment; live fork)
+- [x] 2.4 RED: `anvilArgs` (non-http upstream and bad port rejected, host loopback, spaces stay one argv element, `shell: false`). GREEN `anvil.ts`. ~90 (Threat: subprocess)
+- [x] 2.5 RED: keystore round trip, modes 0700/0600, `wx` no overwrite, output has no 64-hex key; GREEN `keystore/encrypt.ts`, `state.ts`. ~110 (Threat: state files)
+- [x] 2.6 `scripts/fork.ts` and `fork-block.ts` (no-op at `N`, exit 1 naming `N`, `syncClock`, `demo1.env`); `fork` Vitest project, CI `fork` job with RPC cache `foundry-rpc-43114-<N>`, pinned Foundry, SIGINT stop; scripts in `package.json`. ~120 (fork-environment; live fork)
 
 PR 3
-- [ ] 3.1 RED: funding idempotence unit tests (gas under 1 AVAX, shortfall below T, `approve` bounded, balance >= T, allowance == T, persisted `funding.json`); GREEN `adapters/funding.ts`. ~130
-- [ ] 3.2 `module.ts` (`registerX402Module`, registers only), `tokens.ts` (12 tokens), `scripts/fund.ts`. ~100
-- [ ] 3.3 Fork test: four roles funded, top up second run no-op (live fork). ~50
+- [x] 3.1 RED: funding idempotence unit tests (gas under 1 AVAX, shortfall below T, `approve` bounded, balance >= T, allowance == T, persisted `funding.json`); GREEN `adapters/funding.ts`. ~130
+- [x] 3.2 `module.ts` (`registerX402Module`, registers only), `tokens.ts` (12 tokens), `scripts/fund.ts`. ~100
+- [x] 3.3 Fork test: four roles funded, top up second run no-op (live fork). ~50
 
 ## Phase 2: x402 services (PRs 4, 5, 6)
 
