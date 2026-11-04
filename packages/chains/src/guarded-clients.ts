@@ -16,6 +16,7 @@ import {
 } from 'viem';
 import type { ChainsClient } from './chain-client.ts';
 import { ChainError } from './chain-error.ts';
+import { assertLocalChain, type LocalChain, toViemLocalChain } from './local.ts';
 import { chain as lookup, toViemChain } from './registry.ts';
 import { isLoopback, needsClientVersion, writeRefusal } from './write-guard.ts';
 
@@ -23,6 +24,7 @@ export interface AnvilCheats {
   impersonate(address: Address): Promise<void>;
   stopImpersonating(address: Address): Promise<void>;
   setBalance(address: Address, wei: bigint): Promise<void>;
+  setCode(address: Address, bytecode: Hex): Promise<void>;
   syncClock(nowSeconds: bigint): Promise<bigint>;
   forkBlock(): Promise<bigint | undefined>;
   snapshot(): Promise<Hex>;
@@ -41,7 +43,7 @@ export interface GuardedClients {
 }
 
 export interface GuardedClientsOptions {
-  readonly chain: string;
+  readonly chain: string | LocalChain;
   readonly rpcUrl: string;
   readonly transport?: Transport;
 }
@@ -55,14 +57,36 @@ const READ_METHODS: ReadonlySet<string> = new Set(
 const CHEAT_METHOD = /^(anvil|evm|hardhat)_/;
 const CLOCK_SLACK_SECONDS = 30n;
 
+// Local chains are checked before any RPC call: loopback host (named without path or query) and a safe chain ID.
+function resolveTarget(target: string | LocalChain, rpcUrl: string) {
+  if (typeof target === 'string') {
+    const entry = lookup(target);
+    const viemChain = toViemChain(target);
+    if (entry.status !== 'live') throw new ChainError(`chain "${target}" is not deployed`);
+    return { key: target, entry, viemChain };
+  }
+  if (!isLoopback(rpcUrl)) {
+    throw new ChainError(`local chain "${target.key}" needs a loopback RPC, host "${hostOf(rpcUrl)}" is not`);
+  }
+  assertLocalChain(target);
+  const entry = { chainId: target.chainId, access: target.access } as const;
+  return { key: target.key, entry, viemChain: toViemLocalChain(target) };
+}
+
+const hostOf = (url: string): string => {
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return 'invalid URL';
+  }
+};
+
 export async function createGuardedClients({
-  chain: key,
+  chain: target,
   rpcUrl,
   transport,
 }: GuardedClientsOptions): Promise<GuardedClients> {
-  const entry = lookup(key);
-  const viemChain = toViemChain(key);
-  if (entry.status !== 'live') throw new ChainError(`chain "${key}" is not deployed`);
+  const { key, entry, viemChain } = resolveTarget(target, rpcUrl);
   const via = transport ?? http(rpcUrl, { batch: true, retryCount: 3 });
   const probe = createPublicClient({ chain: viemChain, transport: via });
   const reported = await probe.getChainId();
@@ -171,6 +195,7 @@ export async function createGuardedClients({
         impersonate: (address) => test.impersonateAccount({ address }),
         stopImpersonating: (address) => test.stopImpersonatingAccount({ address }),
         setBalance: (address, wei) => test.setBalance({ address, value: wei }),
+        setCode: (address, bytecode) => test.setCode({ address, bytecode }),
         async syncClock(nowSeconds) {
           const head = (await publicClient.getBlock()).timestamp;
           if (nowSeconds - head <= CLOCK_SLACK_SECONDS) return head;
