@@ -2,6 +2,42 @@
 
 Mode: Strict TDD (forge test; Vitest for TypeScript). Store: hybrid. Chain: stacked-to-main, every PR targets `develop`.
 
+## Batch 2 (PR 5 to PR 8c): tasks 5.1, 6.1, 7.1, 8.1, 8.2 complete (19 of 29 task rows)
+
+PR 7 split at `refund` (7b) and PR 8 split into settle and withdraw (8), callback policy (8b) and `dispatch` (8c); each split has its own issue, later numbering unchanged. `IMessenger` moved from 8.1 to 8c. All PRs target `develop`, stacked from `feature/payment-state-lib`.
+
+| PR | Branch | PR / issue | Authored lines | Commits (tree, red, green) |
+|---|---|---|---|---|
+| 5 | `feature/hub-lanes` | #120 / #119 | 399 | tree aa8de67, red d059d6b, green 26694a0 |
+| 6 | `feature/hub-authorization` | #122 / #121 | 273 | tree 6af5ab0, red a810138, green 0c71b44 |
+| 7 | `feature/hub-pay` | #124 / #123 | 312 | tree 3c98ace, red b0b3dab, green 4afc24e, tree-name fix 573f8c4 |
+| 7b | `feature/hub-refund` | #126 / #125 | 150 | tree 3e894fa, red 5a6b5a6, green be2309d |
+| 8 | `feature/hub-settle` | #128 / #127 | 238 | tree 90c9e4a, red 42ee7c4, green cff2572 |
+| 8b | `feature/hub-callback` | #130 / #129 | 258 | tree eacb273, red 9cf412c, green f4c052f |
+| 8c | `feature/hub-dispatch` | #132 / #131 | 242 | tree 2083280, red 048f89a, green 197fec6 |
+
+All seven PRs: CI green. Full forge suite at the stack tip: 90 tests.
+
+| Task | Test file | Layer | Safety net | RED | GREEN | TRIANGULATE | REFACTOR |
+|---|---|---|---|---|---|---|---|
+| 5.1 | `PaymentHubLanes.t.sol`, `PaymentHubTransition.t.sol` | Unit | N/A (new) | Written, build fails | 16/16 pass | 8 lane cases, every non-table edge, every wrong from-state | None needed |
+| 6.1 | `PaymentHubAuthorization.t.sol` | Unit | N/A (new) | Written, build fails | 11/11 pass | EOA, ERC-1271 approve and reject, replay, wrong nonce, expiry and equal deadline, chain id, hub address | None needed |
+| 7.1 | `PaymentHubPay.t.sol` | Unit | 4/4 harness-stub baseline | Written, 11 of 12 fail at runtime | 12/12 pass | self-pay, broker, cap, spent budget, fee token, zero delta, distinct ids | None needed |
+| 7.1 (7b) | `PaymentHubRefund.t.sol` | Unit | N/A (new) | Written, 6 of 6 fail at runtime | 6/6 pass | past, at and before deadline, 4 wrong states, double refund, other lane | None needed |
+| 8.1 | `PaymentHubSettle.t.sol`, `PaymentHubWithdraw.t.sol` | Unit | N/A (new) | Written, build fails | 9/9 pass | before and at deadline, 4 wrong states, cross chain, late, two tokens | None needed |
+| 8.1 (8b) | `PaymentHubCallback.t.sol` | Unit | N/A (new) | Written, build fails | 5/5 pass | ok, revert, burn gas, starved and funded gas, reentrancy | Test double packed to fit the 100000 gas cap |
+| 8.2 | `PaymentHubDispatch.t.sol` | Unit | N/A (new) | Written, build fails | 8/8 pass | before and at deadline, 4 wrong states, local, late, send revert, short pull, no refund | None needed |
+
+### Batch 2 deviations and notes
+
+- `PaymentHub` stays `abstract` until PR 8c; `test/utils/PaymentHubHarness.sol` stubs unbuilt functions and shrinks each PR.
+- A fully spent budget reads `PaymentHub_Unauthorized` (budget 0 means no authorization); a non-zero budget below the amount reverts `PaymentHub_BudgetExceeded`.
+- `refund`, `settle` and `dispatch` run `_transition` first, so wrong-state errors win over deadline errors.
+- Reentrancy of `dispatch` is asserted in PR 8c, since the function did not exist in 8b.
+- Callback constants: `CALLBACK_GAS` 100000, `GAS_RESERVE` 30000 (design leaves the numbers open).
+- Bulloak tree names cannot contain hyphens either (PR 7 follow-up 573f8c4).
+- Remaining spec items for PR 9: invariants, nightly workflow, gas snapshot.
+
 ## Batch 1 (PR 1a to PR 4): tasks 1.1 to 4.1 complete (14 of 29 task rows)
 
 | PR | Branch | PR / issue | Authored lines | Commits (tree, red, green) |
@@ -50,4 +86,4 @@ Totals: forge 23 tests, Vitest 44 tests in `packages/contracts`.
 
 ## Remaining
 
-Tasks 5.1 onward (PR 5 `feature/hub-lanes` and later). Next PR starts from `feature/payment-state-lib`.
+Task 9.1 onward (PR 9 hub invariants). Next PR starts from `feature/hub-dispatch`.
