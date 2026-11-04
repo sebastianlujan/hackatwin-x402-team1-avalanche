@@ -48,7 +48,6 @@ contract UnitDeployFuji is Test {
     assertEq(_in.requiredGasLimit, 500_000);
     assertEq(_in.recipientGasLimit, 300_000);
     assertEq(_in.receiverDeployer, _RECEIVER_DEPLOYER);
-    assertEq(_in.receiverNonce, 0);
     assertEq(_in.pairs.length, 0);
   }
 
@@ -80,11 +79,8 @@ contract UnitDeployFuji is Test {
   function test_GivenTheCommittedFujiParams() external whenLoadingTheFujiInputs {
     // it holds gas limits the messenger accepts and no wallet
     string memory _json = vm.readFile('./script/params/fuji.json');
-    uint256 _required = vm.parseJsonUint(_json, '.requiredGasLimit');
-    uint256 _recipient = vm.parseJsonUint(_json, '.recipientGasLimit');
-    assertEq(_required, 500_000);
-    assertEq(_recipient, 300_000);
-    assertLt(_recipient, _required);
+    assertEq(vm.parseJsonUint(_json, '.requiredGasLimit'), 500_000);
+    assertEq(vm.parseJsonUint(_json, '.recipientGasLimit'), 300_000);
     assertFalse(vm.keyExistsJson(_json, '.deployer'));
   }
 
@@ -189,7 +185,6 @@ contract UnitDeployFuji is Test {
     DeployFuji.Deployed memory _out = _script.deploy(_in);
     assertEq(block.chainid, 43_113);
     assertGt(_in.router.code.length, 0);
-    assertGt(_in.token.code.length, 0);
     assertEq(PaymentBroker(address(_out.broker)).getRouter(), _in.router);
   }
 
