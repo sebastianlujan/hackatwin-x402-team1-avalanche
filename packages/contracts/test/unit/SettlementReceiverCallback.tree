@@ -1,0 +1,10 @@
+UnitSettlementReceiverCallback
+└── when a payment settles to a merchant contract
+    ├── given a callback that succeeds
+    │   └── it receives the payment id token and amount and emits no CallbackFailed
+    ├── given a callback that reverts or burns all gas
+    │   └── it settles and keeps the credit withdrawable and emits CallbackFailed
+    ├── given a callback that withdraws during the call
+    │   └── it blocks the reentrant withdraw and the delivery settles
+    └── given too little gas to fund the full callback
+        └── it reverts with SettlementReceiver_InsufficientCallbackGas and the full amount reaches the fallback
