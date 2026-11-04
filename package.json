@@ -16,6 +16,7 @@
     "contracts:abi": "pnpm --filter @hackatwin/contracts abi:export",
     "quote": "node packages/pricing/scripts/quote.ts",
     "test:fork": "vitest run --project fork",
+    "test:local": "vitest run --project local",
     "web": "pnpm --filter @hackatwin/web dev",
     "web:demo1": "pnpm run \"/^(demo1:facilitator|demo1:seller|web)$/\"",
     "demo1": "node --env-file-if-exists=.demo1/demo1.env --env-file-if-exists=.env demos/01-x402-twin/buyer-agent/main.ts",

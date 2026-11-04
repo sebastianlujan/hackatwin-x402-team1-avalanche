@@ -11,8 +11,12 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'default',
-          include: ['test/**/*.test.ts', '{apps,packages,demos}/**/*.test.{ts,tsx}'],
-          exclude: ['**/node_modules/**', '**/*.nightly.test.ts', '**/*.fork.test.ts'],
+          include: [
+            'test/**/*.test.ts',
+            '{apps,packages,demos}/**/*.test.{ts,tsx}',
+            'e2e/protocol/src/local/**/*.test.ts',
+          ],
+          exclude: ['**/node_modules/**', '**/*.nightly.test.ts', '**/*.fork.test.ts', '**/*.local.test.ts'],
         },
       },
       {
@@ -20,6 +24,17 @@ export default defineConfig({
         test: {
           name: 'fork',
           include: ['{apps,packages,demos,e2e}/**/*.fork.test.ts'],
+          exclude: ['**/node_modules/**'],
+          testTimeout: 120_000,
+          hookTimeout: 120_000,
+          fileParallelism: false,
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'local',
+          include: ['e2e/protocol/src/local/**/*.local.test.ts'],
           exclude: ['**/node_modules/**'],
           testTimeout: 120_000,
           hookTimeout: 120_000,
