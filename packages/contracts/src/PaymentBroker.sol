@@ -15,6 +15,9 @@ contract PaymentBroker is IPaymentBroker, CCIPReceiver, Ownable2Step {
   uint256 internal constant _PAYLOAD_SIZE = 128;
 
   /// @inheritdoc IPaymentBroker
+  uint256 public constant MIN_RELAY_GAS = 500_000;
+
+  /// @inheritdoc IPaymentBroker
   IPaymentHub public immutable HUB;
 
   /// @notice The payer each allowed source pair is bound to
@@ -68,9 +71,30 @@ contract PaymentBroker is IPaymentBroker, CCIPReceiver, Ownable2Step {
       emit MessageRejected(_messageId, PaymentBroker_PayerMismatch.selector);
       return;
     }
+
+    uint256 _available = gasleft();
+    if (_available < MIN_RELAY_GAS) revert PaymentBroker_InsufficientGas(_available, MIN_RELAY_GAS);
+
+    bytes32 _paymentId;
+    try HUB.pay(_laneId, _onBehalf, _amount, _deadline) returns (bytes32 _id) {
+      _paymentId = _id;
+    } catch (bytes memory _reason) {
+      _statuses[_messageId] = Status.Rejected;
+      emit MessageRejected(_messageId, _selectorOf(_reason));
+      return;
+    }
     _statuses[_messageId] = Status.Accepted;
-    bytes32 _paymentId = HUB.pay(_laneId, _onBehalf, _amount, _deadline);
-    HUB.dispatch(_laneId, _paymentId);
-    emit MessageAccepted(_messageId, _laneId, _paymentId);
+    try HUB.dispatch(_laneId, _paymentId) {
+      emit MessageAccepted(_messageId, _laneId, _paymentId);
+    } catch (bytes memory _reason) {
+      emit DispatchFailed(_messageId, _paymentId, _selectorOf(_reason));
+    }
+  }
+
+  /// @notice The first four bytes of revert data
+  /// @param _revert The revert data
+  /// @return _selector The selector, zero when the data is shorter than four bytes
+  function _selectorOf(bytes memory _revert) internal pure returns (bytes4 _selector) {
+    if (_revert.length >= 4) _selector = bytes4(_revert);
   }
 }

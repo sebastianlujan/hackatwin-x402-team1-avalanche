@@ -46,9 +46,16 @@ test messenger, so it is an upper bound for the hub work.
 | Receiver `receiveTokens`, settled, succeeding callback | 183813 |
 | Receiver `receiveTokens`, rejected | 52065 |
 | Receiver settled then `withdraw` | 108436 |
+| Broker `ccipReceive`, accepted (pay and dispatch, test messenger) | 313450 |
+| Broker `ccipReceive`, rejected (budget exceeded) | 67128 |
 
 The receiver rows include the first cold write of every slot. The documented `recipientGasLimit` is 300000: the settled
 path with a callback must fit it (asserted in `GasSettlementReceiver`), and a delivery that cannot fund the callback cap
 (about 131.6k gas left at the callback) reverts so ICTT sends the whole amount to the fallback recipient.
+
+The broker rows include the test messenger, so the real ICTT send adds to the accepted row. The documented CCIP
+`gasLimit` for the broker is 800000 (asserted in `GasPaymentBroker`), and `MIN_RELAY_GAS` is 500000: a message that
+reaches the hub calls with less gas left reverts `PaymentBroker_InsufficientGas` (re-executable) instead of being
+recorded as a final `Rejected`.
 
 Nothing in this project broadcasts transactions.
