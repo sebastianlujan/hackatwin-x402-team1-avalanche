@@ -1,7 +1,10 @@
 import { chain, type LiveChain } from '@hackatwin/chains';
 import { type Container, Ports } from '@hackatwin/core';
 import { createGuardedOracle } from '@hackatwin/pricing';
+import { createFacilitatorApp } from './adapters/facilitator-app.ts';
 import { createFundingChain, fund } from './adapters/funding.ts';
+import { assertSdkAddresses } from './adapters/sdk-addresses.ts';
+import { createX402Facilitator } from './adapters/x402-facilitator.ts';
 import { Tokens } from './tokens.ts';
 
 const live = (key: string): LiveChain => chain(key) as LiveChain;
@@ -60,5 +63,14 @@ export function registerX402Module(container: Container): void {
           gasFor: roles,
         }),
     };
+  });
+  container.register(Tokens.FacilitatorApp, (resolver) => {
+    const cchain = live('cchain');
+    assertSdkAddresses({
+      permit2: contract(cchain, 'permit2').address,
+      proxy: contract(cchain, 'x402Proxy').address,
+    });
+    const { facilitator } = resolver.resolve(Tokens.Accounts);
+    return createFacilitatorApp(createX402Facilitator(resolver.resolve(Tokens.Fork), facilitator), console.error);
   });
 }

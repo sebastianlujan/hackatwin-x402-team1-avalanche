@@ -1,6 +1,7 @@
 import type { GuardedClients } from '@hackatwin/chains';
 import type { Profile } from '@hackatwin/config';
 import { type AgentEvent, type ChainClient, token } from '@hackatwin/core';
+import type { Hono } from 'hono';
 import type { LocalAccount } from 'viem';
 import type { FundingReport } from './adapters/funding.ts';
 import type { DemoState, Role } from './state.ts';
@@ -15,7 +16,7 @@ export const Tokens = {
   Events: token<(event: AgentEvent) => void>('Events'),
   Funding: token<{ fund(): Promise<FundingReport> }>('Funding'),
   Registration: token<unknown>('Registration'),
-  FacilitatorApp: token<unknown>('FacilitatorApp'),
+  FacilitatorApp: token<Hono>('FacilitatorApp'),
   SellerApp: token<unknown>('SellerApp'),
   Buyer: token<unknown>('Buyer'),
   Balances: token<unknown>('Balances'),

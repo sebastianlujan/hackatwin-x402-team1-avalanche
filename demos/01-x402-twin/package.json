@@ -14,6 +14,11 @@
     "@hackatwin/config": "workspace:*",
     "@hackatwin/core": "workspace:*",
     "@hackatwin/pricing": "workspace:*",
-    "viem": "catalog:"
+    "@hono/node-server": "catalog:",
+    "@x402/core": "catalog:",
+    "@x402/evm": "catalog:",
+    "hono": "catalog:",
+    "viem": "catalog:",
+    "zod": "catalog:"
   }
 }

@@ -25,6 +25,15 @@ describe('registerX402Module', () => {
     expect([...arbitrum.calls, ...base.calls, ...arbitrum.writes, ...base.writes]).toEqual([]);
   });
 
+  it('builds the facilitator app over the guarded fork client', async () => {
+    const container = createContainer();
+    container.register(Tokens.Accounts, () => ({ facilitator: account(3) }) as never);
+    container.register(Tokens.Fork, () => ({ wallet: () => ({}) }) as never);
+    registerX402Module(container);
+    const response = await container.resolve(Tokens.FacilitatorApp).request('/supported');
+    expect(await response.json()).toMatchObject({ kinds: [{ scheme: 'exact', network: 'eip155:43114' }] });
+  });
+
   it('lets a child container override the oracle', () => {
     const container = createContainer();
     container.register(Tokens.ReadChains, () => ({ arbitrum: new FakeChainClient(), base: new FakeChainClient() }));

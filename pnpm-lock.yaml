@@ -191,6 +191,9 @@ catalogs:
     '@docusaurus/types':
       specifier: 3.10.2
       version: 3.10.2
+    '@hono/node-server':
+      specifier: 2.1.6
+      version: 2.1.6
     '@mdx-js/react':
       specifier: 3.1.1
       version: 3.1.1
@@ -200,9 +203,18 @@ catalogs:
     '@vitest/coverage-v8':
       specifier: 5.1.0
       version: 5.1.0
+    '@x402/core':
+      specifier: 2.29.0
+      version: 2.29.0
+    '@x402/evm':
+      specifier: 2.29.0
+      version: 2.29.0
     clsx:
       specifier: 2.1.1
       version: 2.1.1
+    hono:
+      specifier: 4.13.16
+      version: 4.13.16
     husky:
       specifier: 9.1.7
       version: 9.1.7
@@ -313,9 +325,24 @@ importers:
       '@hackatwin/pricing':
         specifier: workspace:*
         version: link:../../packages/pricing
+      '@hono/node-server':
+        specifier: 'catalog:'
+        version: 2.1.6(hono@4.13.16)
+      '@x402/core':
+        specifier: 'catalog:'
+        version: 2.29.0
+      '@x402/evm':
+        specifier: 'catalog:'
+        version: 2.29.0(typescript@7.0.2)
+      hono:
+        specifier: 'catalog:'
+        version: 4.13.16
       viem:
         specifier: 'catalog:'
         version: 2.57.16(typescript@7.0.2)(zod@4.6.7)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
 
   demos/02-l1-crosschain: {}
 
@@ -1767,6 +1794,12 @@ packages:
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
 
+  '@hono/node-server@2.1.6':
+    resolution: {integrity: sha512-p/KH9MnfNcsm3sR6x4lNgm5j+QN4Et8srKredl9DZfXiyZ1UQ3aQ2YVpFLbqktYN5JI+DB+VZFKM2PqE5hLKjQ==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      hono: ^4 || ^5.0.0-0
+
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
 
@@ -2957,6 +2990,12 @@ packages:
 
   '@webassemblyjs/wast-printer@1.14.1':
     resolution: {integrity: sha512-kPSSXE6De1XOR820C90RIo2ogvZG+c3KiHzqUoO/F34Y2shGzesfqv7o57xrxovZJH/MetF5UjroJ/R/3isoiw==}
+
+  '@x402/core@2.29.0':
+    resolution: {integrity: sha512-fkS0JqVwHgczteDlwItLRipOlIzm28U9HWLvYnYpnNbfmepoBT/4ux7LjrR0xGD51JHoC8/r+Qo7uCfoAQYeuw==}
+
+  '@x402/evm@2.29.0':
+    resolution: {integrity: sha512-Gk4bJ6WoRR3jeT2+vERSPMSkSr1nRL5kjtVh14uoynRm8y+fGFH8xmvlGzuwKT0liA6OLjdr9xjZtN8i0WYk9g==}
 
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -4321,6 +4360,10 @@ packages:
 
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
+
+  hono@4.13.16:
+    resolution: {integrity: sha512-AOLOEhvrV+iH92xXCnFr/5+3KjPKcI3xP63XJtX5spAnkznPdHijlIsUTpi7/9EhWqrTCekw5c5zh1K+YsVw7A==}
+    engines: {node: '>=16.9.0'}
 
   hpack.js@2.1.6:
     resolution: {integrity: sha512-zJxVehUdMGIKsRaNt7apO2Gqp0BdqW5yaiGHXXmbpvxgBYVZnAql+BJb4RO5ad2MgpbZKn5G6nMnegrH1FcNYQ==}
@@ -9474,6 +9517,10 @@ snapshots:
     dependencies:
       '@hapi/hoek': 9.3.0
 
+  '@hono/node-server@2.1.6(hono@4.13.16)':
+    dependencies:
+      hono: 4.13.16
+
   '@iconify/types@2.0.0': {}
 
   '@iconify/utils@3.1.7':
@@ -10671,6 +10718,21 @@ snapshots:
     dependencies:
       '@webassemblyjs/ast': 1.14.1
       '@xtuc/long': 4.2.2
+
+  '@x402/core@2.29.0':
+    dependencies:
+      zod: 4.6.7
+
+  '@x402/evm@2.29.0(typescript@7.0.2)':
+    dependencies:
+      '@x402/core': 2.29.0
+      viem: 2.57.16(typescript@7.0.2)(zod@4.6.7)
+      zod: 4.6.7
+    transitivePeerDependencies:
+      - bufferutil
+      - mppx
+      - typescript
+      - utf-8-validate
 
   '@xtuc/ieee754@1.2.0': {}
 
@@ -12194,6 +12256,8 @@ snapshots:
   hoist-non-react-statics@3.3.2:
     dependencies:
       react-is: 16.13.1
+
+  hono@4.13.16: {}
 
   hpack.js@2.1.6:
     dependencies:
