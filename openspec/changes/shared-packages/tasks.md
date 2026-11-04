@@ -49,16 +49,16 @@ Start state: `ChainClient.read(call)` returns a bare value; fake is name-keyed; 
 End state: block-pinned port, arg-aware fake, secret-free loader, ADR 0006.
 Rollback: revert the squash commit; nothing else consumes the port yet.
 
-- [ ] 1.1 Port delta (D1). Update `packages/core/src/ports/chain-client.ts`: `ReadOptions`, `ReadResult<T>`, `blockNumber()`, `read` returns `{ value, blockNumber }`. Add compile checks to `packages/core/src/ports/ports.test.ts`. About 35 lines.
+- [x] 1.1 Port delta (D1). Update `packages/core/src/ports/chain-client.ts`: `ReadOptions`, `ReadResult<T>`, `blockNumber()`, `read` returns `{ value, blockNumber }`. Add compile checks to `packages/core/src/ports/ports.test.ts`. About 35 lines.
   - Satisfies: core-domain-ports "Pinned read", "Unpinned read", "Seven ports / Pinned read in the port".
   - Acceptance: `pnpm --filter @hackatwin/core test` passes `ports.test.ts`; `pnpm typecheck` clean.
-- [ ] 1.2 Arg-aware fake (D2). Update `packages/core/src/testing/fake-chain-client.ts`: scripts keyed `address:fn(args)`, bigint-safe; `Error` values reject; `calls` records requested block; misses name address, function, args. Add `packages/core/src/testing/fakes.test.ts` cases. About 55 lines.
+- [x] 1.2 Arg-aware fake (D2). Update `packages/core/src/testing/fake-chain-client.ts`: scripts keyed `address:fn(args)`, bigint-safe; `Error` values reject; `calls` records requested block; misses name address, function, args. Add `packages/core/src/testing/fakes.test.ts` cases. About 55 lines.
   - Satisfies: core-domain-ports "Scripted fake", "Same function, different args", "Unscripted call", "Requested block recorded", "Fake in production code".
   - Acceptance: `fakes.test.ts` covers each named scenario; dependency-rule test still passes.
-- [ ] 1.3 RPC loader (D4, SD2, SD3). Add `loadRpcUrls(needed, env = process.env)` to `packages/config/src/load-profile.ts`; add comment-line-above-each-RPC-variable to `.env.example` (value empty, comment holds registry default); add `packages/config/src/env-example.test.ts`; add `load-profile.test.ts` cases. About 45 lines.
+- [x] 1.3 RPC loader (D4, SD2, SD3). Add `loadRpcUrls(needed, env = process.env)` to `packages/config/src/load-profile.ts`; add comment-line-above-each-RPC-variable to `.env.example` (value empty, comment holds registry default); add `packages/config/src/env-example.test.ts`; add `load-profile.test.ts` cases. About 45 lines.
   - Satisfies: config-profiles "No secrets needed" (passes with empty env, SD2), "Env overrides default", "Missing RPC" (`TWINPAY_L1_RPC_URL` named, SD2), "Invalid URL" (variable named, never value), "Env coverage" (SD3), "Single reader".
   - Acceptance: `pnpm --filter @hackatwin/config test` passes; `test/dependency-rule.test.ts` shows `process.env` only in `load-profile.ts`.
-- [ ] 1.4 ADR and README row. Add `docs/adr/0006-block-pinned-chain-reads.md` and its README table row. About 40 lines.
+- [x] 1.4 ADR and README row. Add `docs/adr/0006-block-pinned-chain-reads.md` and its README table row. About 40 lines.
   - Satisfies: design D1 (ADR 0006).
   - Acceptance: README row links the file; markdown lint (if configured) passes.
 
@@ -71,16 +71,16 @@ End state: six validated JSON files, typed lookups, four addresses promoted with
 Rollback: revert; remove `packages/chains/registry`, `registry.ts`, and the four `decisions.md` rows.
 Depends on: PR 1.
 
-- [ ] 2.1 Promote four addresses in `docs/decisions.md` Verified facts (Arbitrum ARGt, USD₮0, Base sequencer feed, Fuji TeleporterRegistry) with source and date; re-check the Chainlink entries on the official page and cite it. Orchestrator-verified values: ARGt `0x59863989d080B22476DB95656d0C3CC18be92214`, USD₮0 `0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9`, ARS/USD feed `0xaf992a6ad37b4878cF9c31f082B178860e268cE3`, sequencer `0xBCF85224fc0756B9Fa45aA7892530B47e10b6433`. About 30 lines.
+- [x] 2.1 Promote four addresses in `docs/decisions.md` Verified facts (Arbitrum ARGt, USD₮0, Base sequencer feed, Fuji TeleporterRegistry) with source and date; re-check the Chainlink entries on the official page and cite it. Orchestrator-verified values: ARGt `0x59863989d080B22476DB95656d0C3CC18be92214`, USD₮0 `0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9`, ARS/USD feed `0xaf992a6ad37b4878cF9c31f082B178860e268cE3`, sequencer `0xBCF85224fc0756B9Fa45aA7892530B47e10b6433`. About 30 lines.
   - Satisfies: chain-registry "Promoted entries", "Unverified address rejected".
   - Acceptance: every registry address has a row in Verified facts; TeleporterRegistry re-read on Fuji before promotion (read-only).
-- [ ] 2.2 Registry schema and loader (D3). `packages/chains/src/registry.ts` with zod 4.6.7 schema, `listChains()`, `chain(key)` (throws `ChainError` naming the key), `toViemChain(key)` (throws for planned L1), EIP-55 checksum validation, `source` rule (`https://` or `read: `). `packages/chains/package.json`, `tsconfig`, vitest wiring. About 120 lines.
+- [x] 2.2 Registry schema and loader (D3). `packages/chains/src/registry.ts` with zod 4.6.7 schema, `listChains()`, `chain(key)` (throws `ChainError` naming the key), `toViemChain(key)` (throws for planned L1), EIP-55 checksum validation, `source` rule (`https://` or `read: `). `packages/chains/package.json`, `tsconfig`, vitest wiring. About 120 lines.
   - Satisfies: chain-registry "Six chains load" (SD1), "Unknown chain", "Checksum enforced", "L1 not deployed".
   - Acceptance: `chains/src/registry.test.ts` covers six entries (five with chain ID and viem chain; L1 has neither and `toViemChain('twinpay-l1')` throws naming the key), unknown key, bad checksum, missing source, L1 lookups return `undefined`.
-- [ ] 2.3 Six JSON files: `cchain` (43114, `fork-only`), `fuji`, `sepolia` (with `ccip.chainSelector` string), `twinpay-l1` (`planned`, `contracts: {}`), `arbitrum`, `base` (`arsUsdFeed.heartbeatSeconds: 86400`), with `checks` per design. About 150 lines.
+- [x] 2.3 Six JSON files: `cchain` (43114, `fork-only`), `fuji`, `sepolia` (with `ccip.chainSelector` string), `twinpay-l1` (`planned`, `contracts: {}`), `arbitrum`, `base` (`arsUsdFeed.heartbeatSeconds: 86400`), with `checks` per design. About 150 lines.
   - Satisfies: chain-registry "Six chains load", "Promoted entries", "Unverified address rejected"; price-oracles heartbeat source.
   - Acceptance: `registry.test.ts` scans `docs/decisions.md` Verified facts and fails on any registry address absent from it; heartbeat 86400 test passes.
-- [ ] 2.4 Docs/exports. Package `index.ts` export of registry API. About 20 lines.
+- [x] 2.4 Docs/exports. Package `index.ts` export of registry API. About 20 lines.
   - Acceptance: `pnpm typecheck` clean.
 
 Parallel: 2.1 first (data), then 2.2 and 2.3 can proceed together; 2.4 last.
@@ -92,13 +92,13 @@ End state: `createChainClient` asserting chain ID and enforcing write policy.
 Rollback: revert; remove `chain-client.ts`, `write-guard.ts`, viem catalog entry.
 Depends on: PR 2.
 
-- [ ] 3.1 Add viem `2.57.16` exact to the `pnpm-workspace.yaml` catalog and `chains` package. Typecheck on TypeScript 7.0.2 first; on failure apply the TS 5.x fallback for `chains` and `pricing` and record it. About 10 lines plus lockfile (excluded).
+- [x] 3.1 Add viem `2.57.16` exact to the `pnpm-workspace.yaml` catalog and `chains` package. Typecheck on TypeScript 7.0.2 first; on failure apply the TS 5.x fallback for `chains` and `pricing` and record it. About 10 lines plus lockfile (excluded).
   - Satisfies: design D13.
   - Acceptance: `pnpm typecheck` result recorded in PR body (TS 7 pass or fallback note).
-- [ ] 3.2 Write policy (D5). `packages/chains/src/write-guard.ts`: `read-only` access and IDs 42161, 8453 never write; 43114 writes only via `CCHAIN_FORK_RPC_URL` that is loopback and reports `anvil` in `web3_clientVersion`; `CCHAIN_RPC_URL` stays read-only. About 90 lines with `write-guard.test.ts`.
+- [x] 3.2 Write policy (D5). `packages/chains/src/write-guard.ts`: `read-only` access and IDs 42161, 8453 never write; 43114 writes only via `CCHAIN_FORK_RPC_URL` that is loopback and reports `anvil` in `web3_clientVersion`; `CCHAIN_RPC_URL` stays read-only. About 90 lines with `write-guard.test.ts`.
   - Satisfies: chain-client "Write on Base", "Public RPC", "Loopback not anvil", "Local anvil", "Read-only mainnets", "43114 anvil guard".
   - Acceptance: `write-guard.test.ts` covers all four named scenarios.
-- [ ] 3.3 Adapter (D1, D5, D13). `packages/chains/src/chain-client.ts`: async `createChainClient({ chain, rpcUrl, account? })`, asserts `eth_chainId`, `http(url, { batch: true, retryCount: 3 })`, unpinned reads pinned to head, returns `{ value, blockNumber }`. About 150 lines with `chain-client.test.ts` using `custom()` transport.
+- [x] 3.3 Adapter (D1, D5, D13). `packages/chains/src/chain-client.ts`: async `createChainClient({ chain, rpcUrl, account? })`, asserts `eth_chainId`, `http(url, { batch: true, retryCount: 3 })`, unpinned reads pinned to head, returns `{ value, blockNumber }`. About 150 lines with `chain-client.test.ts` using `custom()` transport.
   - Satisfies: chain-client "Adapter implements the port / Pinned read", "Write on Base" (transport sees no send), "Local anvil".
   - Acceptance: `chain-client.test.ts` passes; `custom()` transport records zero `eth_sendRawTransaction` on refused writes; chain-ID mismatch rejects.
 
@@ -111,10 +111,10 @@ End state: Web3 Secret Storage v3 decrypt in a subpath, banned inside `packages/
 Rollback: revert; remove `chains/src/keystore/` and R7.
 Depends on: PR 3.
 
-- [ ] 4.1 Keystore (D6). `packages/chains/src/keystore/` (scrypt, pbkdf2, AES-128-CTR on `node:crypto`, viem `keccak256` MAC, `timingSafeEqual`), `loadKeystoreAccount(name, passwordFile)` exported at `@hackatwin/chains/keystore` (package `exports` subpath). About 150 lines with `keystore.test.ts`.
+- [x] 4.1 Keystore (D6). `packages/chains/src/keystore/` (scrypt, pbkdf2, AES-128-CTR on `node:crypto`, viem `keccak256` MAC, `timingSafeEqual`), `loadKeystoreAccount(name, passwordFile)` exported at `@hackatwin/chains/keystore` (package `exports` subpath). About 150 lines with `keystore.test.ts`.
   - Satisfies: chain-client "Public test vector", "Keystores decrypted in roots only".
   - Acceptance: public Web3 Secret Storage test vectors (scrypt and pbkdf2) decrypt to the known key; wrong password throws `KeystoreError` naming the keystore and not the password.
-- [ ] 4.2 Rule R7. Add R7 to `test/dependency-rule.ts` (no import of `@hackatwin/chains/keystore` under `packages/*`) and cases to `test/dependency-rule.test.ts`. About 50 lines.
+- [x] 4.2 Rule R7. Add R7 to `test/dependency-rule.ts` (no import of `@hackatwin/chains/keystore` under `packages/*`) and cases to `test/dependency-rule.test.ts`. About 50 lines.
   - Satisfies: chain-client "Import boundary".
   - Acceptance: a fixture importing the subpath from `packages/*` fails; a root script import passes.
 
@@ -127,10 +127,10 @@ End state: `pnpm chains:verify` runs secret-free with zero config.
 Rollback: revert; remove `verify-registry.ts`, `scripts/verify.ts`, root script.
 Depends on: PR 3 (4 not required; may land in order).
 
-- [ ] 5.1 `verifyRegistry(chains, connect)` in `packages/chains/src/verify-registry.ts` (D3 section): one block per live chain, adapter-only `codeSize`, `checks` with `@name` and string `args`/`expect`; failures print `FAIL <chain> <name> <address>`, planned L1 prints `SKIP`; never prints RPC URL; exit code 1 after all entries. About 170 lines with `verify-registry.test.ts`.
+- [x] 5.1 `verifyRegistry(chains, connect)` in `packages/chains/src/verify-registry.ts` (D3 section): one block per live chain, adapter-only `codeSize`, `checks` with `@name` and string `args`/`expect`; failures print `FAIL <chain> <name> <address>`, planned L1 prints `SKIP`; never prints RPC URL; exit code 1 after all entries. About 170 lines with `verify-registry.test.ts`.
   - Satisfies: registry-verification "All healthy", "Optional L1 skipped", "Missing contract", "One of many fails", "RPC down".
   - Acceptance: `verify-registry.test.ts` covers the five scenarios with fakes, including a rejected `connect`, `blockNumber`, and `read` marking every affected entry.
-- [ ] 5.2 Root `packages/chains/scripts/verify.ts` wiring `loadRpcUrls` and `createChainClient`; root `package.json` script `chains:verify`. About 60 lines plus a nightly `verify.nightly.test.ts` stub excluded from `pnpm test` (project defined in PR 6; stub added there if absent).
+- [x] 5.2 Root `packages/chains/scripts/verify.ts` wiring `loadRpcUrls` and `createChainClient`; root `package.json` script `chains:verify`. About 60 lines plus a nightly `verify.nightly.test.ts` stub excluded from `pnpm test` (project defined in PR 6; stub added there if absent).
   - Satisfies: T4.3 Done-when (Step 0 repeated, non-zero exit).
   - Acceptance: `pnpm chains:verify` live exits 0 and prints no RPC URL (manual, recorded in PR body); source scan shows no `process.env` outside config.
 
