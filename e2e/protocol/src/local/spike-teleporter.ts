@@ -50,9 +50,13 @@ const artifact = (path: string): { bytecode: Hex; deployedBytecode: Hex } => {
   return { bytecode: json.bytecode.object, deployedBytecode: json.deployedBytecode.object };
 };
 
+// viem's public client types omit the node-only eth_accounts call.
+interface Rpc {
+  request(args: { method: 'eth_accounts' }): Promise<Address[]>;
+}
 const unlocked = (address: Address): Account => ({ address, type: 'json-rpc' }) as Account;
 const firstAccount = async (c: GuardedClients): Promise<Account> => {
-  const [address] = await c.public.request({ method: 'eth_accounts' });
+  const [address] = await (c.public as unknown as Rpc).request({ method: 'eth_accounts' });
   if (!address) throw new Error('anvil exposes no unlocked accounts');
   return unlocked(address);
 };
