@@ -12,6 +12,7 @@ import { SafeCast } from '@openzeppelin/contracts/utils/math/SafeCast.sol';
 
 import { IPaymentHub, Id } from 'src/interfaces/IPaymentHub.sol';
 import { LaneParamsLib } from 'src/libraries/LaneParamsLib.sol';
+import { PaymentCallbackLib } from 'src/libraries/PaymentCallbackLib.sol';
 import { PaymentStateLib } from 'src/libraries/PaymentStateLib.sol';
 
 /// @title PaymentHub
@@ -158,6 +159,14 @@ abstract contract PaymentHub is IPaymentHub, Ownable2Step, EIP712, Nonces, Reent
     uint256 _escrow = _payment.amount;
     _payment.amount = 0;
     _credits[_lane.token][_lane.merchant] += _escrow;
+
+    address _merchant = _lane.merchant;
+    if (PaymentCallbackLib.hasCallback(_merchant)) {
+      if (!PaymentCallbackLib.canFund()) revert PaymentHub_InsufficientCallbackGas();
+      if (!PaymentCallbackLib.notify(_merchant, _paymentId, _lane.token, _escrow)) {
+        emit CallbackFailed(_paymentId, _merchant);
+      }
+    }
   }
 
   /// @inheritdoc IPaymentHub

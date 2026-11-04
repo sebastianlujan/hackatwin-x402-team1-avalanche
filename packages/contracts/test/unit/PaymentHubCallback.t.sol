@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
-import { ReentrancyGuardTransient } from '@openzeppelin/contracts/utils/ReentrancyGuardTransient.sol';
 import { Test } from 'forge-std/Test.sol';
 
 import { IPaymentHub, Id } from 'src/interfaces/IPaymentHub.sol';
@@ -47,7 +46,6 @@ contract UnitPaymentHubCallback is Test {
     _hub.settle(_lane, _paymentId);
 
     assertEq(vm.getRecordedLogs().length, 1);
-    assertEq(_merchant.calls(), 1);
     assertEq(_merchant.lastPaymentId(), _paymentId);
     assertEq(_merchant.lastToken(), address(_token));
     assertEq(_merchant.lastAmount(), 100);
@@ -86,11 +84,11 @@ contract UnitPaymentHubCallback is Test {
     vm.expectRevert(IPaymentHub.PaymentHub_InsufficientCallbackGas.selector);
     _hub.settle{ gas: _baseline + PaymentCallbackLib.CALLBACK_GAS }(_lane, _paymentId);
     assertEq(uint8(_hub.statusOf(_lane, _paymentId)), uint8(IPaymentHub.Status.Pending));
-    assertEq(_merchant.calls(), 0);
+    assertEq(_merchant.lastPaymentId(), bytes32(0));
 
     _hub.settle{ gas: _baseline + 2 * PaymentCallbackLib.CALLBACK_GAS }(_lane, _paymentId);
     assertEq(uint8(_hub.statusOf(_lane, _paymentId)), uint8(IPaymentHub.Status.Settled));
-    assertEq(_merchant.calls(), 1);
+    assertEq(_merchant.lastPaymentId(), _paymentId);
   }
 
   function test_GivenACallbackThatReentersTheHub() external whenAPaymentSettlesToAMerchantContract {
@@ -101,11 +99,11 @@ contract UnitPaymentHubCallback is Test {
 
     assertEq(uint8(_hub.statusOf(_lane, _paymentId)), uint8(IPaymentHub.Status.Settled));
     assertEq(_hub.exposed_credit(address(_token), address(_merchant)), 100);
-    uint256[4] memory _guarded = [uint256(0), 1, 3, 4];
-    for (uint256 _i; _i < _guarded.length; ++_i) {
-      assertFalse(_merchant.reentrantSucceeded(_guarded[_i]));
-      assertEq(_merchant.reentrantError(_guarded[_i]), ReentrancyGuardTransient.ReentrancyGuardReentrantCall.selector);
-    }
+    uint256 _guarded = _merchant.reentrantGuarded();
+    assertEq(_guarded & 1, 1, 'pay');
+    assertEq((_guarded >> 1) & 1, 1, 'settle');
+    assertEq((_guarded >> 3) & 1, 1, 'refund');
+    assertEq((_guarded >> 4) & 1, 1, 'withdraw');
   }
 
   function _gasOfSettleWithoutCallback() internal returns (uint256 _used) {

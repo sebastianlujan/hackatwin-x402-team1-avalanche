@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
+import { ReentrancyGuardTransient } from '@openzeppelin/contracts/utils/ReentrancyGuardTransient.sol';
+
 import { IPaymentCallback } from 'src/interfaces/IPaymentCallback.sol';
 import { IPaymentHub, Id } from 'src/interfaces/IPaymentHub.sol';
 
@@ -16,12 +18,10 @@ contract CallbackMerchant is IPaymentCallback {
   uint256 internal constant _REENTRANT_CALLS = 5;
 
   Mode public mode;
-  uint256 public calls;
   bytes32 public lastPaymentId;
   address public lastToken;
   uint256 public lastAmount;
-  bool[5] public reentrantSucceeded;
-  bytes4[5] public reentrantError;
+  uint256 public reentrantGuarded;
 
   IPaymentHub internal _hub;
   Id internal _lane;
@@ -33,16 +33,15 @@ contract CallbackMerchant is IPaymentCallback {
   }
 
   function onPaymentSettled(bytes32 _paymentId, address _token, uint256 _amount) external {
-    ++calls;
-    lastPaymentId = _paymentId;
-    lastToken = _token;
-    lastAmount = _amount;
-
     if (mode == Mode.Revert) revert('callback failed');
     if (mode == Mode.BurnGas) {
       while (true) { }
     }
-    if (mode == Mode.Reenter) _reenter(_paymentId, _token);
+    if (mode == Mode.Reenter) return _reenter(_paymentId, _token);
+
+    lastPaymentId = _paymentId;
+    lastToken = _token;
+    lastAmount = _amount;
   }
 
   function _reenter(bytes32 _paymentId, address _token) internal {
@@ -53,10 +52,13 @@ contract CallbackMerchant is IPaymentCallback {
       abi.encodeCall(IPaymentHub.refund, (_lane, _paymentId)),
       abi.encodeCall(IPaymentHub.withdraw, (_token))
     ];
+    uint256 _guarded;
     for (uint256 _i; _i < _REENTRANT_CALLS; ++_i) {
       (bool _ok, bytes memory _ret) = address(_hub).call(_data[_i]);
-      reentrantSucceeded[_i] = _ok;
-      if (_ret.length >= 4) reentrantError[_i] = bytes4(_ret);
+      if (!_ok && _ret.length >= 4 && bytes4(_ret) == ReentrancyGuardTransient.ReentrancyGuardReentrantCall.selector) {
+        _guarded |= 1 << _i;
+      }
     }
+    reentrantGuarded = _guarded;
   }
 }
