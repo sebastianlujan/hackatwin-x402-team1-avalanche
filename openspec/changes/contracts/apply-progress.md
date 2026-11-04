@@ -2,6 +2,47 @@
 
 Mode: Strict TDD (forge test; Vitest for TypeScript). Store: hybrid. Chain: stacked-to-main, every PR targets `develop`.
 
+## Batch 3 (PR 9 to PR 12b): tasks 9.1, 10.1, 10.2, 11.1, 12.1 complete (24 of 33 task rows)
+
+Every task row split at a seam, each with its own issue, later numbering unchanged. All PRs target `develop`, stacked from `feature/hub-dispatch`.
+
+| PR | Branch | PR / issue | Authored lines | Commits (tree, red, green) |
+|---|---|---|---|---|
+| 9 | `feature/hub-invariants` | #134 / #133 | 335 | red 4b8ae91, green 55aeaed, nightly 4cb6847 |
+| 9b | `feature/hub-gas` | #136 / #135 | 124 | tree 54feb9f, red bfb4769, green 48b7fa7 |
+| 10 | `feature/icm-messenger` | #138 / #137 | 249 | tree 8c87ad5, red 032250f, green 785ed61 |
+| 10b | `feature/icm-messenger-send` | #140 / #139 | 263 | tree 878e875, red a1de96e, green d1aeb40, ADR 59445f1 |
+| 11 | `feature/settlement-receiver` | #142 / #141 | 349 | tree c8dfeef, red d756bd3, green 24ba986 |
+| 11b | `feature/settlement-receiver-outcome` | #144 / #143 | 257 | tree c39e867, red 64cc231, green e8b8f6e |
+| 12 | `feature/settlement-receiver-callback` | #146 / #145 | 273 | tree 7925db2, red edb7934, green a291587 |
+| 12b | `feature/settlement-receiver-invariants` | #148 / #147 | 334 | tree 48d7930, red c622001, green 19504ae |
+
+All eight PRs: CI green (12 checks each). Full forge suite at the stack tip: 138 tests.
+
+| Task | Test file | Layer | Safety net | RED | GREEN | TRIANGULATE | REFACTOR |
+|---|---|---|---|---|---|---|---|
+| 9.1 (PR 9) | `test/invariants/PaymentHub.invariants.t.sol` | Invariant | N/A (new) | Written, build fails (handler missing) | 2 invariants, 64 runs, 0 reverts; deep 512 runs | 2 tokens, 8 lanes, warps, retries; 3 mutations killed (over-credit, refund keeps Pending, refund selector dropped) | None needed |
+| 9.1 (PR 9b) | `test/gas/PaymentHubGas.t.sol` | Gas | N/A (new) | `forge snapshot --check` exits 1 (no snapshot) | 6/6 pass, check exits 0 | pay local and cross, settle, dispatch, refund, withdraw | None needed |
+| 10.1 (PR 10) | `test/unit/IcttMessenger.t.sol` | Unit | N/A (new) | Written, build fails | 4/4 pass | 4 gas-limit pairs, 6 zero addresses, zero id | Docs and imports |
+| 10.1, 10.2 (PR 10b) | `test/unit/IcttMessengerSend.t.sol` | Unit | N/A (new) | Written, build fails | 6/6 pass | non-hub, foreign destination and token, zero, input fields, approval residue, one event, revert; approve plus one mutation killed | None needed |
+| 11.1 (PR 11) | `test/unit/SettlementReceiverValidation.t.sol` | Unit | N/A (new) | Written, build fails | 8/8 pass | 5 mismatches, order, source before payload, 4 bad payloads, 3 used statuses; 2 mutations killed | None needed |
+| 11.1 (PR 11b) | `test/unit/SettlementReceiverOutcome.t.sol` | Unit | 8/8 PR 11 baseline | Written, build fails | 16/16 pass | allow, remove, zero, non-owner, settle, pull fail, reject, fallback sweep; 2 mutations killed | None needed |
+| 12.1 (PR 12) | `test/unit/SettlementReceiver{Withdraw,Callback}.t.sol` | Unit | 16/16 baseline | Written, build fails | 19/19 pass | credit, two merchants, no credit, ok, revert and burn gas, reentrant withdraw, starved and funded gas; 3 mutations killed | None needed |
+| 12.1 (PR 12b) | `test/invariants/SettlementReceiver.invariants.t.sol`, `test/gas/SettlementReceiverGas.t.sol` | Invariant and gas | N/A (new) | Written, build fails (handler missing); snapshot check exits 1 | 3 invariants, 64 runs, 0 reverts; deep 512 runs; 4/4 gas | 3 merchants, valid, invalid and duplicate deliveries; 3 mutations killed; coverage assert caught a vacuous run | Handler forces one rejection |
+
+### Batch 3 deviations and notes
+
+- Splits: PR 9 into invariants (9) and gas (9b), because the full unit measured 459 authored lines; PR 10 into configuration (10) and `send` plus ADR 0010 (10b), because the full messenger measured 463 and the lintspec rules (`inheritdoc`) needed the interface getters; PR 11 at step 8 instead of the named reject-path seam (11 = steps 1 to 7, 11b = allowlist, settle and reject), because a receiver with a settle path but no reject path has no defined behavior for a non-allowlisted merchant; PR 12 into withdraw and callback (12) and invariants plus gas bound (12b).
+- Contracts live in `src/` (not `src/contracts/`) like `PaymentHub`.
+- The invariant suites have no Bulloak tree: Bulloak scaffolds `test_` functions only. Gas suites do.
+- Nightly runs the existing `deep` profile (depth 200, runs 512), not depth 100: the profile already existed in `foundry.toml`.
+- `forge snapshot --check --tolerance 1 --match-path 'test/gas/*'` runs in the `contracts` CI job; the assertions never hard-code gas numbers except the documented `recipientGasLimit` 300000 ceiling for the settled path with a callback.
+- `TestTokenTransferrer` models both sides: `sendAndCall` pulls the amount and sweeps unused allowance to the fallback (home side), `deliver` approves the receiver, calls it and sweeps what it did not pull or the whole amount on a revert (remote side).
+- The receiver reuses `PaymentCallbackLib` (`CALLBACK_GAS` 100000, `GAS_RESERVE` 30000) and the `CallbackMerchant` double (new `WithdrawFromCaller` mode).
+- A payload whose merchant word has dirty upper bits reverts `SettlementReceiver_InvalidPayload` (extra over the spec's 64 byte rule).
+- The README gas table documents hub and receiver gas; the documented `recipientGasLimit` is 300000 and the callback cap needs about 131.6k gas left.
+- The task counts earlier read "of 29"; the tasks file has 33 rows.
+
 ## Batch 2 (PR 5 to PR 8c): tasks 5.1, 6.1, 7.1, 8.1, 8.2 complete (19 of 29 task rows)
 
 PR 7 split at `refund` (7b) and PR 8 split into settle and withdraw (8), callback policy (8b) and `dispatch` (8c); each split has its own issue, later numbering unchanged. `IMessenger` moved from 8.1 to 8c. All PRs target `develop`, stacked from `feature/payment-state-lib`.
@@ -86,4 +127,4 @@ Totals: forge 23 tests, Vitest 44 tests in `packages/contracts`.
 
 ## Remaining
 
-Task 9.1 onward (PR 9 hub invariants). Next PR starts from `feature/hub-dispatch`.
+Task 13.1 onward (PR 13 PaymentBroker). Next PR starts from `feature/settlement-receiver-invariants`.
