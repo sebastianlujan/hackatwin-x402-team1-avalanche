@@ -17,6 +17,8 @@ const names: Record<string, string> = {
   'demos/02-l1-crosschain': '@hackatwin/demo-02-l1-crosschain',
   'demos/03-agentic-crosschain-commerce': '@hackatwin/demo-03-agentic-crosschain-commerce',
   'e2e/protocol': '@hackatwin/e2e-protocol',
+  'apps/web': '@hackatwin/web',
+  'packages/ui': '@hackatwin/ui',
 };
 
 const make = (files: Record<string, string> = {}, manifests: Record<string, Manifest> = {}): Snapshot => ({
@@ -179,6 +181,56 @@ describe('dependency rule', () => {
     expect(rules(make(chains, { 'packages/chains/package.json': { name: '@hackatwin/chains' } }))).toEqual([]);
     expect(rules(make({ 'packages/pricing/src/x.test.ts': 'const c = createPublicClient({});' }))).toEqual([]);
     expect(rules(make({ 'e2e/protocol/src/x.test.ts': 'const c = createWalletClient({});' }))).toEqual([]);
+  });
+
+  it('R10 fails when a presentational file imports a hook, wagmi, react-query or core', () => {
+    const hook = { 'apps/web/src/components/organisms/a.tsx': "import { useState } from 'react';" };
+    expect(rules(make(hook))).toEqual(['R10']);
+    const namespace = { 'packages/ui/src/atoms/a.tsx': "import * as React from 'react';\nconst s = React.useRef(1);" };
+    expect(rules(make(namespace))).toEqual(['R10']);
+    for (const specifier of ['wagmi', '@tanstack/react-query', '@hackatwin/core']) {
+      expect(rules(make({ 'apps/web/src/components/a.tsx': `import { x } from '${specifier}';` }))).toEqual(['R10']);
+    }
+    const atom = { 'packages/ui/src/atoms/Badge.tsx': "import type { ReactNode } from 'react';" };
+    expect(rules(make(atom))).toEqual([]);
+    const test = { 'apps/web/src/components/a.test.tsx': "import { useState } from 'react';" };
+    expect(rules(make(test))).toEqual([]);
+    const container = { 'apps/web/src/containers/a.tsx': "import { useState } from 'react';" };
+    expect(rules(make(container))).toEqual([]);
+  });
+
+  it('R11 fails when a client file imports server-side packages, the chains root or the server dir', () => {
+    const client = (specifier: string, file = 'apps/web/src/containers/a.tsx'): Record<string, string> => ({
+      [file]: `'use client';\nimport { x } from '${specifier}';`,
+    });
+    for (const specifier of [
+      '@hackatwin/config',
+      '@hackatwin/chains',
+      '@hackatwin/chains/keystore',
+      '@hackatwin/agent-kit',
+      '@hackatwin/pricing',
+      '@hackatwin/demo-01-x402-twin/module',
+      'server-only',
+    ]) {
+      expect(rules(make(client(specifier)))).toContain('R11');
+    }
+    expect(rules(make(client('../server/root.ts')))).toEqual(['R11']);
+    expect(rules(make(client('@hackatwin/chains/registry')))).toEqual([]);
+    const commented = {
+      'apps/web/src/containers/a.tsx': '// note\n"use client";\nimport x from "@hackatwin/pricing";',
+    };
+    expect(rules(make(commented))).toContain('R11');
+  });
+
+  it('R11 leaves server files, late directives and test files alone', () => {
+    const server = { 'apps/web/src/server/a.ts': "import 'server-only';\nimport { x } from '@hackatwin/chains';" };
+    expect(rules(make(server))).toEqual([]);
+    const late = {
+      'apps/web/src/containers/a.tsx': "import 'react';\n'use client';\nimport x from '@hackatwin/pricing';",
+    };
+    expect(rules(make(late))).toEqual([]);
+    const test = { 'apps/web/src/containers/a.test.tsx': "'use client';\nimport x from '@hackatwin/pricing';" };
+    expect(rules(make(test))).toEqual([]);
   });
 
   it('ignores files outside any workspace', () => {

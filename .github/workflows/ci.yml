@@ -83,6 +83,7 @@ jobs:
       pull-requests: read
     outputs:
       docs: ${{ steps.filter.outputs.docs }}
+      web: ${{ steps.filter.outputs.web }}
       demo-3: ${{ steps.filter.outputs.demo-3 }}
       ts: ${{ steps.filter.outputs.ts }}
       contracts: ${{ steps.filter.outputs.contracts }}
@@ -105,6 +106,11 @@ jobs:
                 - .github/workflows/ci.yml
               - docs/**
               - apps/docs/**
+            web:
+              - *root
+              - apps/web/**
+              - packages/**
+              - demos/01-*/**
             demo-3:
               - *root
               - demos/01-*/**
@@ -323,11 +329,35 @@ jobs:
           path: apps/docs/build
           retention-days: 7
 
+  web-build:
+    name: web build
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      ANTHROPIC_API_KEY: hackatwin-sentinel-anthropic
+      KEYSTORE_DIR: /tmp/hackatwin-sentinel-keystore
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @hackatwin/web build
+      - name: Scan the client bundle for secrets
+        run: node apps/web/scripts/scan-static.ts
+
   ci-gate:
     name: ci-gate
     if: always()
     needs:
-      [pr-title, commits, branch-name, lint, changes, biome, typecheck, test, fork, contracts, contracts-dry-run, docs-build]
+      [pr-title, commits, branch-name, lint, changes, biome, typecheck, test, fork, contracts, contracts-dry-run, docs-build, web-build]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions: {}

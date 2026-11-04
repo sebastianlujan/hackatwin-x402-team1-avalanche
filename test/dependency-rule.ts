@@ -16,7 +16,7 @@ export interface Snapshot {
 }
 
 export interface Violation {
-  readonly rule: 'R1' | 'R2' | 'R3' | 'R4' | 'R5' | 'R6' | 'R7' | 'R8' | 'R9';
+  readonly rule: 'R1' | 'R2' | 'R3' | 'R4' | 'R5' | 'R6' | 'R7' | 'R8' | 'R9' | 'R10' | 'R11';
   readonly file: string;
   readonly specifier: string;
   readonly reason: string;
@@ -30,6 +30,13 @@ const LOADER = 'packages/config/src/load-profile.ts';
 const KEYSTORE_DIR = 'packages/chains/src/keystore';
 const PRICING_SRC = 'packages/pricing/src/';
 const CHAINS_SRC = 'packages/chains/src/';
+const WEB_SERVER = 'apps/web/src/server/';
+const HOOK_IMPORT = /\bimport\s*(?:type\s+)?\{[^}]*\buse(?:[A-Z]\w*)?\b[^}]*\}\s*from\s*['"]react['"]/;
+const HOOK_MEMBER = /\bReact\s*\.\s*use(?:[A-Z]\w*)?\b/;
+const USE_CLIENT = /^\s*(?:(?:\/\/[^\n]*|\/\*[\s\S]*?\*\/)\s*)*(['"])use client\1/;
+const PRESENTATIONAL_BANNED = /^(?:wagmi|@tanstack\/react-query|@hackatwin\/core)(?:\/|$)/;
+const CLIENT_BANNED =
+  /^(?:@hackatwin\/(?:config|agent-kit|pricing)|@hackatwin\/chains|server-only)(?:\/(?!registry$).*)?$/;
 const VIEM_CLIENT = /\bcreate(?:Public|Wallet|Test)Client\b/;
 
 export function readSnapshot(root: string): Snapshot {
@@ -143,6 +150,20 @@ export function checkDependencyRule(snapshot: Snapshot): Violation[] {
       }
       if ((specifier === 'process' || specifier === 'node:process') && file !== LOADER) {
         add('R6', file, specifier, 'only the config loader reads the environment');
+      }
+    }
+    if (!isTestFile(file)) {
+      const presentational = file.startsWith('apps/web/src/components/') || file.startsWith('packages/ui/src/');
+      const isClient = USE_CLIENT.test(source);
+      if (presentational && (HOOK_IMPORT.test(source) || HOOK_MEMBER.test(source)))
+        add('R10', file, 'react', 'presentational files import no hook');
+      for (const specifier of extractSpecifiers(source)) {
+        if (presentational && PRESENTATIONAL_BANNED.test(specifier))
+          add('R10', file, specifier, 'presentational files import no wagmi, react-query or core');
+        if (!isClient) continue;
+        const reachesServer = specifier.startsWith('.') && posix.join(dirname(file), specifier).startsWith(WEB_SERVER);
+        if (CLIENT_BANNED.test(specifier) || demoId(specifier) !== undefined || reachesServer)
+          add('R11', file, specifier, 'client files import no server-side package, chains root or server file');
       }
     }
     const client = VIEM_CLIENT.exec(source)?.[0];
