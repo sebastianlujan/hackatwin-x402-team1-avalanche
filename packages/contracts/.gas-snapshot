@@ -1,0 +1,6 @@
+GasPaymentHub:test_GivenACreditedMerchant() (gas: 75835)
+GasPaymentHub:test_GivenAFirstPaymentOnACrossChainLane() (gas: 92761)
+GasPaymentHub:test_GivenAFirstPaymentOnALocalLane() (gas: 92795)
+GasPaymentHub:test_GivenAPendingCrossChainPayment() (gas: 210513)
+GasPaymentHub:test_GivenAPendingLocalPayment() (gas: 54652)
+GasPaymentHub:test_GivenAnExpiredPendingPayment() (gas: 41394)
