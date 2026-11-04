@@ -184,6 +184,7 @@ contract UnitDeployFuji is Test {
     // it deploys against the real router and USDC
     if (!vm.envOr('FUJI_FORK', false)) vm.skip(true);
     string memory _real = vm.readFile('../chains/registry/fuji.json');
+    vm.makePersistent(address(_script));
     vm.createSelectFork(vm.parseJsonString(_real, '.rpc.public'));
     DeployFuji.Inputs memory _in = _script.load(_REGISTRY, _PARAMS);
     DeployFuji.Deployed memory _out = _script.deploy(_in);
