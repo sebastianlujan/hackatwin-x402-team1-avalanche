@@ -7,7 +7,12 @@ export interface EventChannel {
   until<T>(work: Promise<T>): AsyncGenerator<AgentEvent, T>;
 }
 
-export function createEventChannel(): EventChannel {
+export interface EventChannelOptions {
+  readonly simulated?: 'local-crosschain';
+}
+
+// With `simulated`, every emitted event is stamped with the marker.
+export function createEventChannel({ simulated }: EventChannelOptions = {}): EventChannel {
   const queue: AgentEvent[] = [];
   let wake: (() => void) | undefined;
   const poke = (): void => {
@@ -17,7 +22,7 @@ export function createEventChannel(): EventChannel {
   };
   return {
     emit(event) {
-      queue.push(event);
+      queue.push(simulated === undefined ? event : { ...event, simulated });
       poke();
     },
     async *until<T>(work: Promise<T>): AsyncGenerator<AgentEvent, T> {
