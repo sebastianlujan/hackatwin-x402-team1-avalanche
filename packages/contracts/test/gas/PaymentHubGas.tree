@@ -1,0 +1,14 @@
+GasPaymentHub
+└── when the hub hot paths run on fresh state
+    ├── given a first payment on a local lane
+    │   └── it pays and the gas lands in the snapshot
+    ├── given a first payment on a cross chain lane
+    │   └── it pays and the gas lands in the snapshot
+    ├── given a pending local payment
+    │   └── it settles and the gas lands in the snapshot
+    ├── given a pending cross chain payment
+    │   └── it dispatches and the gas lands in the snapshot
+    ├── given an expired pending payment
+    │   └── it refunds and the gas lands in the snapshot
+    └── given a credited merchant
+        └── it withdraws and the gas lands in the snapshot
