@@ -71,7 +71,7 @@ contract DeployL1 is Deploy {
       FujiRecord(_paramAddress(_record, _FUJI, 'messenger'), _paramAddress(_record, _FUJI, 'predictedReceiver'));
   }
 
-  /// @notice Check the nonce and the prediction, deploy the receiver, then check its address
+  /// @notice Check the nonce and the prediction, deploy the receiver as the deployer, offer ownership, check the address
   function deploy(Inputs memory _in) public returns (Deployed memory _out) {
     uint256 _nonce = vm.getNonce(_in.deployer);
     if (_nonce != _in.receiverNonce) revert Deploy_NonceMismatch(_in.receiverNonce, _nonce);
@@ -83,11 +83,12 @@ contract DeployL1 is Deploy {
     vm.startBroadcast(_in.deployer);
     // The ICTT remote contract is its own ERC-20, so the token equals the transferrer
     _out.receiver = new SettlementReceiver(
-      _in.transferrer, _in.sourceBlockchainId, _in.originTransferrer, _in.fuji.messenger, _in.transferrer, _in.owner
+      _in.transferrer, _in.sourceBlockchainId, _in.originTransferrer, _in.fuji.messenger, _in.transferrer, _in.deployer
     );
     for (uint256 _i; _i < _in.merchants.length; ++_i) {
       _out.receiver.setMerchant(_in.merchants[_i], true);
     }
+    _offerOwnership(address(_out.receiver), _in.deployer, _in.owner);
     vm.stopBroadcast();
 
     if (address(_out.receiver) != _predicted) revert Deploy_AddressMismatch(_predicted, address(_out.receiver));
@@ -105,6 +106,7 @@ contract DeployL1 is Deploy {
     string memory _obj = 'l1';
     vm.serializeUint(_obj, 'chainId', block.chainid);
     vm.serializeAddress(_obj, 'deployer', _in.deployer);
+    vm.serializeAddress(_obj, 'pendingOwner', _pendingOwnerOf(address(_out.receiver)));
     _json = vm.serializeAddress(_obj, 'receiver', address(_out.receiver));
   }
 }

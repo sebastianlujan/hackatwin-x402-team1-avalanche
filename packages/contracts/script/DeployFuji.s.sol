@@ -85,11 +85,11 @@ contract DeployFuji is Deploy {
     _in.pairs = _pairs(_registryDir, _params);
   }
 
-  /// @notice Deploy and configure the Fuji contracts from the inputs
+  /// @notice Deploy as the deployer, configure, then offer ownership to the owner (who must accept it)
   function deploy(Inputs memory _in) public returns (Deployed memory _out) {
     _out.predictedReceiver = vm.computeCreateAddress(_in.receiverDeployer, _in.receiverNonce);
     vm.startBroadcast(_in.deployer);
-    _out.hub = new PaymentHub(_in.owner);
+    _out.hub = new PaymentHub(_in.deployer);
     _out.messenger = new IcttMessenger(
       address(_out.hub),
       IERC20TokenTransferrer(_in.transferrer),
@@ -102,10 +102,12 @@ contract DeployFuji is Deploy {
       _in.fallbackRecipient
     );
     _out.hub.enableMessenger(address(_out.messenger));
-    _out.broker = new PaymentBroker(_in.router, address(_out.hub), _in.owner);
+    _out.broker = new PaymentBroker(_in.router, address(_out.hub), _in.deployer);
     for (uint256 _i; _i < _in.pairs.length; ++_i) {
       _out.broker.setAllowedSender(_in.pairs[_i].selector, _in.pairs[_i].sender, _in.pairs[_i].payer);
     }
+    _offerOwnership(address(_out.hub), _in.deployer, _in.owner);
+    _offerOwnership(address(_out.broker), _in.deployer, _in.owner);
     vm.stopBroadcast();
     _out.pairsConfigured = _in.pairs.length;
     if (_out.pairsConfigured == 0) console.log('No broker pair in params: allowlist not configured');
@@ -121,6 +123,7 @@ contract DeployFuji is Deploy {
     string memory _obj = 'fuji';
     vm.serializeUint(_obj, 'chainId', block.chainid);
     vm.serializeAddress(_obj, 'deployer', _in.deployer);
+    vm.serializeAddress(_obj, 'pendingOwner', _pendingOwnerOf(address(_out.hub)));
     vm.serializeAddress(_obj, 'hub', address(_out.hub));
     vm.serializeAddress(_obj, 'broker', address(_out.broker));
     vm.serializeAddress(_obj, 'messenger', address(_out.messenger));
