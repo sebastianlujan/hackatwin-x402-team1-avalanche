@@ -23,6 +23,9 @@ feat(agent-kit): add x402 client adapter
 Refs #12
 ```
 
+`pnpm install` sets up a `commit-msg` hook that runs commitlint with the same config as CI, so a bad message is
+rejected locally. CI still checks every commit, including ones made with `--no-verify`.
+
 ## Pull requests
 
 English, one issue each, small. The body follows the template and says `Closes #12`. Squash merge into `develop`.
