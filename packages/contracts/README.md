@@ -58,4 +58,48 @@ The broker rows include the test messenger, so the real ICTT send adds to the ac
 reaches the hub calls with less gas left reverts `PaymentBroker_InsufficientGas` (re-executable) instead of being
 recorded as a final `Rejected`.
 
+## Deploy dry-runs
+
+`script/DeployFuji.s.sol` (hub, messenger, broker) and `script/DeployL1.s.sol` (receiver) read chain facts from
+`../chains/registry` and choices from `script/params/<chainKey>.json` (ADR 0011). Directories are overridable with
+`CHAIN_REGISTRY_DIR`, `DEPLOY_PARAMS_DIR` and `DEPLOY_DEPLOYMENTS_DIR`; dry-runs use `test/fixtures`:
+
+```bash
+export CHAIN_REGISTRY_DIR=./test/fixtures/registry DEPLOY_PARAMS_DIR=./test/fixtures/params
+export DEPLOY_DEPLOYMENTS_DIR=./test/fixtures/deployments
+anvil --chain-id 100001 &
+forge script script/DeployL1.s.sol:DeployL1 --fork-url http://127.0.0.1:8545
+FUJI_FORK=1 forge test --match-contract UnitDeployFuji   # reads Fuji through the registry RPC, sends nothing
+```
+
+The broadcast gate stays closed: no script or workflow enables it, and signers are keystores selected with
+`--account <keystore-name>` (never a key in the environment or an argument). Real params arrive with the testnet deploy
+(T7.12): until then the committed params files lack the deployer, owner and fallback recipient and a real run reverts
+`Deploy_ParamNotFound`, and it reverts `Registry_EntryNotFound` until the L1 and its ICTT pair are registered (M6).
+
+## Verification templates
+
+Reuse the build settings (solc `0.8.30`, `cancun`, optimizer on with 10000 runs). Constructor arguments come from
+`cast abi-encode` with the same values the script used.
+
+Fuji, Snowtrace (served by Routescan; its Etherscan-compatible read API answered `getabi` for the Fuji USDC contract on
+2026-11-04, a verification submit has not been run):
+
+```bash
+forge verify-contract <address> src/PaymentHub.sol:PaymentHub --chain-id 43113 \
+  --verifier-url 'https://api.routescan.io/v2/network/testnet/evm/43113/etherscan' --etherscan-api-key verifyContract \
+  --compiler-version 0.8.30 --evm-version cancun --optimizer-runs 10000 \
+  --constructor-args "$(cast abi-encode 'constructor(address)' <owner>)"
+```
+
+L1, Builder Hub verifier (UNVERIFIED: the L1 and its explorer do not exist yet, so this command has never run;
+confirm the verifier URL in Builder Hub before use):
+
+```bash
+forge verify-contract <address> src/SettlementReceiver.sol:SettlementReceiver --chain-id <l1-chain-id> \
+  --verifier custom --verifier-url '<builder-hub-verifier-url>' --verifier-api-key <builder-hub-api-key> \
+  --compiler-version 0.8.30 --evm-version cancun --optimizer-runs 10000 \
+  --constructor-args "$(cast abi-encode 'constructor(address,bytes32,address,address,address,address)' <args>)"
+```
+
 Nothing in this project broadcasts transactions.
