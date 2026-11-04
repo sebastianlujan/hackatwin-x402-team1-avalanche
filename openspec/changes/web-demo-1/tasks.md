@@ -115,32 +115,32 @@ Seams if a forecast overruns: P2 (CI job after rules), P4 (replay source after h
 - [x] 11.1 Organisms: timeline, 402/pay/200 strip, quote panel ("market rate, not official"), balances and fork hashes with no `<a>`; CSS Modules; scenario markup tests.
 - [x] 11.2 Wire into `app/demo-1/page.tsx` and container; stream-drop and replay-control checks; rerun checkpoint 7.6.
 
-## P12 web-guided-path (`feature/web-guided-path`)
+## P12 web-guided-path (`feature/web-guided-path`; delivered as P12a keys and P12b static screens)
 
-- [ ] 12.1 Tests first: `TALK_PATH` equals PLAN section 7, page file per path, `nextPath` (next, previous, ends, ignored in input), copy scan, static screens with a throwing `fetch` stub.
-- [ ] 12.2 `lib/talk-path.ts`, `containers/PresenterKeys`, `PathNav`, `content/copy.ts`, static screens, `/demo-2` and `/demo-3` placeholders.
+- [x] 12.1 Tests first: `TALK_PATH` equals PLAN section 7, page file per path, `nextPath` (next, previous, ends, ignored in input), copy scan, static screens with a throwing `fetch` stub.
+- [x] 12.2 `lib/talk-path.ts`, `containers/PresenterKeys`, `PathNav`, `content/copy.ts`, static screens, `/demo-2` and `/demo-3` placeholders.
 
 ## P13 web-landing (`feature/web-landing`)
 
-- [ ] 13.1 Tests: hero, manifesto, cards, tagline, FAQ, "Built on Avalanche" text link, one-column rule under 768px.
-- [ ] 13.2 D22 organisms and `LandingTemplate`; copy in `copy.ts`.
+- [x] 13.1 Tests: hero, manifesto, cards, tagline, FAQ, "Built on Avalanche" text link, one-column rule under 768px.
+- [x] 13.2 D22 organisms and `LandingTemplate`; copy in `copy.ts`.
 
-## P14 web-identity (`feature/web-identity`)
+## P14 web-identity (`feature/web-identity`; delivered as P14a reader and P14b card)
 
-- [ ] 14.1 `demos/01-x402-twin/identity-card.ts` (`readDemo1Identities`) plus tests: live, fork down labeled "offline" with last-known ids.
-- [ ] 14.2 Identity card organism and page wiring.
+- [x] 14.1 `demos/01-x402-twin/identity-card.ts` (`readDemo1Identities`) plus tests: live, fork down labeled "offline" with last-known ids.
+- [x] 14.2 Identity card organism and page wiring.
 
 ## P15 web-wallet (`feature/web-wallet`)
 
-- [ ] 15.1 Tests in `packages/chains`: `txUrl` fuji, undefined for `cchain` and bad hash, `ChainError` unknown key; subpath exports only registry and `txUrl`, no `node:` import; root and registry JSON unchanged.
-- [ ] 15.2 `src/explorer.ts`, `src/browser.ts`, `package.json` export `./registry`.
-- [ ] 15.3 `containers/wallet-provider.tsx`; test config `[43113]`, injected only.
+- [x] 15.1 Tests in `packages/chains`: `txUrl` fuji, undefined for `cchain` and bad hash, `ChainError` unknown key; subpath exports only registry and `txUrl`, no `node:` import; root and registry JSON unchanged.
+- [x] 15.2 `src/explorer.ts`, `src/browser.ts`, `package.json` export `./registry`.
+- [x] 15.3 `containers/wallet-provider.tsx`; test config `[43113]`, injected only.
 
-## P16 web-first-tx (`feature/web-first-tx`)
+## P16 web-first-tx (`feature/web-first-tx`; delivered as P16a logic and P16b screen)
 
-- [ ] 16.1 Tests: `buildFirstTx` self-transfer of `10n ** 15n`; `firstTxState` (happy, rejected, no balance, mainnet, switch rejected, no wallet); no link before a hash.
-- [ ] 16.2 Test (added): pre-sent unset shows "not set yet" and no anchor (`specs/first-fuji-tx/spec.md:86-90`); set renders a `txUrl` link in every state. Hash lands after rehearsal.
-- [ ] 16.3 `lib/first-tx.ts`, `lib/first-tx-state.ts`, `app/path/first-tx/page.tsx` in `WalletProvider`.
+- [x] 16.1 Tests: `buildFirstTx` self-transfer of `10n ** 15n`; `firstTxState` (happy, rejected, no balance, mainnet, switch rejected, no wallet); no link before a hash.
+- [x] 16.2 Test (added): pre-sent unset shows "not set yet" and no anchor (`specs/first-fuji-tx/spec.md:86-90`); set renders a `txUrl` link in every state. Hash lands after rehearsal.
+- [x] 16.3 `lib/first-tx.ts`, `lib/first-tx-state.ts`, `app/path/first-tx/page.tsx` in `WalletProvider`.
 
 ## PLAN Done-when map
 

@@ -57,4 +57,33 @@ Checkpoint (11.2, rerun of 7.6): local anvil fork, scripted run over SSE (15 fra
 ## Open
 
 - 2.5 acceptance (failing build fails the gate, docs-only skips `web-build`) is true by construction of the `changes` filter and `ci-gate` needs; no experiment was run.
-- Next batch: P12 onward (guided path, landing, identity, wallet, first tx).
+- 2.5 stays open by design (no experiment run).
+
+## Batch 3 (P11e, P12 to P16)
+
+Stacked on `feature/web-demo-1`, one linear queue, all PRs target `develop`. Authored lines exclude `pnpm-lock.yaml`.
+
+| Unit | Branch | PR (issue) | Lines | Tasks |
+|---|---|---|---|---|
+| P11e | feature/web-demo-1-format | #204 (#203) | 270 | formatter, decision copy, balance layout (review of the batch 2 screenshot) |
+| P12a | feature/web-guided-path | #206 (#205) | 256 | 12.1, 12.2 keys and order |
+| P12b | feature/web-guided-path-screens | #208 (#207) | 271 | 12.1, 12.2 static screens, placeholders, copy scan |
+| P13 | feature/web-landing | #210 (#209) | 344 | 13.1, 13.2 |
+| P14a | feature/demo-1-identity-reader | #212 (#211) | 148 | 14.1 |
+| P14b | feature/web-identity | #214 (#213) | 312 | 14.2 |
+| P15 | feature/web-wallet | #216 (#215) | 133 | 15.1, 15.2, 15.3 |
+| P16a | feature/web-first-tx-state | #218 (#217) | 167 | 16.1 (logic), 16.2 data |
+| P16b | feature/web-first-tx | #220 (#219) | 293 + 12 | 16.2, 16.3 |
+
+## Batch 3 deviations
+
+- P11e: amounts use `lib/format.ts` (two decimals from one unit up, two to four below, thousands separators, USD as `$0.01`, rate as `1 USD = 1658.4 ARGt`); full precision stays in `title`. The Demo 1 grid stacks under 1024px because the side column overflowed at exactly 768px.
+- P12: `/path/identity` and `/path/first-tx` were labeled placeholders in P12b until P14b and P16b replaced them. The `TALK_PATH` test parses the Screen column of `docs/PLAN.md`.
+- P14: the registry read is `readDemo1Identities` plus injected `readIdentityCard`; any read failure (including an unregistered role) shows the committed last-known ids as "offline"; `content/last-known.ts` is empty until rehearsal ("not set yet"). Verified on a local fork: live ids 1850 and 1851 with the keystore owners, rejection with the fork stopped.
+- P15: `createWalletConfig` casts the registry chain to the web app's `viem` `Chain` (two viem installs because the web pins TypeScript 5.9.3).
+- P16: wagmi 3 renamed `useAccount` to `useConnection`; the container uses `useConnection`, `useConnectors` and the `mutate` forms. The pre-sent hash (`content/pre-sent.ts`) is unset until rehearsal. A follow-up commit in P16b aligns the talk screens and the path nav to the page grid (found in the final screenshots).
+- Screenshots (headless Chrome, local): demo1-v2.png, landing.png, path.png, first-tx.png under the session scratchpad.
+
+## Open
+
+- 2.5 acceptance (no experiment run); pre-sent Fuji hash and last-known identity ids after rehearsal; O4 logos; O13.
