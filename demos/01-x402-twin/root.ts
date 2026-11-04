@@ -1,7 +1,7 @@
 import { createChainClient, createGuardedClients, type GuardedClients } from '@hackatwin/chains';
 import { loadKeystoreAccount } from '@hackatwin/chains/keystore';
 import { loadProfile, type Profile } from '@hackatwin/config';
-import { type Container, createContainer } from '@hackatwin/core';
+import { type AgentEvent, type Container, createContainer } from '@hackatwin/core';
 import { registerX402Module } from './module.ts';
 import { fileState, ROLES, type Role, STATE_DIR } from './state.ts';
 import { Tokens } from './tokens.ts';
@@ -13,8 +13,15 @@ export interface Root {
 }
 
 // Every Demo 1 process starts here: profile, keystores, guarded fork client, then the module.
-export async function composeRoot({ readChains = false }: { readonly readChains?: boolean } = {}): Promise<Root> {
-  const profile = loadProfile('cchain-fork');
+export interface RootOptions {
+  readonly readChains?: boolean;
+  // The LLM the process will use: `claude` needs ANTHROPIC_API_KEY, checked before any chain call.
+  readonly llm?: 'claude' | 'scripted';
+  readonly events?: (event: AgentEvent) => void;
+}
+
+export async function composeRoot({ readChains = false, llm, events }: RootOptions = {}): Promise<Root> {
+  const profile = loadProfile('cchain-fork', undefined, llm === undefined ? {} : { llm });
   const { env } = profile;
   const dir = env.KEYSTORE_DIR ?? STATE_DIR;
   const accounts = Object.fromEntries(
@@ -37,6 +44,7 @@ export async function composeRoot({ readChains = false }: { readonly readChains?
   container.register(Tokens.Fork, () => fork);
   if (reads !== undefined) container.register(Tokens.ReadChains, () => reads);
   container.register(Tokens.State, () => fileState(dir));
+  if (events !== undefined) container.register(Tokens.Events, () => events);
   registerX402Module(container);
   return { container, profile, fork };
 }

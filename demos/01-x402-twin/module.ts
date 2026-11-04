@@ -1,14 +1,18 @@
-import { Erc8004Identity } from '@hackatwin/agent-kit';
+import { BudgetPolicy, createX402Engine, Erc8004Identity, X402PaymentGateway } from '@hackatwin/agent-kit';
 import { chain, type LiveChain } from '@hackatwin/chains';
 import { type Container, Ports } from '@hackatwin/core';
 import { createGuardedOracle } from '@hackatwin/pricing';
 import { HTTPFacilitatorClient } from '@x402/core/server';
+import { toClientEvmSigner } from '@x402/evm';
+import type { LocalAccount } from 'viem';
+import { createBalances } from './adapters/balances.ts';
 import { createFacilitatorApp } from './adapters/facilitator-app.ts';
 import { createFundingChain, fund } from './adapters/funding.ts';
-import { type RoleIdentity, registerRoles } from './adapters/registration.ts';
+import { type RoleIdentity, readIdentities, registerRoles } from './adapters/registration.ts';
 import { assertSdkAddresses } from './adapters/sdk-addresses.ts';
 import { createSellerApp } from './adapters/seller-app.ts';
-import { createX402Facilitator } from './adapters/x402-facilitator.ts';
+import { createX402Facilitator, NETWORK } from './adapters/x402-facilitator.ts';
+import { createBuyerTools } from './buyer-agent/tools.ts';
 import { PORTS } from './ports.ts';
 import { Tokens } from './tokens.ts';
 
@@ -110,5 +114,59 @@ export function registerX402Module(container: Container): void {
       register: () =>
         registerRoles(state, { agent: identityFor(accounts.agent), seller: identityFor(accounts.seller) }),
     };
+  });
+  container.register(Ports.AgentPolicy, (resolver) => {
+    return new BudgetPolicy(resolver.resolve(Tokens.Config).budget, resolver.resolve(Tokens.Events));
+  });
+  container.register(Tokens.Balances, (resolver) => {
+    const accounts = resolver.resolve(Tokens.Accounts);
+    return createBalances({
+      chain: resolver.resolve(Tokens.Fork).chainClient(),
+      token: contract(live('cchain'), 'argt').address,
+      agent: accounts.agent.address,
+      seller: accounts.seller.address,
+    });
+  });
+  container.register(Tokens.Buyer, (resolver) => {
+    const [profile, fork, accounts, events, policy] = [
+      resolver.resolve(Tokens.Config),
+      resolver.resolve(Tokens.Fork),
+      resolver.resolve(Tokens.Accounts),
+      resolver.resolve(Tokens.Events),
+      resolver.resolve(Ports.AgentPolicy),
+    ];
+    const sellerAgentId = readIdentities(resolver.resolve(Tokens.State)).seller;
+    if (sellerAgentId === undefined) throw new Error('the seller is not registered: run pnpm demo1:register');
+    const cchain = live('cchain');
+    const asset = contract(cchain, 'argt').address;
+    const chainClient = fork.chainClient(accounts.agent);
+    const engine = createX402Engine({
+      signer: toClientEvmSigner(fork.wallet(accounts.agent).account as LocalAccount, fork.public),
+      network: NETWORK,
+    });
+    const rating = new Erc8004Identity({
+      chain: chainClient,
+      identity: contract(cchain, 'erc8004Identity').address,
+      reputation: contract(cchain, 'erc8004Reputation').address,
+      signer: accounts.agent.address,
+    });
+    const tools = createBuyerTools({
+      oracle: resolver.resolve(Ports.PriceOracle),
+      perPayment: profile.budget.perPayment,
+      url: `http://127.0.0.1:${PORTS.seller}/quote`,
+      createGateway: (usdValue) =>
+        new X402PaymentGateway({
+          engine,
+          chain: chainClient,
+          policy,
+          emit: events,
+          owner: accounts.agent.address,
+          asset,
+          usdValue,
+        }),
+      rating,
+      sellerAgentId,
+    });
+    return { tools, policy };
   });
 }
