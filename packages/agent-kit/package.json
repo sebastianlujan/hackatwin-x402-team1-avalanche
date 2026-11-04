@@ -12,6 +12,7 @@
   "dependencies": {
     "@hackatwin/core": "workspace:*",
     "@x402/core": "catalog:",
-    "@x402/evm": "catalog:"
+    "@x402/evm": "catalog:",
+    "viem": "catalog:"
   }
 }
