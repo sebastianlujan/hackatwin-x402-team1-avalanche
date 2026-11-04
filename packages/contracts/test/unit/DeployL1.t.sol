@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
+import { Ownable2Step } from '@openzeppelin/contracts/access/Ownable2Step.sol';
 import { Test } from 'forge-std/Test.sol';
 import { Vm } from 'forge-std/Vm.sol';
 
@@ -19,6 +20,7 @@ contract UnitDeployL1 is Test {
   string internal constant _DEPLOYMENTS = '../chains/deployments';
 
   address internal constant _DEPLOYER = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+  address internal constant _NEW_OWNER = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC;
   address internal constant _PREDICTED = 0x5FbDB2315678afecb367f032d93F642f64180aa3;
 
   DeployL1 internal _script;
@@ -127,6 +129,27 @@ contract UnitDeployL1 is Test {
     assertEq(_set[1], 0x8888888888888888888888888888888888888888);
   }
 
+  function test_GivenAnOwnerOtherThanTheDeployer() external whenDeployingTheReceiver {
+    // it applies the merchants as the deployer and leaves the owner as pending owner
+    DeployL1.Inputs memory _in = _script.load(_REGISTRY, './test/fixtures/params-merchant', _RECORDS);
+    _in.owner = _NEW_OWNER;
+    vm.recordLogs();
+    DeployL1.Deployed memory _out = _script.deploy(_in);
+    assertEq(Ownable2Step(address(_out.receiver)).owner(), _DEPLOYER);
+    assertEq(Ownable2Step(address(_out.receiver)).pendingOwner(), _NEW_OWNER);
+    assertEq(_merchantsSet(address(_out.receiver)).length, 2);
+    vm.prank(_NEW_OWNER);
+    Ownable2Step(address(_out.receiver)).acceptOwnership();
+    assertEq(Ownable2Step(address(_out.receiver)).owner(), _NEW_OWNER);
+  }
+
+  function test_GivenAnOwnerEqualToTheDeployer() external whenDeployingTheReceiver {
+    // it leaves no pending owner
+    DeployL1.Deployed memory _out = _script.deploy(_script.load(_REGISTRY, _PARAMS, _RECORDS));
+    assertEq(Ownable2Step(address(_out.receiver)).owner(), _DEPLOYER);
+    assertEq(Ownable2Step(address(_out.receiver)).pendingOwner(), address(0));
+  }
+
   modifier whenRecordingTheDeployment() {
     _;
   }
@@ -146,6 +169,21 @@ contract UnitDeployL1 is Test {
     assertEq(vm.parseJsonUint(_json, '.chainId'), 100_001);
     assertEq(vm.parseJsonAddress(_json, '.deployer'), _DEPLOYER);
     assertEq(vm.parseJsonAddress(_json, '.receiver'), address(_out.receiver));
+  }
+
+  function test_GivenAnOwnerOtherThanTheDeployer_WhenRecordingTheDeployment() external whenRecordingTheDeployment {
+    // it serializes the pending owner
+    DeployL1.Inputs memory _in = _script.load(_REGISTRY, _PARAMS, _RECORDS);
+    _in.owner = _NEW_OWNER;
+    string memory _json = _script.serialize(_in, _script.deploy(_in));
+    assertEq(vm.parseJsonAddress(_json, '.pendingOwner'), _NEW_OWNER);
+  }
+
+  function test_GivenAnOwnerEqualToTheDeployer_WhenRecordingTheDeployment() external whenRecordingTheDeployment {
+    // it serializes no pending owner
+    DeployL1.Inputs memory _in = _script.load(_REGISTRY, _PARAMS, _RECORDS);
+    string memory _json = _script.serialize(_in, _script.deploy(_in));
+    assertEq(vm.parseJsonAddress(_json, '.pendingOwner'), address(0));
   }
 
   function _merchantsSet(address _emitter) internal returns (address[] memory _merchants) {

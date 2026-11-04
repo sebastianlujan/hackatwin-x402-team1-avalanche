@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
+import { Ownable2Step } from '@openzeppelin/contracts/access/Ownable2Step.sol';
 import { Test } from 'forge-std/Test.sol';
 import { Vm } from 'forge-std/Vm.sol';
 
@@ -21,6 +22,7 @@ contract UnitDeployFuji is Test {
   string internal constant _DEPLOYMENTS = '../chains/deployments';
 
   address internal constant _OWNER = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8;
+  address internal constant _NEW_OWNER = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC;
   address internal constant _RECEIVER_DEPLOYER = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
 
   DeployFuji internal _script;
@@ -145,6 +147,33 @@ contract UnitDeployFuji is Test {
     );
   }
 
+  function test_GivenAnOwnerOtherThanTheDeployer() external whenDeploying {
+    // it applies the config as the deployer and leaves the owner as pending owner of the hub and the broker
+    DeployFuji.Inputs memory _in = _script.load(_REGISTRY, './test/fixtures/params-pair');
+    _in.owner = _NEW_OWNER;
+    vm.recordLogs();
+    DeployFuji.Deployed memory _out = _script.deploy(_in);
+    assertEq(Ownable2Step(address(_out.hub)).owner(), _OWNER);
+    assertEq(Ownable2Step(address(_out.hub)).pendingOwner(), _NEW_OWNER);
+    assertEq(Ownable2Step(address(_out.broker)).owner(), _OWNER);
+    assertEq(Ownable2Step(address(_out.broker)).pendingOwner(), _NEW_OWNER);
+    assertEq(_countLogs(address(_out.broker), IPaymentBroker.AllowedSenderSet.selector), 1);
+    _in.owner = 0x90F79bf6EB2c4f870365E785982E1f101E93b906;
+    _out = _script.deploy(_in);
+    assertEq(Ownable2Step(address(_out.hub)).pendingOwner(), _in.owner);
+    vm.prank(_in.owner);
+    Ownable2Step(address(_out.hub)).acceptOwnership();
+    assertEq(Ownable2Step(address(_out.hub)).owner(), _in.owner);
+  }
+
+  function test_GivenAnOwnerEqualToTheDeployer() external whenDeploying {
+    // it leaves no pending owner
+    DeployFuji.Deployed memory _out = _script.deploy(_script.load(_REGISTRY, _PARAMS));
+    assertEq(Ownable2Step(address(_out.hub)).owner(), _OWNER);
+    assertEq(Ownable2Step(address(_out.hub)).pendingOwner(), address(0));
+    assertEq(Ownable2Step(address(_out.broker)).pendingOwner(), address(0));
+  }
+
   modifier whenRecordingTheDeployment() {
     _;
   }
@@ -169,6 +198,22 @@ contract UnitDeployFuji is Test {
     assertEq(vm.parseJsonAddress(_json, '.receiverDeployer'), _RECEIVER_DEPLOYER);
     assertEq(vm.parseJsonUint(_json, '.receiverDeployerNonce'), 0);
     assertEq(vm.parseJsonAddress(_json, '.predictedReceiver'), _out.predictedReceiver);
+  }
+
+  function test_GivenAnOwnerOtherThanTheDeployer_WhenRecordingTheDeployment() external whenRecordingTheDeployment {
+    // it serializes the pending owner
+    DeployFuji.Inputs memory _in = _script.load(_REGISTRY, _PARAMS);
+    _in.owner = _NEW_OWNER;
+    string memory _json = _script.serialize(_in, _script.deploy(_in));
+    assertEq(vm.parseJsonAddress(_json, '.deployer'), _OWNER);
+    assertEq(vm.parseJsonAddress(_json, '.pendingOwner'), _NEW_OWNER);
+  }
+
+  function test_GivenAnOwnerEqualToTheDeployer_WhenRecordingTheDeployment() external whenRecordingTheDeployment {
+    // it serializes no pending owner
+    DeployFuji.Inputs memory _in = _script.load(_REGISTRY, _PARAMS);
+    string memory _json = _script.serialize(_in, _script.deploy(_in));
+    assertEq(vm.parseJsonAddress(_json, '.pendingOwner'), address(0));
   }
 
   modifier whenDryRunningOnAFujiFork() {
