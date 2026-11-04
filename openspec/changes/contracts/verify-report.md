@@ -120,3 +120,42 @@ No CRITICAL or HIGH finding.
 ### Verdict
 PASS WITH WARNINGS
 0 CRITICAL, 8 WARNING, 7 SUGGESTION: all tests, gates and CI are green, every scenario has a passing covering test (two items partial, W2 and W4), strict TDD order and red states reproduced; warnings are the owner-not-deployer deploy bug, missing hub invariants, the non-blocking Fuji fork step and spec sync items.
+
+## Re-verify after batch 6
+
+Scope: PRs #170 (W1), #172 (W2) and #174 (zero-address constructor checks), verified on `origin/feature/constructor-zero-checks` at 437c1c1 (stacked on the other two). No code changes, no broadcast, no keys.
+
+### Gates (all green)
+- `forge clean && forge build`: exit 0. `forge test`: 226 passed, 0 failed, 1 skipped.
+- `FOUNDRY_PROFILE=deep forge test --match-path 'test/invariants/*'`: 12 passed (hub 5/5).
+- `forge snapshot --check --tolerance 1 --match-path 'test/gas/*'`: pass. `bulloak check 'test/**/*.tree'` (as `pnpm test:bulloak:check`): no issues. `lintspec`: no issue.
+- `pnpm contracts:abi`: no diff. Root `pnpm typecheck`, `pnpm test`, `pnpm lint`: pass.
+- CI on #170, #172, #174: every check passes, none failing or pending.
+
+### W1 (deploy owner handoff): CLOSED
+- Scripts construct with the deployer, run the `onlyOwner` config, then `_offerOwnership` (skipped when owner equals deployer); records carry `pendingOwner`.
+- Tests: owner other than deployer succeeds, config applied, `owner()` is the deployer, `pendingOwner()` is the params owner, and `acceptOwnership` completes the handoff; owner equal to deployer leaves `pendingOwner` zero; the record JSON holds `pendingOwner` in both cases (Fuji hub and broker, L1 receiver).
+- Red 04a6957 fails (3 Fuji failures, `OwnableUnauthorizedAccount` and a missing `.pendingOwner`); green 361a0b2 passes (Deploy 8, Fuji 15 + 1 skipped, L1 15).
+- Nonce prediction (ADR 0010) unchanged: the receiver is still the deployer's first transaction, the offer follows it, and the `Deploy_NonceMismatch` and `Deploy_AddressMismatch` checks still pass; ADR 0010 documents it.
+
+### W2 (hub invariants): CLOSED, one residual suggestion
+- Invariant 2: `invariant_OnlyTableEdgesAreObserved` reads `StatusChanged` events, requires every observed edge in `PaymentStateLib.canTransition`, each change to continue the last seen status, and the edge total to equal the pay, settle, dispatch and refund calls.
+- Invariant 4: `invariant_PaidAndRefundedAreExclusive` flags a payment that reached both a paid exit (Settled or Dispatched) and Refunded; the handler races exits at the deadline.
+- Invariant 5: `invariant_BudgetOnlyChangesBySignatureOrDelegatePay` compares `exposed_budget` with a ghost budget updated only by `setAuthorizationWithSig` (EIP-712 signed by key-backed payers) and delegate payments, over all payer, broker and token combinations.
+- Non-vacuity: the invariant suite asserts every handler action ran at least once (pay, settle, dispatch, refund, withdraw, warp, retry, authorize, delegate pay, race, both tokens). The budget invariant had an isolating mutation (budget not decremented).
+- The note that invariant 4's event check had no isolating mutation is judged acceptable: exclusivity is a corollary of the edge table plus chain continuity (Refunded is reachable only from Pending, Settled and Dispatched leave Pending), so any break trips invariant 2 first. The check is redundant, not wrong; operator precedence of `== A | B` is correct in Solidity.
+- SUGGESTION: the exclusivity assertion has no independent mutation; consider a stateless assertion on final statuses if it should stand alone.
+
+### Zero-address constructor checks: CONFIRMED
+- `PaymentBroker` reverts `PaymentBroker_ZeroAddress` for a zero hub; `SettlementReceiver` reverts `SettlementReceiver_ZeroAddress` for a zero transferrer, origin transferrer, origin sender or token. Existing errors reused, only NatSpec changed, ABI unchanged (`pnpm contracts:abi` no diff).
+- Red babd749 fails (4 receiver and 1 broker tests, "did not revert"); green 437c1c1 passes (3 and 5 tests).
+- The earlier zero-address SUGGESTION is closed.
+
+### Remaining
+- 0 CRITICAL.
+- WARNING (6 open): W3 (Fuji fork non-blocking in CI, accepted spec delta), W4 (viem `getContract` inference test), W5 (budget 0 reads Unauthorized), W6 (real ICTT semantics, T7.12 and M8), W7 (#134 and #158 without tree commit), W8 (no authorizer-side nonce invalidation).
+- SUGGESTION: the six earlier ones except zero-address, plus the invariant 4 independence note above.
+
+### Verdict
+PASS WITH WARNINGS
+0 CRITICAL, 6 WARNING, 7 SUGGESTION: W1 and W2 are closed with reproduced red and green states, zero-address checks confirmed, all gates and CI green; the remaining warnings are spec sync, a non-blocking Fuji fork step, accepted design limits and integration risks deferred to T7.12 and M8.
