@@ -39,6 +39,15 @@ Deviations: the license guard test lives at `e2e/protocol/src/local/license-guar
 
 Tasks 7.1 and 7.2 are marked `[x]`. Method A lives in `teleporter.ts`; the spike now reuses `deployInfra`. The registry precursor for Remote registered is `TeleporterRegistry` listing Teleporter as version 1 (the ICTT pair lands in PR 9).
 
+## Batch 5 (PR 8): done
+
+| Task PR | Branch | Issue | PR | Red | Green | Authored lines |
+|---|---|---|---|---|---|---|
+| 8 | `feature/icm-relay-simulator` | #239 | #240 | 4da2728, a28b985 | 90d3567, 89dac65 | about 287 added, 55 removed |
+
+Tasks 8.1 to 8.3 are marked `[x]`. `relay.ts` exports `relayOnce`, `sendMessage`, `messageReceived`, and the Teleporter ABI and events; the spike round trip reuses them. CI job `local` passed on #240 in 1m16s (cache miss).
+Notes: `waitForTransactionReceipt` does not throw on a reverted receipt, so delivery does a `simulateContract` dry run first (revert reason) and also checks the receipt status. The revert case uses `allowedRelayerAddresses` with another address, which makes Teleporter revert with "unauthorized relayer". The `local` job runs when `ts` or `contracts` paths change and builds `packages/contracts` (the stub artifact) before `pnpm test:local`.
+
 ## Deviations and notes
 
 - `WarpMessengerStub` defines its own `WarpMessage` struct and does not import an upstream `IWarpMessenger` (none exists under `src/interfaces/external/icm/`). Field layout `(bytes32 sourceChainID, address originSenderAddress, bytes payload)` and the `WarpMessageSent(bytes32 indexed messageID, bytes message)` event follow design D7; conformance with the upstream struct is verified by the PR 1 spike (PR 1 task 1.5).

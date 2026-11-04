@@ -85,9 +85,9 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 8: Relay and CI (specs: icm-relay-simulation, crosschain-protocol-e2e)
 
-- [ ] 8.1 RED `relay.local.test.ts`: Hub to L1, L1 to hub, No double delivery, Delivery reverts report
-- [ ] 8.2 GREEN `relay.ts` (D7: ID from `SendCrossChainMessage`, bytes from `WarpMessageSent`)
-- [ ] 8.3 `.github/workflows/ci.yml` job `local` (cache, forge v1.5.1, empty `git status`, `ci-gate`); guard: no `--private-key` in workflows (CI job)
+- [x] 8.1 RED `relay.local.test.ts`: Hub to L1, L1 to hub, No double delivery, Delivery reverts report
+- [x] 8.2 GREEN `relay.ts` (D7: ID from `SendCrossChainMessage`, bytes from `WarpMessageSent`)
+- [x] 8.3 `.github/workflows/ci.yml` job `local` (cache, forge v1.5.1, empty `git status`, `ci-gate`); guard: no `--private-key` in workflows (CI job)
 
 ## PR 9: World contracts steps 4 and 5
 
