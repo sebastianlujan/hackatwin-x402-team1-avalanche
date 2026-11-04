@@ -16,7 +16,7 @@ UnitPaymentHubPay
     │   └── it reverts with PaymentHub_ZeroAmount
     ├── given a deadline that is not in the future
     │   └── it reverts with PaymentHub_InvalidDeadline
-    ├── given a fee-on-transfer token
+    ├── given a fee on transfer token
     │   └── it records the delivered delta as the escrow
     ├── given a token that delivers nothing
     │   └── it reverts with PaymentHub_ZeroAmount
