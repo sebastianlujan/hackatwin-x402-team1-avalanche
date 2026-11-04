@@ -68,6 +68,53 @@ export const copy = {
       kinds: { 'payment.status': 'payment', 'identity.feedback': 'feedback' },
     },
   },
+  landing: {
+    hero: {
+      brand: '> HACKATWIN',
+      title: 'Autonomous payments on an Avalanche L1',
+      lead: 'x402, stablecoins and AI agents, shown live by Twin and team1.',
+      cta: { label: 'Start the guided path', href: '/path/avalanche' },
+    },
+    manifesto: {
+      title: 'Manifesto',
+      lines: [
+        'Software now acts on its own, so it has to pay on its own.',
+        'An agent with a bounded budget, a verifiable identity and a payment rail can buy what it needs with no human in the loop.',
+        'Every step is on screen: the quote, the policy check, the signature and the receipt.',
+      ],
+    },
+    cards: {
+      title: 'Who builds this',
+      items: [
+        { mark: 'Twin', text: 'The ARGt token and the TwinPay L1 that Demos 2 and 3 run on.' },
+        { mark: 'team1', text: 'The agents, the x402 flow and this repository, written with MCP servers and skills.' },
+      ],
+    },
+    tagline: { text: 'Agents pay. Chains keep the receipt.' },
+    faq: {
+      title: 'Questions',
+      items: [
+        {
+          question: 'What is x402?',
+          answer: 'An HTTP payment scheme: a server answers 402 with a price, the client pays and asks again.',
+        },
+        {
+          question: 'Does a demo move real money?',
+          answer:
+            'No. Demo 1 runs on a local fork of the C-Chain, and the first Fuji transaction costs testnet AVAX only.',
+        },
+        {
+          question: 'Why a local fork?',
+          answer: 'It keeps the real ARGt contract and the chain ID without sending a mainnet transaction.',
+        },
+        {
+          question: 'Who wrote the code?',
+          answer: 'Twin and team1 direct it; agents write most of the repository.',
+        },
+      ],
+    },
+    builtOn: { label: 'Built on Avalanche', href: 'https://www.avax.network' },
+  },
   path: {
     nav: { label: 'Talk path', previous: 'Previous', next: 'Next' },
     screens: {
@@ -137,6 +184,7 @@ export const copy = {
 } as const;
 
 export type Demo1Copy = typeof copy.demo1;
+export type LandingCopy = typeof copy.landing;
 export type PathCopy = typeof copy.path;
 export interface TalkScreenCopy {
   readonly title: string;

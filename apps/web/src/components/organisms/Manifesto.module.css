@@ -1,0 +1,17 @@
+.manifesto {
+  display: grid;
+  gap: var(--hk-space-4);
+  max-width: 60ch;
+}
+
+.manifesto p {
+  margin: 0;
+}
+
+.title {
+  color: var(--hk-fg-muted);
+  font-size: var(--hk-text-sm);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
