@@ -16,7 +16,7 @@ export interface Snapshot {
 }
 
 export interface Violation {
-  readonly rule: 'R1' | 'R2' | 'R3' | 'R4' | 'R5' | 'R6';
+  readonly rule: 'R1' | 'R2' | 'R3' | 'R4' | 'R5' | 'R6' | 'R7';
   readonly file: string;
   readonly specifier: string;
   readonly reason: string;
@@ -27,6 +27,7 @@ const SKIP = new Set(['node_modules', 'dist', 'build', 'coverage', '.next', '.do
 const SOURCE = /\.(?:ts|tsx|mts|cts)$/;
 const DEMO_PREFIX = '@hackatwin/demo-';
 const LOADER = 'packages/config/src/load-profile.ts';
+const KEYSTORE_DIR = 'packages/chains/src/keystore';
 
 export function readSnapshot(root: string): Snapshot {
   const manifests: Record<string, Manifest> = {};
@@ -109,6 +110,8 @@ export function checkDependencyRule(snapshot: Snapshot): Violation[] {
       }
       if (relative) {
         const target = posix.join(dirname(file), specifier);
+        if (fromLibrary && target.startsWith(`${KEYSTORE_DIR}/`) && !file.startsWith(`${KEYSTORE_DIR}/`))
+          add('R7', file, specifier, 'only composition roots import the keystore');
         if (target === owner || target.startsWith(`${owner}/`)) continue;
         if (fromLibrary && target.startsWith('demos/'))
           add('R2', file, specifier, 'packages and apps must not import demos');
@@ -124,6 +127,9 @@ export function checkDependencyRule(snapshot: Snapshot): Violation[] {
       }
       if (/^@hackatwin\/core\/testing(?:\/|$)/.test(specifier) && !isTestFile(file) && !fromE2e) {
         add('R5', file, specifier, 'test fakes are imported only from test files');
+      }
+      if (/^@hackatwin\/chains\/keystore(?:\/|$)/.test(specifier) && owner.startsWith('packages/')) {
+        add('R7', file, specifier, 'only composition roots import the keystore');
       }
       if ((specifier === 'process' || specifier === 'node:process') && file !== LOADER) {
         add('R6', file, specifier, 'only the config loader reads the environment');
