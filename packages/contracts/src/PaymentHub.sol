@@ -2,9 +2,13 @@
 pragma solidity 0.8.30;
 
 import { Ownable, Ownable2Step } from '@openzeppelin/contracts/access/Ownable2Step.sol';
+import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import { SafeERC20 } from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import { Nonces } from '@openzeppelin/contracts/utils/Nonces.sol';
+import { ReentrancyGuardTransient } from '@openzeppelin/contracts/utils/ReentrancyGuardTransient.sol';
 import { EIP712 } from '@openzeppelin/contracts/utils/cryptography/EIP712.sol';
 import { SignatureChecker } from '@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol';
+import { SafeCast } from '@openzeppelin/contracts/utils/math/SafeCast.sol';
 
 import { IPaymentHub, Id } from 'src/interfaces/IPaymentHub.sol';
 import { LaneParamsLib } from 'src/libraries/LaneParamsLib.sol';
@@ -12,7 +16,9 @@ import { PaymentStateLib } from 'src/libraries/PaymentStateLib.sol';
 
 /// @title PaymentHub
 /// @notice Singleton hub of permissionless lanes and escrowed payments behind one state machine
-abstract contract PaymentHub is IPaymentHub, Ownable2Step, EIP712, Nonces {
+abstract contract PaymentHub is IPaymentHub, Ownable2Step, EIP712, Nonces, ReentrancyGuardTransient {
+  using SafeERC20 for IERC20;
+
   /// @notice A payment record packed into one slot, plus the escrowed amount
   struct Payment {
     address payer;
@@ -29,6 +35,9 @@ abstract contract PaymentHub is IPaymentHub, Ownable2Step, EIP712, Nonces {
   /// @notice Remaining budget by authorizer, authorized caller and token
   mapping(address _authorizer => mapping(address _authorized => mapping(address _token => uint256 _budget))) internal
     _budgets;
+
+  /// @notice The number of payments created, which feeds the payment id
+  uint256 internal _count;
 
   /// @notice Lane params by lane id; a lane exists when its token is set
   mapping(Id _id => LaneParams _params) internal _lanes;
@@ -92,6 +101,36 @@ abstract contract PaymentHub is IPaymentHub, Ownable2Step, EIP712, Nonces {
   }
 
   /// @inheritdoc IPaymentHub
+  function pay(
+    Id _id,
+    address _onBehalf,
+    uint256 _amount,
+    uint256 _deadline
+  )
+    external
+    nonReentrant
+    returns (bytes32 _paymentId)
+  {
+    address _token = _lanes[_id].token;
+    if (_token == address(0)) revert PaymentHub_LaneNotFound(_id);
+    if (_amount == 0) revert PaymentHub_ZeroAmount();
+    if (_deadline <= block.timestamp) revert PaymentHub_InvalidDeadline();
+    if (msg.sender != _onBehalf) _spendBudget(_onBehalf, _token, _amount);
+
+    _paymentId = keccak256(abi.encode(block.chainid, address(this), ++_count));
+    uint256 _before = IERC20(_token).balanceOf(address(this));
+    IERC20(_token).safeTransferFrom(_onBehalf, address(this), _amount);
+    uint256 _escrow = IERC20(_token).balanceOf(address(this)) - _before;
+    if (_escrow == 0) revert PaymentHub_ZeroAmount();
+
+    Payment storage _payment = _payments[_id][_paymentId];
+    _payment.payer = _onBehalf;
+    _payment.deadline = SafeCast.toUint64(_deadline);
+    _payment.amount = _escrow;
+    _transition(_id, _paymentId, Status.None, Status.Pending);
+  }
+
+  /// @inheritdoc IPaymentHub
   function statusOf(Id _id, bytes32 _paymentId) external view returns (Status _status) {
     _status = _payments[_id][_paymentId].status;
   }
@@ -109,5 +148,16 @@ abstract contract PaymentHub is IPaymentHub, Ownable2Step, EIP712, Nonces {
     }
     _payment.status = _to;
     emit StatusChanged(_id, _paymentId, _from, _to);
+  }
+
+  /// @notice Reduce the budget the caller holds from a payer, which is never restored
+  /// @param _payer The authorizing account
+  /// @param _token The lane token
+  /// @param _amount The amount to spend
+  function _spendBudget(address _payer, address _token, uint256 _amount) internal {
+    uint256 _remaining = _budgets[_payer][msg.sender][_token];
+    if (_remaining == 0) revert PaymentHub_Unauthorized(msg.sender);
+    if (_amount > _remaining) revert PaymentHub_BudgetExceeded(_remaining, _amount);
+    _budgets[_payer][msg.sender][_token] = _remaining - _amount;
   }
 }
