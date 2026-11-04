@@ -22,7 +22,11 @@ describe('wallet scope', () => {
       .filter((file) => new RegExp(`from '${word}`).test(readFileSync(resolve(src, file), 'utf8')))
       .sort();
 
-  it('loads wagmi only through the wallet config and provider', () => {
-    expect(importing('wagmi')).toEqual(['containers/wallet-provider.tsx', 'lib/wallet-config.ts']);
+  it('loads wagmi only in the wallet config, provider and first transaction container', () => {
+    expect(importing('wagmi')).toEqual([
+      'containers/first-tx.tsx',
+      'containers/wallet-provider.tsx',
+      'lib/wallet-config.ts',
+    ]);
   });
 });

@@ -83,6 +83,28 @@ export const copy = {
       score: 'score',
     },
   },
+  firstTx: {
+    title: 'First transaction on Fuji',
+    lead: 'Connect an injected wallet on Fuji and send 0.001 AVAX to yourself.',
+    network: 'Wallet network',
+    phases: {
+      checking: 'Checking the wallet.',
+      'no-wallet': 'No injected wallet found. Install one, or open the pre-sent transaction below.',
+      connect: 'Connect a wallet to start.',
+      'wrong-network': 'The wallet is not on Fuji. Switch networks to send.',
+      'switch-failed': 'The network switch failed or was rejected. Send stays disabled.',
+      'no-balance': 'This account has less than 0.001 AVAX. Fund it with testnet AVAX from a Fuji faucet.',
+      idle: 'Ready to send.',
+      signing: 'Confirm the transaction in your wallet.',
+      pending: 'Pending on Fuji.',
+      confirmed: 'Confirmed on Fuji.',
+      rejected: 'The wallet rejected the request. You can send again.',
+      failed: 'The transaction failed. You can send again.',
+    },
+    actions: { connect: 'Connect wallet', send: 'Send 0.001 AVAX', switch: 'Switch to Fuji' },
+    explorer: 'Explorer',
+    preSent: { title: 'Pre-sent transaction', unset: 'not set yet' },
+  },
   landing: {
     hero: {
       brand: '> HACKATWIN',
@@ -192,7 +214,6 @@ export const copy = {
       badge: 'Placeholder',
       demo2: { title: 'Demo 2', lead: 'The TwinPay L1 payment is not built yet.', items: [] },
       demo3: { title: 'Demo 3', lead: 'The config switch between chains is not built yet.', items: [] },
-      firstTx: { title: 'First transaction on Fuji', lead: 'The wallet screen is not built yet.', items: [] },
     },
   },
 } as const;
@@ -200,6 +221,7 @@ export const copy = {
 export type Demo1Copy = typeof copy.demo1;
 export type LandingCopy = typeof copy.landing;
 export type IdentityCopy = typeof copy.identity;
+export type FirstTxCopy = typeof copy.firstTx;
 export type PathCopy = typeof copy.path;
 export interface TalkScreenCopy {
   readonly title: string;
