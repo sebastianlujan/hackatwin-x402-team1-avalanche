@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ConfigError } from './config-error.ts';
 import { keystoreNamedInEnv, loadProfile, loadRpcUrls, rpcVariable } from './load-profile.ts';
-import { CCHAIN_FORK_BLOCK, forkStaticsSchema, PROFILE_NAMES, ProfileToken } from './profiles.ts';
+import { CCHAIN_FORK_BLOCK, forkStaticsSchema, localStaticsSchema, PROFILE_NAMES, ProfileToken } from './profiles.ts';
 
 const rpc = 'https://rpc.example.org';
 const base = {
@@ -93,10 +93,10 @@ describe('keystore dir', () => {
 });
 
 describe('failures', () => {
-  it('lists the four valid names for an unknown profile', () => {
+  it('lists the five valid names for an unknown profile', () => {
     const error = catchConfigError(() => loadProfile('mainnet', base));
     for (const name of PROFILE_NAMES) expect(error.message).toContain(name);
-    expect(PROFILE_NAMES).toHaveLength(4);
+    expect(PROFILE_NAMES).toEqual(['cchain-fork', 'fuji-crosschain', 'twinpay-l1', 'fuji-cchain', 'local-crosschain']);
   });
 
   it('falls back to the ambient environment', () => {
@@ -178,6 +178,72 @@ describe('fork guard', () => {
   it('does not guard CCHAIN_RPC_URL', () => {
     const url = 'https://api.avax.network/ext/bc/C/rpc';
     expect(loadProfile('cchain-fork', { ...base, CCHAIN_RPC_URL: url }).env.CCHAIN_RPC_URL).toBe(url);
+  });
+});
+
+describe('local-crosschain profile', () => {
+  const local = { LOCAL_HUB_RPC_URL: 'http://127.0.0.1:8545', LOCAL_L1_RPC_URL: 'http://localhost:8546' };
+
+  it('loads from two loopback URLs with the simulated statics and the shared budget', () => {
+    const profile = loadProfile('local-crosschain', local, { llm: 'scripted' });
+    expect(profile).toMatchObject({ name: 'local-crosschain', ccip: 'simulated', hubChainId: 31337, l1ChainId: 31338 });
+    expect(profile.env).toEqual({ ...local });
+    expect(profile.budget.total).toEqual({ units: 5_000_000n, decimals: 6, currency: 'USD' });
+    expect(profile.budget).toEqual(loadProfile('fuji-cchain', base).budget);
+  });
+
+  it('accepts localhost and [::1] and needs no keystore or secret', () => {
+    const env = { LOCAL_HUB_RPC_URL: 'http://[::1]:8545', LOCAL_L1_RPC_URL: 'ws://localhost:8546' };
+    expect(loadProfile('local-crosschain', env).env).toEqual(env);
+  });
+
+  it('ignores live keys and names the missing local key', () => {
+    const error = catchConfigError(() =>
+      loadProfile('local-crosschain', { ...base, LOCAL_L1_RPC_URL: local.LOCAL_L1_RPC_URL }),
+    );
+    expect(error.issues).toEqual([{ variable: 'LOCAL_HUB_RPC_URL', message: 'is required' }]);
+  });
+
+  it('never carries a live-network RPC variable into the profile', () => {
+    const profile = loadProfile('local-crosschain', { ...base, ...local });
+    expect(Object.keys(profile.env).sort()).toEqual(['LOCAL_HUB_RPC_URL', 'LOCAL_L1_RPC_URL']);
+  });
+
+  it('reports one error naming both missing variables', () => {
+    const error = catchConfigError(() => loadProfile('local-crosschain', base));
+    expect(error.issues.map((i) => i.variable)).toEqual(['LOCAL_HUB_RPC_URL', 'LOCAL_L1_RPC_URL']);
+    expect(error.message).toBe('LOCAL_HUB_RPC_URL: is required\nLOCAL_L1_RPC_URL: is required');
+  });
+
+  it('rejects a remote RPC, names the variable and does not echo the value', () => {
+    const url = 'https://api.avax-test.network/ext/bc/C/rpc';
+    const error = catchConfigError(() => loadProfile('local-crosschain', { ...local, LOCAL_L1_RPC_URL: url }));
+    expect(error.issues).toEqual([
+      { variable: 'LOCAL_L1_RPC_URL', message: 'must be a loopback URL (localhost, 127.0.0.1 or [::1])' },
+    ]);
+    expect(error.message).not.toContain('avax-test');
+  });
+
+  it('ignores a chain ID variable and keeps the static', () => {
+    const env = { ...local, LOCAL_HUB_CHAIN_ID: '43113', LOCAL_CHAIN_ID: '1', TWINPAY_L1_CHAIN_ID: '5' };
+    const profile = loadProfile('local-crosschain', env);
+    expect([profile.hubChainId, profile.l1ChainId]).toEqual([31337, 31338]);
+    expect(Object.keys(profile.env)).not.toContain('LOCAL_HUB_CHAIN_ID');
+  });
+
+  it.each([43113, 43114, 11155111])('statics refuse the live chain ID %i naming the field', (live) => {
+    for (const field of ['hubChainId', 'l1ChainId'] as const) {
+      const result = localStaticsSchema.safeParse({ hubChainId: 31337, l1ChainId: 31338, [field]: live });
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0]?.path).toEqual([field]);
+    }
+  });
+
+  it('statics accept the profile values', () => {
+    expect(localStaticsSchema.parse({ hubChainId: 31337, l1ChainId: 31338 })).toEqual({
+      hubChainId: 31337,
+      l1ChainId: 31338,
+    });
   });
 });
 
