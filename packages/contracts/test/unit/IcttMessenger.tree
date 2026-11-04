@@ -1,0 +1,10 @@
+UnitIcttMessenger
+└── when deploying the messenger
+    ├── given valid inputs
+    │   └── it exposes every configured value
+    ├── given a gas limit that is zero or a recipient limit not below the required limit
+    │   └── it reverts with IcttMessenger_InvalidGasLimits
+    ├── given a zero address in any address input
+    │   └── it reverts with IcttMessenger_ZeroAddress
+    └── given a zero destination blockchain id
+        └── it reverts with IcttMessenger_ZeroBlockchainId
