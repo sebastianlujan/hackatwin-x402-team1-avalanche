@@ -4,14 +4,16 @@ pragma solidity 0.8.30;
 import { Ownable, Ownable2Step } from '@openzeppelin/contracts/access/Ownable2Step.sol';
 import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import { SafeERC20 } from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+import { ReentrancyGuardTransient } from '@openzeppelin/contracts/utils/ReentrancyGuardTransient.sol';
 
 import { ISettlementReceiver } from 'src/interfaces/ISettlementReceiver.sol';
 import { IERC20SendAndCallReceiver } from 'src/interfaces/external/icm/IERC20SendAndCallReceiver.sol';
+import { PaymentCallbackLib } from 'src/libraries/PaymentCallbackLib.sol';
 import { PaymentStateLib } from 'src/libraries/PaymentStateLib.sol';
 
 /// @title SettlementReceiver
 /// @notice The L1 ICTT receiver that validates the source and records each payment once
-contract SettlementReceiver is ISettlementReceiver, IERC20SendAndCallReceiver, Ownable2Step {
+contract SettlementReceiver is ISettlementReceiver, IERC20SendAndCallReceiver, Ownable2Step, ReentrancyGuardTransient {
   using SafeERC20 for IERC20;
 
   /// @inheritdoc ISettlementReceiver
@@ -71,6 +73,7 @@ contract SettlementReceiver is ISettlementReceiver, IERC20SendAndCallReceiver, O
     bytes calldata _payload
   )
     external
+    nonReentrant
   {
     if (msg.sender != TRANSFERRER) revert SettlementReceiver_UnauthorizedCaller(msg.sender);
     if (_sourceBlockchainID != SOURCE_BLOCKCHAIN_ID) {
@@ -90,6 +93,22 @@ contract SettlementReceiver is ISettlementReceiver, IERC20SendAndCallReceiver, O
     IERC20(TOKEN).safeTransferFrom(msg.sender, address(this), _amount);
     _credits[_merchant] += _amount;
     _transition(_paymentId, Status.Received, Status.Settled);
+
+    if (PaymentCallbackLib.hasCallback(_merchant)) {
+      if (!PaymentCallbackLib.canFund()) revert SettlementReceiver_InsufficientCallbackGas();
+      if (!PaymentCallbackLib.notify(_merchant, _paymentId, TOKEN, _amount)) {
+        emit CallbackFailed(_paymentId, _merchant);
+      }
+    }
+  }
+
+  /// @inheritdoc ISettlementReceiver
+  function withdraw() external nonReentrant {
+    uint256 _credit = _credits[msg.sender];
+    if (_credit == 0) revert SettlementReceiver_ZeroAmount();
+    _credits[msg.sender] = 0;
+    IERC20(TOKEN).safeTransfer(msg.sender, _credit);
+    emit Withdrawn(msg.sender, _credit);
   }
 
   /// @inheritdoc ISettlementReceiver

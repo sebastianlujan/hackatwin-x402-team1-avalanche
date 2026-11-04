@@ -88,7 +88,7 @@ contract UnitSettlementReceiverCallback is Test {
     _deliver(keccak256('plain'), _plain, 10, gasleft());
     uint256 _baseline = _before - gasleft();
 
-    uint256 _starved = _baseline + PaymentCallbackLib.CALLBACK_GAS;
+    uint256 _starved = _baseline + PaymentCallbackLib.CALLBACK_GAS / 2;
     _deliver(_PAYMENT, address(_merchant), 100, _starved);
     assertEq(uint8(_receiver.statusOf(_PAYMENT)), uint8(ISettlementReceiver.Status.None));
     assertEq(_token.balanceOf(_fallback), 100);

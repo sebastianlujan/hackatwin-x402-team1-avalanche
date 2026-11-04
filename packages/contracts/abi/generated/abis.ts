@@ -1354,6 +1354,32 @@ export const abis = {
       "stateMutability": "nonpayable"
     },
     {
+      "type": "function",
+      "name": "withdraw",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "CallbackFailed",
+      "inputs": [
+        {
+          "name": "_paymentId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_merchant",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
       "type": "event",
       "name": "MerchantSet",
       "inputs": [
@@ -1436,6 +1462,25 @@ export const abis = {
       "anonymous": false
     },
     {
+      "type": "event",
+      "name": "Withdrawn",
+      "inputs": [
+        {
+          "name": "_merchant",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "_amount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
       "type": "error",
       "name": "OwnableInvalidOwner",
       "inputs": [
@@ -1459,6 +1504,11 @@ export const abis = {
     },
     {
       "type": "error",
+      "name": "ReentrancyGuardReentrantCall",
+      "inputs": []
+    },
+    {
+      "type": "error",
       "name": "SafeERC20FailedOperation",
       "inputs": [
         {
@@ -1467,6 +1517,11 @@ export const abis = {
           "internalType": "address"
         }
       ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InsufficientCallbackGas",
+      "inputs": []
     },
     {
       "type": "error",
@@ -2491,6 +2546,32 @@ export const abis = {
       "stateMutability": "view"
     },
     {
+      "type": "function",
+      "name": "withdraw",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "CallbackFailed",
+      "inputs": [
+        {
+          "name": "_paymentId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_merchant",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
       "type": "event",
       "name": "MerchantSet",
       "inputs": [
@@ -2533,6 +2614,30 @@ export const abis = {
         }
       ],
       "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "Withdrawn",
+      "inputs": [
+        {
+          "name": "_merchant",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "_amount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InsufficientCallbackGas",
+      "inputs": []
     },
     {
       "type": "error",
