@@ -87,3 +87,12 @@ Stacked on `feature/web-demo-1`, one linear queue, all PRs target `develop`. Aut
 ## Open
 
 - 2.5 acceptance (no experiment run); pre-sent Fuji hash and last-known identity ids after rehearsal; O4 logos; O13.
+
+## Batch 4: verify fixes
+
+PR #222 (`feature/web-verify-fixes`, issue #221, 67 authored lines). Closes verify W2, W3, S1, S2, S3, S6.
+- Copy: Twin card, FAQ authorship and `demo1.lead` corrected; `copy.test.ts` pins them.
+- `POST /api/runs` guard: `Origin`, when present, must equal the request's own origin (Host header); otherwise 403. Content-type must be `application/json`, otherwise 415. No `Origin` (curl) is allowed. Agent-event-stream behavior: GET `/api/runs/[id]` and `/events` are unchanged (read-only); only run start is guarded.
+- `hackatwin-sentinel-fork` added to `SENTINELS` and to the CI `web-build` env as `CCHAIN_FORK_RPC_URL`.
+- `docs/demos.md` web URL is now `http://127.0.0.1:3000/demo-1`, with the route guard noted.
+- Local fork evidence: JSON POST 202, Origin evil.example 403, no content-type 415, same-origin 202; ports freed.
