@@ -42,5 +42,13 @@ test messenger, so it is an upper bound for the hub work.
 | `dispatch` (test messenger) | 210513 |
 | `refund` | 41394 |
 | `settle` then `withdraw` | 75835 |
+| Receiver `receiveTokens`, settled, merchant without code | 112035 |
+| Receiver `receiveTokens`, settled, succeeding callback | 183813 |
+| Receiver `receiveTokens`, rejected | 52065 |
+| Receiver settled then `withdraw` | 108436 |
+
+The receiver rows include the first cold write of every slot. The documented `recipientGasLimit` is 300000: the settled
+path with a callback must fit it (asserted in `GasSettlementReceiver`), and a delivery that cannot fund the callback cap
+(about 131.6k gas left at the callback) reverts so ICTT sends the whole amount to the fallback recipient.
 
 Nothing in this project broadcasts transactions.
