@@ -52,25 +52,25 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 2: Stub and token (Q21 order; specs: icm-relay-simulation)
 
-- [ ] 2.1 Tree: `WarpMessengerStub.tree` and `LocalUsdc.tree`, scaffold via `bulloak scaffold` (Tree covers tests)
-- [ ] 2.2 RED `packages/contracts/test/utils/WarpMessengerStub.t.sol` (Blockchain ID, Send recorded, Two sends, Injected message, Missing index, Overwrite); `LocalUsdc.t.sol` (6 decimals, mint)
-- [ ] 2.3 GREEN `WarpMessengerStub.sol` (storage only, no immutables) and `LocalUsdc.sol`; `bulloak check` passes
-- [ ] 2.4 Guard test: no `script/**` names `WarpMessengerStub` (No script deploys it)
+- [x] 2.1 Tree: `WarpMessengerStub.tree` and `LocalUsdc.tree`, scaffold via `bulloak scaffold` (Tree covers tests)
+- [x] 2.2 RED `packages/contracts/test/utils/WarpMessengerStub.t.sol` (Blockchain ID, Send recorded, Two sends, Injected message, Missing index, Overwrite); `LocalUsdc.t.sol` (6 decimals, mint)
+- [x] 2.3 GREEN `WarpMessengerStub.sol` (storage only, no immutables) and `LocalUsdc.sol`; `bulloak check` passes
+- [x] 2.4 Guard test: no `script/**` names `WarpMessengerStub` (No script deploys it)
 
 ## PR 3: Local chains (specs: local-crosschain-profile)
 
-- [ ] 3.1 RED tests: forbidden chain ID refuses before spawn; non-loopback refuses before spawn; plain anvil args; reported ID 43113 on loopback refused; `txUrl` undefined (Forbidden ID, Wrong chain ID, Remote host, Local hash, Plain mode)
-- [ ] 3.2 GREEN `packages/chains/src/{local,anvil,guarded-clients,explorer}.ts`: `LocalChain`, `shell: false` fixed args, `setCode` cheat (No explorer, Registry unchanged)
+- [x] 3.1 RED tests: forbidden chain ID refuses before spawn; non-loopback refuses before spawn; plain anvil args; reported ID 43113 on loopback refused; `txUrl` undefined (Forbidden ID, Wrong chain ID, Remote host, Local hash, Plain mode)
+- [x] 3.2 GREEN `packages/chains/src/{local,anvil,guarded-clients,explorer}.ts`: `LocalChain`, `shell: false` fixed args, `setCode` cheat (No explorer, Registry unchanged)
 
 ## PR 4: Profile (specs: config-profiles, local-crosschain-profile)
 
-- [ ] 4.1 RED: five profiles (rename in tests and docs), Live keys ignored, Two bad values (one error naming both), No chain ID env key, Remote RPC, Live chain ID statics, Local profile loads, Env example
-- [ ] 4.2 GREEN `packages/config/src/{env,profiles,load-profile}.ts`, `.env.example`, `childEnv` for forge; statics incl. shared `budget`
+- [x] 4.1 RED: five profiles (rename in tests and docs), Live keys ignored, Two bad values (one error naming both), No chain ID env key, Remote RPC, Live chain ID statics, Local profile loads, Env example
+- [x] 4.2 GREEN `packages/config/src/{env,profiles,load-profile}.ts`, `.env.example`, `childEnv` for forge; statics incl. shared `budget` (`childEnv` deferred to the forge wrapper PR: no forge spawn exists yet)
 
 ## PR 5: Labeling (specs: simulated-run-labeling, core-domain-ports)
 
-- [ ] 5.1 RED: Marker round trip, absent, on the base, other value; Hop with and without link; Call with and without value; Stamped by the channel; Save refused, Real run saves; replay refuses marked lines
-- [ ] 5.2 GREEN `packages/core/src/{domain/agent-event,ports/chain-client}.ts`, `packages/agent-kit/src/{runner/event-channel,recording/recording}.ts`, `apps/web/src/server/replay-source.ts`
+- [x] 5.1 RED: Marker round trip, absent, on the base, other value; Hop with and without link; Call with and without value; Stamped by the channel; Save refused, Real run saves; replay refuses marked lines
+- [x] 5.2 GREEN `packages/core/src/{domain/agent-event,ports/chain-client}.ts`, `packages/agent-kit/src/{runner/event-channel,recording/recording}.ts`, `apps/web/src/server/replay-source.ts`
 
 ## PR 6: World base (threat matrix: git selection, process spawn)
 
