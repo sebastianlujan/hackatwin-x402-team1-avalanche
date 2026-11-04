@@ -29,3 +29,5 @@ export function decodeFrame(data: string): Envelope {
   if (typeof event !== 'string') throw new AgentEventError('Frame event must be an encoded string');
   return { seq, source, event: decodeAgentEvent(event) };
 }
+
+export const sourceLabel = (source: Source): string | undefined => (source === 'replay' ? 'Replay' : undefined);
