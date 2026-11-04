@@ -964,7 +964,6 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 
 **T8.3 `feat(demo-2): add treasury setup script`**
 
-- Local base (B0): runs against the local pair deployed by the real scripts.
 - Branch: `feature/treasury-setup`
 - Depends on: T7.12
 - What: Create the lane, approve the hub from the treasury, and sign the EIP-712 budget authorization for the broker.
@@ -1328,12 +1327,7 @@ export interface Container {
 
 ### 5.3 ICTT paths in local E2E
 
-> **M8 order change (2026-11-04).** Option B waits on T6.7, so M8 first builds on option B0: two plain anvils with
-> `CCIPLocalSimulator` on the hub, Teleporter and the ICTT pair built from `ava-labs/icm-services` at the PROVENANCE
-> commit (fetched at test time into the gitignored `.cache/`, never committed, O7), the `WarpMessengerStub` in
-> `packages/contracts/test/utils/`, and the relay in `e2e/protocol/src/local/`. The local T8.1 adapter and T8.2 to T8.5
-> run on B0. The real CCIP sender, CCIP API status, hop explorer links, T8.6, and option B still wait on T7.12. B0 output
-> is labeled simulated and is never a stage demo or replay (C1, Q2).
+> M8 first runs on option B0: two plain anvils with the relay simulator and no forks (see the M8 order change note).
 
 
 | Option | What runs | Fidelity | Cost | Verdict |
