@@ -1,0 +1,16 @@
+UnitIcttMessengerSend
+└── when the hub sends a payment
+    ├── given a caller that is not the hub
+    │   └── it reverts with IcttMessenger_OnlyHub
+    ├── given a lane destination that is not configured
+    │   └── it reverts with IcttMessenger_DestinationMismatch
+    ├── given a lane token that is not the bound token
+    │   └── it reverts with IcttMessenger_TokenMismatch
+    ├── given a zero amount
+    │   └── it reverts with IcttMessenger_ZeroAmount
+    ├── given a valid payment
+    │   ├── it passes the configured values and the payment to sendAndCall
+    │   ├── it approves exactly the amount and leaves no balance or allowance
+    │   └── it emits one PaymentSent
+    └── given a transferrer that reverts
+        └── it reverts and leaves no tokens in the messenger
