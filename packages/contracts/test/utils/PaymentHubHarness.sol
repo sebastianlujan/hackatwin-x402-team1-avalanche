@@ -32,6 +32,10 @@ contract PaymentHubHarness is PaymentHub {
     _budgets[_authorizer][_authorized][_token] = _budget;
   }
 
+  function exposed_credit(address _token, address _merchant) external view returns (uint256 _credit) {
+    _credit = _credits[_token][_merchant];
+  }
+
   function exposed_budget(
     address _authorizer,
     address _authorized,
