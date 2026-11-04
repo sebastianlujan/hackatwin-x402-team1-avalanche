@@ -1,0 +1,28 @@
+{
+  "key": "arbitrum",
+  "name": "Arbitrum One",
+  "status": "live",
+  "chainId": 42161,
+  "access": "read-only",
+  "rpc": { "public": "https://arb1.arbitrum.io/rpc" },
+  "contracts": {
+    "curveArgtUsdt0Pool": {
+      "address": "0x356D349dA9ADd7Efb56a35fAB939A2c6D852f853",
+      "source": "https://arbiscan.io/address/0x356d349da9add7efb56a35fab939a2c6d852f853",
+      "checks": [
+        { "call": "function coins(uint256 i) view returns (address)", "args": ["0"], "expect": "@argt" },
+        { "call": "function coins(uint256 i) view returns (address)", "args": ["1"], "expect": "@usdt0" }
+      ]
+    },
+    "argt": {
+      "address": "0x59863989d080B22476DB95656d0C3CC18be92214",
+      "source": "read: coins(0) of curveArgtUsdt0Pool, 2026-11-04",
+      "checks": [{ "call": "function symbol() view returns (string)", "expect": "ARGt" }]
+    },
+    "usdt0": {
+      "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+      "source": "read: coins(1) of curveArgtUsdt0Pool, 2026-11-04",
+      "checks": [{ "call": "function symbol() view returns (string)", "expect": "USD₮0" }]
+    }
+  }
+}
