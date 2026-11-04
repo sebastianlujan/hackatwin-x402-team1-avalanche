@@ -24,6 +24,14 @@ const contract = z.strictObject({
   checks: z.array(check).optional(),
   heartbeatSeconds: z.number().int().positive().optional(),
 });
+const icm = z.strictObject({
+  blockchainId: z
+    .string()
+    .regex(/^0x[0-9a-fA-F]{64}$/)
+    .optional(),
+  usdcTokenHome: address.optional(),
+  usdcTokenRemote: address.optional(),
+});
 const live = z.strictObject({
   key: z.string(),
   name: z.string(),
@@ -32,6 +40,7 @@ const live = z.strictObject({
   access: z.enum(['read-only', 'fork-only', 'read-write']),
   rpc: z.strictObject({ public: z.url() }),
   ccip: z.strictObject({ chainSelector: z.string().regex(/^\d+$/) }).optional(),
+  icm: icm.optional(),
   contracts: z.record(z.string(), contract),
 });
 const planned = z.strictObject({
