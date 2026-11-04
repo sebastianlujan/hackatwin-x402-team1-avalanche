@@ -39,6 +39,9 @@ abstract contract PaymentHub is IPaymentHub, Ownable2Step, EIP712, Nonces, Reent
   /// @notice The number of payments created, which feeds the payment id
   uint256 internal _count;
 
+  /// @notice Credited merchant balance by token and merchant, withdrawn by the merchant
+  mapping(address _token => mapping(address _merchant => uint256 _credit)) internal _credits;
+
   /// @notice Lane params by lane id; a lane exists when its token is set
   mapping(Id _id => LaneParams _params) internal _lanes;
 
@@ -141,6 +144,29 @@ abstract contract PaymentHub is IPaymentHub, Ownable2Step, EIP712, Nonces, Reent
     uint256 _escrow = _payment.amount;
     _payment.amount = 0;
     IERC20(_lanes[_id].token).safeTransfer(_payer, _escrow);
+  }
+
+  /// @inheritdoc IPaymentHub
+  function settle(Id _id, bytes32 _paymentId) external nonReentrant {
+    _transition(_id, _paymentId, Status.Pending, Status.Settled);
+
+    LaneParams storage _lane = _lanes[_id];
+    if (_lane.messenger != address(0)) revert PaymentHub_WrongLaneKind();
+    Payment storage _payment = _payments[_id][_paymentId];
+    if (block.timestamp > _payment.deadline) revert PaymentHub_DeadlinePassed();
+
+    uint256 _escrow = _payment.amount;
+    _payment.amount = 0;
+    _credits[_lane.token][_lane.merchant] += _escrow;
+  }
+
+  /// @inheritdoc IPaymentHub
+  function withdraw(address _token) external nonReentrant {
+    uint256 _credit = _credits[_token][msg.sender];
+    if (_credit == 0) revert PaymentHub_ZeroAmount();
+    _credits[_token][msg.sender] = 0;
+    IERC20(_token).safeTransfer(msg.sender, _credit);
+    emit Withdrawn(_token, msg.sender, _credit);
   }
 
   /// @inheritdoc IPaymentHub
