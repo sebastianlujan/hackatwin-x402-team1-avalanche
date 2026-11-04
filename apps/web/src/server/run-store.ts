@@ -40,7 +40,7 @@ interface RunRecord {
   status: RunView['status'];
   llm?: 'claude' | 'scripted';
   before?: BalanceSnapshot;
-  after?: BalanceSnapshot;
+  after?: BalanceSnapshot | undefined;
   readonly frames: Envelope[];
   readonly listeners: Set<(e: Envelope) => void>;
 }
@@ -66,14 +66,6 @@ export function createRunStore({ newId = () => crypto.randomUUID(), now = Date.n
     for (const listener of [...r.listeners]) listener(frame);
   };
 
-  const settle = async (r: RunRecord, run: StartedRun): Promise<void> => {
-    try {
-      r.after = await run.after();
-    } catch {
-      // The record simply keeps no after balances.
-    }
-  };
-
   const pump = async (r: RunRecord, run: StartedRun): Promise<void> => {
     let finished: AgentEvent | undefined;
     try {
@@ -95,7 +87,7 @@ export function createRunStore({ newId = () => crypto.randomUUID(), now = Date.n
       const message = error instanceof Error ? error.message : String(error);
       finished = { version: 1, type: 'run.finished', at: now(), reason: 'error', message };
     }
-    await settle(r, run);
+    r.after = await run.after().catch(() => undefined);
     r.status = 'finished';
     publish(r, finished);
   };
