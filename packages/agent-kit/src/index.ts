@@ -1,6 +1,7 @@
 export * from './identity/abi.ts';
 export * from './identity/erc8004-identity.ts';
 export * from './identity/errors.ts';
+export * from './policy/budget-policy.ts';
 export * from './x402/engine.ts';
 export * from './x402/errors.ts';
 export * from './x402/payment-gateway.ts';
