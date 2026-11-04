@@ -1,0 +1,4 @@
+{
+  "extends": ["../../tsconfig.base.json", "@docusaurus/tsconfig"],
+  "include": ["docusaurus.config.ts", "sidebars.ts", "src"]
+}
