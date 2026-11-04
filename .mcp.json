@@ -1,5 +1,6 @@
 {
   "mcpServers": {
-    "avalanche-mcp": { "type": "http", "url": "https://build.avax.network/api/mcp" }
+    "avalanche-mcp": { "type": "http", "url": "https://build.avax.network/api/mcp" },
+    "OpenZeppelinSolidityContracts": { "type": "http", "url": "https://mcp.openzeppelin.com/contracts/solidity/mcp" }
   }
 }
