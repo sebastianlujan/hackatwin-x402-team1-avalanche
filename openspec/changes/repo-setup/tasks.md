@@ -90,40 +90,40 @@ Specs: commit-gate.
 
 Specs: docs-site (build, links, diagrams, in place). Parallel with Phase 3 in authoring only; branches stay stacked.
 
-- [ ] 4.1 Create `apps/docs/package.json` (every `@docusaurus/*` at `3.10.2` via catalog, react, mdx, clsx, prism),
+- [x] 4.1 Create `apps/docs/package.json` (every `@docusaurus/*` at `3.10.2` via catalog, react, mdx, clsx, prism),
   `tsconfig.json` (extends base and `@docusaurus/tsconfig`), `sidebars.ts`. Check: `pnpm install --frozen-lockfile`;
   if `tsc --noEmit` fails on TS 7, pin the latest 5.x for `apps/docs` only and note it in the PR.
-- [ ] 4.2 Create `apps/docs/docusaurus.config.ts` per design (`docs.path: '../../docs'`, `routeBasePath: '/'`,
+- [x] 4.2 Create `apps/docs/docusaurus.config.ts` per design (`docs.path: '../../docs'`, `routeBasePath: '/'`,
   `blog: false`, `url`, `baseUrl`, `markdown.format: 'detect'`, `mermaid: true`, throw on broken links and Markdown
   links, Mermaid themes, Prism `solidity` and `toml`, `future.v4: true`). Add `docs/README.md` with `slug: /`. Check:
   requirement "Docusaurus reads docs in place"; no file copied out of `docs/` (`git status` shows no duplicates;
   PLAN box 3).
-- [ ] 4.3 Fix broken links in `docs/*.md` in place until `pnpm --filter docs build` passes. Check: PLAN box 1;
+- [x] 4.3 (no broken links existed; probe confirmed the build fails on one) Fix broken links in `docs/*.md` in place until `pnpm --filter docs build` passes. Check: PLAN box 1;
   requirement "Broken links fail the build"; probe: an uncommitted broken link makes the build fail, then remove it.
-- [ ] 4.4 Threat probe: a `.md` file containing `{1+1}` renders literally. Check with `pnpm --filter docs serve`.
-- [ ] 4.5 Render check in `serve`: Mermaid blocks render in light and dark themes, and all 5 Excalidraw SVGs in
+- [x] 4.4 Threat probe: a `.md` file containing `{1+1}` renders literally. Check with `pnpm --filter docs serve`.
+- [x] 4.5 Render check in `serve`: Mermaid blocks render in light and dark themes, and all 5 Excalidraw SVGs in
   `docs/diagrams/` render (PLAN box 2; requirement "Diagrams render").
-- [ ] 4.6 Open PR 4. Check: CI green; if the line count tops 400 because of link fixes, split link fixes into a
+- [x] 4.6 Open PR 4. Check: CI green; if the line count tops 400 because of link fixes, split link fixes into a
   preceding commit or PR (flag, do not exceed silently).
 
 ## Phase 5: PR 5, T1.4 (`feature/ci-workspace-jobs`, depends on PRs 2 and 4)
 
 Specs: ci-workspace-jobs.
 
-- [ ] 5.1 Resolve every new action SHA with `gh api repos/<owner>/<repo>/commits/<tag> --jq .sha` (tag as a trailing
+- [x] 5.1 Resolve every new action SHA with `gh api repos/<owner>/<repo>/commits/<tag> --jq .sha` (tag as a trailing
   comment): `dorny/paths-filter`, `pnpm/action-setup`, `actions/setup-node`, `actions/upload-artifact`. Check:
   `rg -nP 'uses: [^#\s]+@(?![0-9a-f]{40}\b)' .github/workflows` finds nothing; requirement "Pinned actions and actionlint".
-- [ ] 5.2 Extend `.github/workflows/ci.yml`: `changes` job (inline filters, root anchor, `docs`, `demo-3`), `biome`
+- [x] 5.2 Extend `.github/workflows/ci.yml`: `changes` job (inline filters, root anchor, `docs`, `demo-3`), `biome`
   job, `docs-build` job (typecheck, build, PR artifact `docs-site`, 7 days), install steps per design, top-level
   `permissions: contents: read` (`changes` adds `pull-requests: read`), `timeout-minutes` on every job, shell inputs
   only through `env:`. Check: requirements "Path-filtered workspace jobs", "Reproducible installs", "Job limits and
   permissions"; PLAN boxes 1 and 2.
-- [ ] 5.3 Add the `ci-gate` job exactly as in the design (`if: always()`, needs all jobs, `jq` over `toJSON(needs)`).
+- [x] 5.3 Add the `ci-gate` job exactly as in the design (`if: always()`, needs all jobs, `jq` over `toJSON(needs)`).
   Check: requirement "Aggregate gate".
-- [ ] 5.4 Local static check: `actionlint` passes. Check: PLAN box 3.
-- [ ] 5.5 CI probes. Check: a docs-only change gives a green gate with skipped jobs; a draft probe PR with a failing
+- [x] 5.4 Local static check: `actionlint` passes. Check: PLAN box 3.
+- [x] 5.5 (failing-gate and injection-title probes done on throwaway PR #20; docs-only skip probe deferred until the workflow is on develop) CI probes. Check: a docs-only change gives a green gate with skipped jobs; a draft probe PR with a failing
   job makes `ci-gate` red; the threat-matrix title `x"; echo pwned; "` fails format and the log has no `pwned`.
-- [ ] 5.6 Open PR 5. Check: `ci-gate` appears and is green.
+- [x] 5.6 Open PR 5. Check: `ci-gate` appears and is green.
 - [ ] 5.7 OPERATIONAL, needs develop merged: after PR 5 is merged, confirm `ci-gate` ran green on `develop`
   (`gh run list --branch develop --workflow ci.yml`). This unblocks task 6.4.
 
@@ -131,13 +131,13 @@ Specs: ci-workspace-jobs.
 
 Specs: branch-policy.
 
-- [ ] 6.1 Export live rulesets verbatim: `gh api repos/<owner>/<repo>/rulesets/26496788` and `/26496789` into
+- [x] 6.1 Export live rulesets verbatim: `gh api repos/<owner>/<repo>/rulesets/26496788` and `/26496789` into
   `.github/rulesets/develop.json` and `main.json` (fields `name, target, enforcement, conditions, bypass_actors,
   rules`). Commit 1 is the verbatim export. Check: requirement "Rulesets as code"; resolves the open question on live
   JSON.
-- [ ] 6.2 Commit 2: set `required_status_checks` to `ci-gate` only, keeping any live `integration_id`; change
+- [x] 6.2 Commit 2: set `required_status_checks` to `ci-gate` only, keeping any live `integration_id`; change
   nothing else. Check: `jq -S` diff of the two files against the export shows only that rule.
-- [ ] 6.3 Create `.github/CODEOWNERS` (`* @sebastianlujan`) and document export, `jq -S` semantic diff, and
+- [x] 6.3 Create `.github/CODEOWNERS` (`* @sebastianlujan`) and document export, `jq -S` semantic diff, and
   `gh api -X PUT repos/<owner>/<repo>/rulesets/<id> --input <file>` in `CONTRIBUTING.md`. Check: requirements
   "CODEOWNERS", "Apply command documented"; PLAN box 3.
 - [ ] 6.4 OPERATIONAL, needs develop merged and `ci-gate` green on `develop` (task 5.7) and PR 6 merged: apply both
@@ -146,7 +146,7 @@ Specs: branch-policy.
   push or deletion"; PLAN box 1.
 - [ ] 6.5 Threat probes, only as a non-bypass actor: `git push origin HEAD:develop`, `--force`, and `:develop` are
   rejected. Check: requirement "Direct pushes rejected"; PLAN box 2.
-- [ ] 6.6 Open PR 6. Check: CI green. Never apply rulesets before task 5.7, or every PR waits on a missing check.
+- [x] 6.6 Open PR 6. Check: CI green. Never apply rulesets before task 5.7, or every PR waits on a missing check.
 
 ## Phase 7: PR 7, T1.6 (`feature/docs-deploy`, depends on PRs 4 and 5)
 
@@ -156,12 +156,12 @@ Specs: docs-site (deploy, artifact, setup documented).
   `build_type=workflow`; `PUT /environments/github-pages` with `custom_branch_policies: true`; `POST
   .../deployment-branch-policies` with `name=main`; delete any other policy. Check: `gh api
   repos/<owner>/<repo>/environments/github-pages/deployment-branch-policies` lists only `main`.
-- [ ] 7.2 Create `.github/workflows/docs-deploy.yml` per design (push to `main` and `workflow_dispatch`, `permissions:
+- [x] 7.2 Create `.github/workflows/docs-deploy.yml` per design (push to `main` and `workflow_dispatch`, `permissions:
   {}`, concurrency `pages` without cancel, `build` with `upload-pages-artifact`, `deploy` guarded on ref `main` with
   `pages: write`, `id-token: write`, environment `github-pages`, SHA-pinned actions). Check: `actionlint`; SHA-pin
   `rg` check; requirement "Pages deploy from main".
-- [ ] 7.3 Document the "github-pages" setup steps in `CONTRIBUTING.md`. Check: requirement "Pages setup documented".
-- [ ] 7.4 Open PR 7. Check: PR run attaches the `docs-site` artifact (PLAN box 3; requirement "PR site artifact");
+- [x] 7.3 Document the "github-pages" setup steps in `CONTRIBUTING.md`. Check: requirement "Pages setup documented".
+- [x] 7.4 Open PR 7. Check: PR run attaches the `docs-site` artifact (PLAN box 3; requirement "PR site artifact");
   `docs-deploy` does not run on PRs.
 
 ## Phase 8: Release and publish (needs develop merged with PRs 1 to 7)
