@@ -1,0 +1,44 @@
+import { createChainClient, createGuardedClients, type GuardedClients } from '@hackatwin/chains';
+import { loadKeystoreAccount } from '@hackatwin/chains/keystore';
+import { loadProfile, type Profile } from '@hackatwin/config';
+import { type Container, createContainer } from '@hackatwin/core';
+import { registerX402Module } from './module.ts';
+import { fileState, ROLES, type Role, STATE_DIR } from './state.ts';
+import { Tokens } from './tokens.ts';
+
+export const PORTS = { facilitator: 4020, seller: 4021 } as const;
+
+export interface Root {
+  readonly container: Container;
+  readonly profile: Profile<'cchain-fork'>;
+  readonly fork: GuardedClients;
+}
+
+// Every Demo 1 process starts here: profile, keystores, guarded fork client, then the module.
+export async function composeRoot({ readChains = false }: { readonly readChains?: boolean } = {}): Promise<Root> {
+  const profile = loadProfile('cchain-fork');
+  const { env } = profile;
+  const dir = env.KEYSTORE_DIR ?? STATE_DIR;
+  const accounts = Object.fromEntries(
+    ROLES.map((role: Role) => {
+      const upper = role.toUpperCase() as 'AGENT' | 'SELLER' | 'FACILITATOR';
+      return [role, loadKeystoreAccount(env[`${upper}_KEYSTORE`], env[`${upper}_KEYSTORE_PASSWORD_FILE`], dir)];
+    }),
+  ) as Record<Role, ReturnType<typeof loadKeystoreAccount>>;
+  const fork = await createGuardedClients({ chain: 'cchain', rpcUrl: env.CCHAIN_FORK_RPC_URL });
+  if (fork.refusal !== undefined) throw new Error(`refusing to start: ${fork.refusal}`);
+  const reads = readChains
+    ? {
+        arbitrum: await createChainClient({ chain: 'arbitrum', rpcUrl: env.ARBITRUM_RPC_URL }),
+        base: await createChainClient({ chain: 'base', rpcUrl: env.BASE_RPC_URL }),
+      }
+    : undefined;
+  const container = createContainer();
+  container.register(Tokens.Config, () => profile);
+  container.register(Tokens.Accounts, () => accounts);
+  container.register(Tokens.Fork, () => fork);
+  if (reads !== undefined) container.register(Tokens.ReadChains, () => reads);
+  container.register(Tokens.State, () => fileState(dir));
+  registerX402Module(container);
+  return { container, profile, fork };
+}
