@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const required = { error: 'is required' } as const;
 
-const isRpcUrl = (value: string): boolean => {
+export const isRpcUrl = (value: string): boolean => {
   try {
     return /^(https?|wss?):$/.test(new URL(value).protocol);
   } catch {
