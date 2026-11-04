@@ -19,6 +19,7 @@ decisions stay in [Decisions](../decisions.md).
 | [0007](0007-guarded-sdk-clients.md) | SDK signers and anvil cheats get viem clients only from `packages/chains`, behind one guard | Accepted |
 | [0008](0008-scripted-llm-mode.md) | `--scripted` is a labeled LLM adapter on the live path, not a test fake | Accepted |
 | [0009](0009-own-ictt-interfaces.md) | We write our own minimal MIT ICTT interfaces instead of vendoring `icm-services` files | Accepted, O7 open |
+| [0010](0010-receiver-address-by-nonce-prediction.md) | The messenger gets the receiver address by deployer nonce prediction, both immutable | Accepted |
 
 ## Add an ADR
 
