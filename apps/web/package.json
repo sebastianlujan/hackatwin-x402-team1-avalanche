@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --env-file-if-exists=../../.demo1/demo1.env --env-file-if-exists=../../.env ../../node_modules/next/dist/bin/next dev",
+    "dev": "next dev -H 127.0.0.1",
     "build": "next build",
-    "start": "node --env-file-if-exists=../../.demo1/demo1.env --env-file-if-exists=../../.env ../../node_modules/next/dist/bin/next start",
+    "start": "next start -H 127.0.0.1",
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
