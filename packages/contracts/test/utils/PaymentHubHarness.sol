@@ -24,6 +24,14 @@ contract PaymentHubHarness is PaymentHub {
     _enabled = _messengerEnabled[_messenger];
   }
 
+  function exposed_payment(Id _id, bytes32 _paymentId) external view returns (Payment memory _payment) {
+    _payment = _payments[_id][_paymentId];
+  }
+
+  function exposed_setBudget(address _authorizer, address _authorized, address _token, uint256 _budget) external {
+    _budgets[_authorizer][_authorized][_token] = _budget;
+  }
+
   function exposed_budget(
     address _authorizer,
     address _authorized,
