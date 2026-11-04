@@ -5,10 +5,9 @@ import { promisify } from 'node:util';
 
 const run = promisify(execFile);
 
-// No inherited GIT_DIR or config: git sees only the directory it is pointed at.
+// A fixed environment: no inherited GIT_DIR or config: git sees only the directory it is pointed at.
 const gitEnv = (): NodeJS.ProcessEnv => ({
-  PATH: process.env.PATH,
-  HOME: process.env.HOME,
+  PATH: '/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin',
   LC_ALL: 'C',
   GIT_CONFIG_NOSYSTEM: '1',
   GIT_CONFIG_GLOBAL: '/dev/null',
