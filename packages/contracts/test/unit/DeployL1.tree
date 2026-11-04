@@ -17,10 +17,18 @@ UnitDeployL1
 │   │   └── it reverts with AddressMismatch before any deployment
 │   ├── given no merchant in params
 │   │   └── it makes no allowlist call
-│   └── given merchants in params
-│       └── it allows each merchant on the receiver
+│   ├── given merchants in params
+│   │   └── it allows each merchant on the receiver
+│   ├── given an owner other than the deployer
+│   │   └── it applies the merchants as the deployer and leaves the owner as pending owner
+│   └── given an owner equal to the deployer
+│       └── it leaves no pending owner
 └── when recording the deployment
     ├── given a dry run
     │   └── it writes no file
-    └── given the deployed receiver
-        └── it serializes the chain ID the deployer and the receiver
+    ├── given the deployed receiver
+    │   └── it serializes the chain ID the deployer and the receiver
+    ├── given an owner other than the deployer
+    │   └── it serializes the pending owner
+    └── given an owner equal to the deployer
+        └── it serializes no pending owner

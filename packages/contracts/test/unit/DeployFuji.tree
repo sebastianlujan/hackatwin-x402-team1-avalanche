@@ -17,13 +17,21 @@ UnitDeployFuji
 │   │   └── it gives the messenger the predicted receiver address
 │   ├── given no broker pair in params
 │   │   └── it makes no allowlist call
-│   └── given a broker pair in params
-│       └── it allows the sender with the selector read from the registry
+│   ├── given a broker pair in params
+│   │   └── it allows the sender with the selector read from the registry
+│   ├── given an owner other than the deployer
+│   │   └── it applies the config as the deployer and leaves the owner as pending owner of the hub and the broker
+│   └── given an owner equal to the deployer
+│       └── it leaves no pending owner
 ├── when recording the deployment
 │   ├── given a dry run
 │   │   └── it writes no file
-│   └── given the deployed addresses
-│       └── it serializes the chain ID the deployer and every address
+│   ├── given the deployed addresses
+│   │   └── it serializes the chain ID the deployer and every address
+│   ├── given an owner other than the deployer
+│   │   └── it serializes the pending owner
+│   └── given an owner equal to the deployer
+│       └── it serializes no pending owner
 └── when dry running on a Fuji fork
     └── given the fork flag is set
         └── it deploys against the real router and USDC
