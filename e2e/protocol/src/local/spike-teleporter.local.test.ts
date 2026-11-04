@@ -1,7 +1,8 @@
 import { startLocalAnvil } from '@hackatwin/chains';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { LOCAL_HUB, LOCAL_L1 } from './anvils.ts';
-import { CANONICAL_TELEPORTER, runSpike, type SpikeReport } from './spike-teleporter.ts';
+import { runSpike, type SpikeReport } from './spike-teleporter.ts';
+import { CANONICAL_TELEPORTER } from './teleporter.ts';
 
 const pids: number[] = [];
 let report: SpikeReport;
