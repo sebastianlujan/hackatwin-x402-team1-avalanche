@@ -13,11 +13,22 @@ Mode: Strict TDD (Solidity: Bulloak tree, red, green; TypeScript: tests in the s
 
 Tasks 2.1 to 2.4, 3.1, 3.2, 4.1, 4.2, 5.1, 5.2 are marked `[x]` in `tasks.md`.
 
+## Batch 2 (PR 6): done
+
+Queue reorder: PR 6 runs before PR 1 (no PR 1 content needed; `.gitignore` `.cache/` stays in task 1.1). Queue is now #232, PR 6 (#234), PR 1, PR 7.
+
+| Task PR | Branch | Issue | PR | Red | Green | Authored lines |
+|---|---|---|---|---|---|---|
+| 6 | `feature/local-world-base` | #233 | #234 | cfbe910 | 89dc104 (+ fix 809078a) | about 216 |
+
+Tasks 6.1 to 6.3 are marked `[x]`. CI green on #234 after one fix commit: the dependency rule R6 forbids `process.env` outside the loader, so the git wrapper uses a fixed environment instead of inheriting `PATH` and `HOME`.
+Design choices: unit tests (`*.test.ts` in `e2e/protocol/src/local/`) run in the default project; real-anvil tests (`*.local.test.ts`) run in the serial `local` project via `pnpm test:local`. Local RPC ports are 18545 (hub, 31337) and 18546 (L1, 31338). Real anvils were started and killed in `anvils.local.test.ts`; none remain.
+Environment note: pnpm 12.16.1 self-switch is broken locally (exec error -8); commands and the commit hook run with `npm_config_manage_package_manager_versions=false`.
+
 ## Deferred (pending the user's approval to fetch `ava-labs/icm-services`)
 
 - PR 1 (spike and fetch, tasks 1.1 to 1.6): not started; no external clone, download, build or execution was done.
-- PR 6 (git-safe fetch wrapper, anvils, `local` project, tasks 6.1 to 6.3): not started.
-- Both will be inserted later in the queue, after the approval.
+- PR 1 will be inserted later in the queue, after the approval.
 
 ## Deviations and notes
 

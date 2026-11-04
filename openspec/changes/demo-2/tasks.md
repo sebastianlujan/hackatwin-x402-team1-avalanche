@@ -74,9 +74,9 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 6: World base (threat matrix: git selection, process spawn)
 
-- [ ] 6.1 RED `e2e/protocol/src/local/icm-services.test.ts`: relative path refused; dir equal to project root refused; absolute accepted
-- [ ] 6.2 GREEN `icm-services.ts` (`git -C <abs>`, `rev-parse --show-toplevel` check) and `anvils.ts` (probe loopback, chain IDs; Chain IDs scenario)
-- [ ] 6.3 `vitest.config.ts` `local` project (serial), `package.json` `test:local` (No external inputs, Teardown)
+- [x] 6.1 RED `e2e/protocol/src/local/icm-services.test.ts`: relative path refused; dir equal to project root refused; absolute accepted
+- [x] 6.2 GREEN `icm-services.ts` (`git -C <abs>`, `rev-parse --show-toplevel` check) and `anvils.ts` (probe loopback, chain IDs; Chain IDs scenario)
+- [x] 6.3 `vitest.config.ts` `local` project (serial), `package.json` `test:local` (No external inputs, Teardown)
 
 ## PR 7: World infra steps 1 to 3 (needs spike pass)
 
