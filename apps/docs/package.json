@@ -1,0 +1,30 @@
+{
+  "name": "docs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "serve": "docusaurus serve",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@docusaurus/core": "catalog:",
+    "@docusaurus/faster": "catalog:",
+    "@docusaurus/preset-classic": "catalog:",
+    "@docusaurus/theme-mermaid": "catalog:",
+    "@mdx-js/react": "catalog:",
+    "clsx": "catalog:",
+    "prism-react-renderer": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@docusaurus/tsconfig": "catalog:",
+    "@docusaurus/types": "catalog:",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
