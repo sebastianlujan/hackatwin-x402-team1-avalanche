@@ -201,7 +201,8 @@ hackatwin-x402-team1-avalanche/
 │       ├── demo3.config.ts        # typed profile selection
 │       └── main.ts                # composition root only
 ├── packages/
-│   ├── core/                      # DI container, domain types, ports, config schemas; testing/ holds fakes
+│   ├── core/                      # DI container, domain types, ports; testing/ holds fakes; no dependencies
+│   ├── config/                    # zod profile schemas and loadProfile, the only process.env reader (ADR 0005)
 │   ├── chains/                    # registry JSON for TS and Foundry, viem ChainClient, fork guard, chains:verify
 │   ├── contracts/                 # Foundry: the four contracts, L1 Permit2 and x402 proxy deploys, ABI exports
 │   ├── pricing/                   # CurvePoolOracle, ChainlinkFeedOracle, GuardedOracle; pnpm quote
