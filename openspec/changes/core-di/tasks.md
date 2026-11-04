@@ -122,16 +122,16 @@ export; no consumer exists before M4.
 Start: PR 3 branch. End: Money, `AgentEvent` v1 codec, seven ports and `Ports` tokens. Spec links: `core-domain-ports`
 (Domain types, AgentEvent wire format, Seven ports, Zero runtime dependencies and no adapters).
 
-- [ ] 4.1 `packages/core/src/domain/money.ts`: `Address`, `Hex`, `AssetSymbol`, `Currency`, `Money`, `MoneyError`,
+- [x] 4.1 `packages/core/src/domain/money.ts`: `Address`, `Hex`, `AssetSymbol`, `Currency`, `Money`, `MoneyError`,
   `money`, `parseMoney`, `formatMoney`, `addMoney`, `compareMoney`, `convertMoney` (rounds up; mismatches throw).
   Parallel with 4.2. Accept: `pnpm typecheck`.
-- [ ] 4.2 `domain/payment.ts` (`PaymentStatus` string union, `PaymentIntent`, `Quote`) and `domain/agent-event.ts`
+- [x] 4.2 `domain/payment.ts` (`PaymentStatus` string union, `PaymentIntent`, `Quote`) and `domain/agent-event.ts`
   (`AgentEvent` v1 union with all eleven `type`s, `encodeAgentEvent`, `decodeAgentEvent`, `AgentEventError`; bigints
   as decimal strings; revive only `units` and `agentId`; reject unknown `version` or `type`). Accept: `pnpm typecheck`.
-- [ ] 4.3 `ports/<port>.ts` for `PaymentGateway`, `AgentPolicy`, `AgentIdentity`, `ChainClient`, `LLM`, `PriceOracle`,
+- [x] 4.3 `ports/<port>.ts` for `PaymentGateway`, `AgentPolicy`, `AgentIdentity`, `ChainClient`, `LLM`, `PriceOracle`,
   `CrossChainMessenger` with their supporting types, plus `ports/tokens.ts` (`Ports` map) and index exports.
   Depends on 4.1 and 4.2 (Money, Quote, PaymentStatus). Accept: `pnpm typecheck`.
-- [ ] 4.4 Tests: `money.test.ts` (Money arithmetic, Mismatched decimals, round-up conversion, parse and format),
+- [x] 4.4 Tests: `money.test.ts` (Money arithmetic, Mismatched decimals, round-up conversion, parse and format),
   `agent-event.test.ts` (Round trip for every `type` including bigint fields, Unknown version, unknown type), and a
   compile-only check that `Ports` has seven tokens typed to the interfaces. Depends on 4.1 to 4.3. Accept:
   `pnpm test` green; the dependency-rule test still reports zero violations (Import scan: core has no runtime
@@ -144,11 +144,11 @@ Verification: `pnpm typecheck && pnpm test`; CI green. Rollback: remove `domain/
 Start: PR 4 branch. End: seven fakes under `@hackatwin/core/testing`, never imported by production code. Spec links:
 `core-domain-ports` (Test-only fakes).
 
-- [ ] 5.1 `packages/core/src/testing/` with `FakePaymentGateway`, `FakeAgentIdentity`, `FakeAgentPolicy`,
+- [x] 5.1 `packages/core/src/testing/` with `FakePaymentGateway`, `FakeAgentIdentity`, `FakeAgentPolicy`,
   `FakeChainClient`, `ScriptedLLM`, `FakePriceOracle`, `FakeCrossChainMessenger` per the design table (no clock or
   randomness unless injected), `testing/index.ts`, and the `./testing` `exports` entry in core's `package.json`.
   Each class `implements` its port. Accept: `pnpm typecheck` (fakes implement each port).
-- [ ] 5.2 Tests per fake (scripted replay and request recording, exhaustion throws for `ScriptedLLM`, sequential
+- [x] 5.2 Tests per fake (scripted replay and request recording, exhaustion throws for `ScriptedLLM`, sequential
   ids and hashes, feedback to reputation, injected clock for the oracle, `track` yields scripted hops) and one
   container test swapping a fake into a child scope. Depends on 5.1. Accept: `pnpm test` green (Scripted fake); the
   dependency-rule test passes and its R5 fixture still fails a non-test import of `@hackatwin/core/testing` (Fake in
@@ -161,23 +161,23 @@ Verification: `pnpm typecheck && pnpm test`; CI green. Rollback: remove `src/tes
 Start: PR 5 branch. End: `@hackatwin/config` with four profiles, the sole `process.env` reader, `.env.example`.
 Spec links: `config-profiles` (all requirements); ADR 0005.
 
-- [ ] 6.1 Toolchain check first: install zod 4.6.7 in `packages/config` and confirm `tsc --noEmit` passes under
+- [x] 6.1 Toolchain check first: install zod 4.6.7 in `packages/config` and confirm `tsc --noEmit` passes under
   TypeScript 7.0.2; if it breaks, pin `typescript` 5.9.3 in `packages/config` only and record it in the PR body.
   Accept: `pnpm -F @hackatwin/config typecheck` passes.
-- [ ] 6.2 `packages/config/src/env.ts` (zod schemas keyed by variable names; http(s) and ws(s) URLs; loopback guard
+- [x] 6.2 `packages/config/src/env.ts` (zod schemas keyed by variable names; http(s) and ws(s) URLs; loopback guard
   for `CCHAIN_FORK_RPC_URL` only; positive-integer chain ids; keystore name `[A-Za-z0-9._-]`; absolute password-file
   path; `ENV_VARIABLES` export of every schema key) and `profiles.ts` (static values per profile table: asset, x402
   method, `llm`, budget 1 USD and 5 USD at 6 decimals, `facilitator: 'x402-ts'` on x402 profiles; `ProfileToken`,
   `PROFILE_NAMES`). Parallel with 6.3 once types are agreed. Accept: `pnpm typecheck`.
-- [ ] 6.3 `load-profile.ts`: `loadProfile(name, env = process.env)` with literal-name overloads; unknown name
+- [x] 6.3 `load-profile.ts`: `loadProfile(name, env = process.env)` with literal-name overloads; unknown name
   `ConfigError` listing four names; empty string counts as missing; raw-key guard (`<ROLE>_PRIVATE_KEY`,
   `<ROLE>_KEYSTORE_PASSWORD`, `PRIVATE_KEY`, 64-hex `<ROLE>_KEYSTORE`) naming only the variable; `safeParse` then merge
   statics; one `ConfigError` with `issues: { variable, message }[]` and `VARIABLE: reason` lines, no values or zod
   dumps. `index.ts` exports. Depends on 6.2. Accept: `pnpm typecheck`; the R6 test still passes (only this file reads
   `process.env`).
-- [ ] 6.4 `.env.example` listing every `ENV_VARIABLES` entry, empty. Parallel with 6.3. Accept: covered by the test
+- [x] 6.4 `.env.example` listing every `ENV_VARIABLES` entry, empty. Parallel with 6.3. Accept: covered by the test
   in 6.5.
-- [ ] 6.5 Tests (injected env records): Valid profile for each of the four profiles, Unknown profile, Env coverage
+- [x] 6.5 Tests (injected env records): Valid profile for each of the four profiles, Unknown profile, Env coverage
   (`.env.example` keys equal `ENV_VARIABLES`), Raw key (each trigger, value never in the message), Remote RPC (fork
   guard accepts `localhost`, `127.0.0.1`, `[::1]`; rejects remote; `CCHAIN_RPC_URL` not guarded), Two bad values (one
   `ConfigError`, two lines). Depends on 6.3 and 6.4. Accept: `pnpm test` green; `pnpm typecheck` green; CI green
@@ -199,5 +199,5 @@ All PRs target `develop`; retarget as parents merge. Workload per PR is `additio
 
 - [x] `ESNext.Disposable` lib in TypeScript 7 (task 1.2): exists, no fallback.
 - [x] Root `node_modules/.bin` on workspace script `PATH` (task 1.2): works, no per-workspace typescript.
-- [ ] TypeScript 7 with zod (task 6.1).
+- [x] TypeScript 7 with zod (task 6.1): works, no pin.
 - [ ] Adapter `AgentEvent` emission (T5.8) and `TWINPAY_L1_CHAIN_ID` removal (T6.1) are outside this change.
