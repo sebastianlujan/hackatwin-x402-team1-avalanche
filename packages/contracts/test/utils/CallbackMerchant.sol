@@ -12,7 +12,8 @@ contract CallbackMerchant is IPaymentCallback {
     Ok,
     Revert,
     BurnGas,
-    Reenter
+    Reenter,
+    WithdrawFromCaller
   }
 
   uint256 internal constant _REENTRANT_CALLS = 5;
@@ -38,10 +39,16 @@ contract CallbackMerchant is IPaymentCallback {
       while (true) { }
     }
     if (mode == Mode.Reenter) return _reenter(_paymentId, _token);
+    if (mode == Mode.WithdrawFromCaller) return _withdrawFromCaller();
 
     lastPaymentId = _paymentId;
     lastToken = _token;
     lastAmount = _amount;
+  }
+
+  function _withdrawFromCaller() internal {
+    (bool _ok, bytes memory _ret) = msg.sender.call(abi.encodeWithSignature('withdraw()'));
+    if (!_ok && bytes4(_ret) == ReentrancyGuardTransient.ReentrancyGuardReentrantCall.selector) reentrantGuarded = 1;
   }
 
   function _reenter(bytes32 _paymentId, address _token) internal {
