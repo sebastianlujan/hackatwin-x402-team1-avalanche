@@ -5,7 +5,7 @@ export const copy = {
   demo1: {
     brand: '> HACKATWIN',
     title: 'Demo 1',
-    lead: 'An agent buys one ARGt quote over x402 on a local Avalanche C-Chain fork.',
+    lead: 'An agent pays ARGt over x402 for one API response, on a local fork of the Avalanche C-Chain.',
     start: {
       claude: 'Run with Claude',
       scripted: 'Run scripted',
@@ -123,7 +123,7 @@ export const copy = {
     cards: {
       title: 'Who builds this',
       items: [
-        { mark: 'Twin', text: 'The ARGt token and the TwinPay L1 that Demos 2 and 3 run on.' },
+        { mark: 'Twin', text: 'ARGt, the Argentine peso token Demo 1 pays with on a local fork of the C-Chain.' },
         { mark: 'team1', text: 'The agents, the x402 flow and this repository, written with MCP servers and skills.' },
       ],
     },
@@ -146,7 +146,7 @@ export const copy = {
         },
         {
           question: 'Who wrote the code?',
-          answer: 'Twin and team1 direct it; agents write most of the repository.',
+          answer: 'team1 directs it; agents write most of the repository.',
         },
       ],
     },

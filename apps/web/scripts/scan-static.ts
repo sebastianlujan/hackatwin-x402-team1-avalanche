@@ -3,7 +3,11 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // The CI web-build job sets these values; they must never reach the client bundle.
-export const SENTINELS = ['hackatwin-sentinel-anthropic', 'hackatwin-sentinel-keystore'] as const;
+export const SENTINELS = [
+  'hackatwin-sentinel-anthropic',
+  'hackatwin-sentinel-keystore',
+  'hackatwin-sentinel-fork',
+] as const;
 export const FORBIDDEN = [...SENTINELS, 'ANTHROPIC_API_KEY', 'KEYSTORE', 'anvil_'] as const;
 
 // The one place the variable name may appear: the Claude-disabled reason shown to the presenter.

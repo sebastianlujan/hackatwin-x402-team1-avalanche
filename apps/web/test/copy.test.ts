@@ -31,3 +31,17 @@ describe('copy scan', () => {
     for (const file of files) expect(literals(readFileSync(resolve(root, file), 'utf8')), file).toEqual([]);
   });
 });
+
+describe('accuracy pins', () => {
+  it('keeps the Twin, FAQ and Demo 1 lines true to the docs', async () => {
+    const { copy } = await import('../src/content/copy.ts');
+    const twin = copy.landing.cards.items.find((item) => item.mark === 'Twin');
+    expect(twin?.text).toBe('ARGt, the Argentine peso token Demo 1 pays with on a local fork of the C-Chain.');
+    expect(copy.demo1.lead).toBe(
+      'An agent pays ARGt over x402 for one API response, on a local fork of the Avalanche C-Chain.',
+    );
+    const faq = JSON.stringify(copy.landing);
+    expect(faq).toContain('team1 directs it; agents write most of the repository.');
+    expect(faq).not.toContain('Twin and team1 direct it');
+  });
+});
