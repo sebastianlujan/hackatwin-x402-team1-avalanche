@@ -1,3 +1,4 @@
+import '@hackatwin/ui/atoms.css';
 import '@hackatwin/ui/tokens.css';
 import './globals.css';
 import type { ReactNode } from 'react';
