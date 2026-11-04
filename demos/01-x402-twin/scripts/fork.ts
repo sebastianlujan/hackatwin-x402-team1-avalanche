@@ -2,7 +2,8 @@ import { existsSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ChainError, chain, createChainClient, createGuardedClients, startAnvil } from '@hackatwin/chains';
 import { CCHAIN_FORK_BLOCK, type Env, keystoreNamedInEnv, loadRpcUrls } from '@hackatwin/config';
-import { ensureRoleKeystore, ensureStateDir, ROLES, type RoleKeystore, STATE_DIR, writeDemoEnv } from '../state.ts';
+import { ensureRoleKeystore, ensureStateDir, ROLES, type RoleKeystore, writeDemoEnv } from '../state.ts';
+import { STATE_DIR } from '../state-dir.ts';
 
 export interface ForkOptions {
   readonly dir?: string;

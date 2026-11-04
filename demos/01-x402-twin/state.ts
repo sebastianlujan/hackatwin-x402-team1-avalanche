@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join } from 'node:path';
 import { chain, type LiveChain } from '@hackatwin/chains';
 import { encryptKeystore } from '@hackatwin/chains/keystore';
 import { rpcVariable } from '@hackatwin/config';
@@ -10,8 +10,6 @@ import { generatePrivateKey } from 'viem/accounts';
 
 export const ROLES = ['agent', 'seller', 'facilitator'] as const;
 export type Role = (typeof ROLES)[number];
-
-export const STATE_DIR = resolve(import.meta.dirname, '../../.demo1');
 
 export interface RoleKeystore {
   readonly role: Role;
