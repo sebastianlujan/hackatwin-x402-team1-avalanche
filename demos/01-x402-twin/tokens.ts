@@ -17,7 +17,7 @@ export const Tokens = {
   Funding: token<{ fund(): Promise<FundingReport> }>('Funding'),
   Registration: token<unknown>('Registration'),
   FacilitatorApp: token<Hono>('FacilitatorApp'),
-  SellerApp: token<unknown>('SellerApp'),
+  SellerApp: token<Hono>('SellerApp'),
   Buyer: token<unknown>('Buyer'),
   Balances: token<unknown>('Balances'),
 } as const;

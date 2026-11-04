@@ -34,6 +34,14 @@ describe('registerX402Module', () => {
     expect(await response.json()).toMatchObject({ kinds: [{ scheme: 'exact', network: 'eip155:43114' }] });
   });
 
+  it('builds the seller app over the oracle and the facilitator URL without touching the network', () => {
+    const container = createContainer();
+    container.register(Tokens.Accounts, () => ({ seller: account(2) }) as never);
+    container.register(Tokens.ReadChains, () => ({ arbitrum: new FakeChainClient(), base: new FakeChainClient() }));
+    registerX402Module(container);
+    expect(typeof container.resolve(Tokens.SellerApp).request).toBe('function');
+  });
+
   it('lets a child container override the oracle', () => {
     const container = createContainer();
     container.register(Tokens.ReadChains, () => ({ arbitrum: new FakeChainClient(), base: new FakeChainClient() }));

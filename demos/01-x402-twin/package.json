@@ -17,6 +17,7 @@
     "@hono/node-server": "catalog:",
     "@x402/core": "catalog:",
     "@x402/evm": "catalog:",
+    "@x402/hono": "catalog:",
     "hono": "catalog:",
     "viem": "catalog:",
     "zod": "catalog:"
