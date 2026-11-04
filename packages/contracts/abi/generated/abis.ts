@@ -170,6 +170,56 @@ export const abis = {
       "stateMutability": "view"
     },
     {
+      "type": "function",
+      "name": "send",
+      "inputs": [
+        {
+          "name": "_id",
+          "type": "bytes32",
+          "internalType": "Id"
+        },
+        {
+          "name": "_paymentId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_lane",
+          "type": "tuple",
+          "internalType": "struct IPaymentHub.LaneParams",
+          "components": [
+            {
+              "name": "token",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "merchant",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "messenger",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "destination",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            }
+          ]
+        },
+        {
+          "name": "_amount",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
       "type": "event",
       "name": "PaymentSent",
       "inputs": [
@@ -263,6 +313,17 @@ export const abis = {
       "type": "error",
       "name": "IcttMessenger_ZeroBlockchainId",
       "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "SafeERC20FailedOperation",
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
     }
   ],
   'src/PaymentHub.sol:PaymentHub': [
