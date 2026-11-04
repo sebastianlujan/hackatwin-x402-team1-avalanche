@@ -26,6 +26,7 @@ contract UnitSettlementReceiverOutcome is Test {
   function setUp() external {
     _token = new MockERC20();
     _transferrer = new TestTokenTransferrer(_token);
+    _fund(1000);
     _receiver = new SettlementReceiver(
       address(_transferrer), _SOURCE, _originTransferrer, _originSender, address(_token), address(this)
     );
@@ -90,7 +91,7 @@ contract UnitSettlementReceiverOutcome is Test {
     assertEq(_token.balanceOf(address(_receiver)), 100);
     assertEq(_receiver.creditOf(_merchant), 100);
     assertEq(_token.balanceOf(_fallback), 0);
-    assertEq(_token.balanceOf(address(_transferrer)), 0);
+    assertEq(_token.balanceOf(address(_transferrer)), 900);
   }
 
   function test_GivenATokenPullThatReverts() external whenAValidatedDeliveryArrives {
@@ -126,11 +127,14 @@ contract UnitSettlementReceiverOutcome is Test {
 
     assertEq(_token.balanceOf(_fallback), 107);
     assertEq(_token.balanceOf(address(_receiver)), 0);
-    assertEq(_token.balanceOf(address(_transferrer)), 0);
+    assertEq(_token.balanceOf(address(_transferrer)), 1000 - 107);
+  }
+
+  function _fund(uint256 _amount) internal {
+    _token.mint(address(_transferrer), _amount);
   }
 
   function _deliver(bytes32 _paymentId, address _to, uint256 _amount) internal returns (bool _ok) {
-    _token.mint(address(_transferrer), _amount);
     _ok = _transferrer.deliver(
       _receiver, _SOURCE, _originTransferrer, _originSender, _amount, abi.encode(_paymentId, _to), _fallback
     );

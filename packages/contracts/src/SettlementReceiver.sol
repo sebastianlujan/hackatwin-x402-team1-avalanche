@@ -1,13 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
+import { Ownable, Ownable2Step } from '@openzeppelin/contracts/access/Ownable2Step.sol';
+import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import { SafeERC20 } from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+
 import { ISettlementReceiver } from 'src/interfaces/ISettlementReceiver.sol';
 import { IERC20SendAndCallReceiver } from 'src/interfaces/external/icm/IERC20SendAndCallReceiver.sol';
 import { PaymentStateLib } from 'src/libraries/PaymentStateLib.sol';
 
 /// @title SettlementReceiver
 /// @notice The L1 ICTT receiver that validates the source and records each payment once
-contract SettlementReceiver is ISettlementReceiver, IERC20SendAndCallReceiver {
+contract SettlementReceiver is ISettlementReceiver, IERC20SendAndCallReceiver, Ownable2Step {
+  using SafeERC20 for IERC20;
+
   /// @inheritdoc ISettlementReceiver
   address public immutable TRANSFERRER;
 
@@ -26,18 +32,28 @@ contract SettlementReceiver is ISettlementReceiver, IERC20SendAndCallReceiver {
   /// @notice Payment status by payment id
   mapping(bytes32 _paymentId => Status _status) internal _statuses;
 
+  /// @notice Merchants whose payments settle
+  mapping(address _merchant => bool _allowed) internal _allowlist;
+
+  /// @notice Credited balance by merchant, the sum of which the receiver holds
+  mapping(address _merchant => uint256 _credit) internal _credits;
+
   /// @param _transferrer The local token transferrer allowed to deliver
   /// @param _sourceBlockchainId The only accepted source blockchain
   /// @param _originTransferrer The only accepted origin token transferrer
   /// @param _originSender The only accepted origin sender, the messenger
   /// @param _token The only accepted token
+  /// @param _owner The owner, who only manages the merchant allowlist
   constructor(
     address _transferrer,
     bytes32 _sourceBlockchainId,
     address _originTransferrer,
     address _originSender,
-    address _token
-  ) {
+    address _token,
+    address _owner
+  )
+    Ownable(_owner)
+  {
     TRANSFERRER = _transferrer;
     SOURCE_BLOCKCHAIN_ID = _sourceBlockchainId;
     ORIGIN_TRANSFERRER = _originTransferrer;
@@ -67,8 +83,25 @@ contract SettlementReceiver is ISettlementReceiver, IERC20SendAndCallReceiver {
     if (_token != TOKEN) revert SettlementReceiver_InvalidToken(_token);
     if (_amount == 0) revert SettlementReceiver_ZeroAmount();
 
-    (bytes32 _paymentId,) = _decode(_payload);
+    (bytes32 _paymentId, address _merchant) = _decode(_payload);
     _transition(_paymentId, Status.None, Status.Received);
+
+    if (!_allowlist[_merchant]) return _transition(_paymentId, Status.Received, Status.Rejected);
+    IERC20(TOKEN).safeTransferFrom(msg.sender, address(this), _amount);
+    _credits[_merchant] += _amount;
+    _transition(_paymentId, Status.Received, Status.Settled);
+  }
+
+  /// @inheritdoc ISettlementReceiver
+  function setMerchant(address _merchant, bool _allowed) external onlyOwner {
+    if (_merchant == address(0)) revert SettlementReceiver_ZeroAddress();
+    _allowlist[_merchant] = _allowed;
+    emit MerchantSet(_merchant, _allowed);
+  }
+
+  /// @inheritdoc ISettlementReceiver
+  function creditOf(address _merchant) external view returns (uint256 _credit) {
+    _credit = _credits[_merchant];
   }
 
   /// @inheritdoc ISettlementReceiver
