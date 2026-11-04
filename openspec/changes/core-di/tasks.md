@@ -53,28 +53,28 @@ Start: `feature/docs-deploy` (PR #24). End: 14 compiling placeholder workspaces,
 CI jobs wired into `ci-gate`, ADR 0005 and layout docs. Out of scope: any logic in core or config.
 Spec links: `workspace-dependency-rule` (Workspace layout, CI gating).
 
-- [ ] 1.1 Resolve and pin versions (`npm view`): vitest, @vitest/coverage-v8, zod, @types/node; add to the
+- [x] 1.1 Resolve and pin versions (`npm view`): vitest, @vitest/coverage-v8, zod, @types/node; add to the
   `pnpm-workspace.yaml` catalog and add root devDependencies (vitest, coverage-v8, @types/node) in `package.json`.
   Update `pnpm-lock.yaml`. Parallel with 1.2. Accept: `pnpm install --frozen-lockfile` succeeds.
-- [ ] 1.2 `pnpm-workspace.yaml` packages: `apps/*`, `packages/*`, `demos/*`, `e2e/*`. `tsconfig.base.json` adds
+- [x] 1.2 `pnpm-workspace.yaml` packages: `apps/*`, `packages/*`, `demos/*`, `e2e/*`. `tsconfig.base.json` adds
   `noEmit`, `allowImportingTsExtensions`, `erasableSyntaxOnly`, lib `["ES2023", "ESNext.Disposable"]`. Verify at
   apply: `ESNext.Disposable` exists in TS 7 (else `ESNext`) and workspace scripts see the root `.bin` on `PATH`
   (else per-workspace `typescript` devDependency). Accept: `pnpm exec tsc --version` prints 7.0.2.
-- [ ] 1.3 Create the 14 workspaces per design table (`package.json` private, type module, version 0.0.0, `exports`,
+- [x] 1.3 Create the 14 workspaces per design table (`package.json` private, type module, version 0.0.0, `exports`,
   `typecheck: tsc --noEmit`; `tsconfig.json` extending base; entry file `export {};`). Demo folders hold `.gitkeep`;
   `packages/config` sets `types: ["node"]`; Demo 3 has `main.ts` and no `exports`; `apps/docs` is untouched.
   Depends on 1.2. Accept: `pnpm -r --if-present typecheck` passes across all workspaces (spec: Clean clone).
-- [ ] 1.4 Root `tsconfig.json` (covers `test/`, `vitest.config.ts`, `types: ["node"]`), root `vitest.config.ts`
+- [x] 1.4 Root `tsconfig.json` (covers `test/`, `vitest.config.ts`, `types: ["node"]`), root `vitest.config.ts`
   (includes `test/**/*.test.ts` and `{apps,packages,demos}/**/*.test.{ts,tsx}`; v8 coverage over `packages/*/src/**`;
   `branches: 100` for `packages/core/src/container.ts`), root scripts `typecheck` and `test`. Use
   `passWithNoTests` only until PR 2 lands a test. Accept: `pnpm typecheck` passes; `pnpm test` exits 0.
-- [ ] 1.5 CI (`.github/workflows/ci.yml`): `changes` job adds output and filter `ts` (`*root`, `test/**`,
+- [x] 1.5 CI (`.github/workflows/ci.yml`): `changes` job adds output and filter `ts` (`*root`, `test/**`,
   `vitest.config.ts`, `tsconfig.json`, `.env.example`, `packages/**`, `demos/**`, `apps/web/**`, `e2e/**`); new jobs
   `typecheck` and `test` (`needs: changes`, `if: needs.changes.outputs.ts == 'true'`, `timeout-minutes: 10`, biome
   job's setup and frozen install, then `pnpm typecheck` or `pnpm test`); `ci-gate.needs` adds both (ADR 0002).
   Accept: PR CI shows `typecheck` and `test` green and `ci-gate` waits on them (spec: CI gating, TypeScript change);
   a docs-only change skips both jobs.
-- [ ] 1.6 ADR 0005 `docs/adr/0005-config-package-outside-core.md` plus `docs/adr/README.md` index entry; fix
+- [x] 1.6 ADR 0005 `docs/adr/0005-config-package-outside-core.md` plus `docs/adr/README.md` index entry; fix
   `docs/PLAN.md` § 2 and `README.md` layout (add `packages/config`; core drops config schemas). Parallel with 1.5.
   Accept: `pnpm exec biome check` and the docs build (`apps/docs`) pass if Markdown is covered; links resolve.
 
@@ -86,12 +86,12 @@ Rollback: revert the PR; nothing else depends on it until PR 2.
 Start: PR 1 branch. End: `test/dependency-rule.ts` and its test enforcing R1 to R6 on the real repo.
 Out of scope: core logic. Spec links: `workspace-dependency-rule` (Core has no dependencies, Import direction).
 
-- [ ] 2.1 `test/dependency-rule.ts`: `readSnapshot(root)` (walk `apps`, `packages`, `demos`, `e2e`, skip
+- [x] 2.1 `test/dependency-rule.ts`: `readSnapshot(root)` (walk `apps`, `packages`, `demos`, `e2e`, skip
   `node_modules`, `dist`, `build`, `coverage`, `.next`, `.docusaurus`; read every `package.json` and
   `*.{ts,tsx,mts,cts}`; longest-directory workspace ownership) and pure `checkDependencyRule(snapshot): Violation[]`
   with R1 to R6 and the specifier extractor (`import`/`export ... from`, side-effect, `import()`, `require()`, type-only
   included). Violations print `R<n> <file>: <specifier>: <reason>`. Accept: `pnpm typecheck` passes.
-- [ ] 2.2 `test/dependency-rule.test.ts`: real repo yields zero violations, plus one in-memory fixture per rule and
+- [x] 2.2 `test/dependency-rule.test.ts`: real repo yields zero violations, plus one in-memory fixture per rule and
   per spec scenario (Dependency added to core, Forbidden edge, Allowed Demo 3 edge, Demo 3 deep import, test-only
   fakes import, `process.env` outside `load-profile.ts`). Depends on 2.1. Accept: `pnpm test` green; each fixture
   fails on the named rule only; removing a fixture's trigger makes it pass.
@@ -103,11 +103,11 @@ Verification: `pnpm typecheck && pnpm test`; CI green. Rollback: delete the two 
 Start: PR 2 branch. End: `@hackatwin/core` container with typed tokens, scopes, cycles, child overrides, disposal,
 100% branch coverage. Spec links: `di-container` (all requirements).
 
-- [ ] 3.1 `packages/core/src/container.ts` per design: `Token`, `token()`, `Scope`, `Resolver`, `Container`,
+- [x] 3.1 `packages/core/src/container.ts` per design: `Token`, `token()`, `Scope`, `Resolver`, `Container`,
   `createContainer`, `ContainerError`; resolution algorithm steps 1 to 5 (closure-aware singleton reuse and
   placement), duplicate `register` throws, tracking resolver invalid after factory returns, `dispose()` idempotent
   with `AggregateError`, `[Symbol.asyncDispose]` alias. Export from `src/index.ts`. Accept: `pnpm typecheck` passes.
-- [ ] 3.2 `packages/core/src/container.test.ts` covering every spec scenario: Resolve, Missing token (message with
+- [x] 3.2 `packages/core/src/container.test.ts` covering every spec scenario: Resolve, Missing token (message with
   path), Scope behavior (singleton vs transient), Cycle (`A -> B -> A`), Swap adapter for fake (closure rule: parent
   singleton reused unless its closure meets a child registration), Reverse order disposal (async before sync
   fallback), Disposer failure (`AggregateError`), post-dispose guards, duplicate register. Depends on 3.1. Accept:
@@ -197,7 +197,7 @@ All PRs target `develop`; retarget as parents merge. Workload per PR is `additio
 
 ## Open items carried from design (resolved at apply)
 
-- [ ] `ESNext.Disposable` lib in TypeScript 7 (task 1.2).
-- [ ] Root `node_modules/.bin` on workspace script `PATH` (task 1.2).
+- [x] `ESNext.Disposable` lib in TypeScript 7 (task 1.2): exists, no fallback.
+- [x] Root `node_modules/.bin` on workspace script `PATH` (task 1.2): works, no per-workspace typescript.
 - [ ] TypeScript 7 with zod (task 6.1).
 - [ ] Adapter `AgentEvent` emission (T5.8) and `TWINPAY_L1_CHAIN_ID` removal (T6.1) are outside this change.
