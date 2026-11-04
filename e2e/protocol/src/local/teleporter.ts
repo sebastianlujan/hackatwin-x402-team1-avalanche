@@ -21,11 +21,12 @@ export const icmArtifact = (name: string) =>
 
 type Rpc = { request(args: { method: 'eth_accounts' }): Promise<Address[]> };
 export const unlocked = (address: Address): Account => ({ address, type: 'json-rpc' }) as Account;
-export const firstAccount = async (c: GuardedClients): Promise<Account> => {
-  const [address] = await (c.public as unknown as Rpc).request({ method: 'eth_accounts' });
-  if (!address) throw new Error('anvil exposes no unlocked accounts');
+export const accountAt = async (c: GuardedClients, index: number): Promise<Account> => {
+  const address = (await (c.public as unknown as Rpc).request({ method: 'eth_accounts' }))[index];
+  if (!address) throw new Error(`anvil exposes no unlocked account ${index}`);
   return unlocked(address);
 };
+export const firstAccount = (c: GuardedClients): Promise<Account> => accountAt(c, 0);
 
 // The v1 deployer is impersonated at nonce 0 and deploys the pinned build, so CREATE yields the canonical address.
 export async function placeTeleporter(c: GuardedClients): Promise<Address> {
