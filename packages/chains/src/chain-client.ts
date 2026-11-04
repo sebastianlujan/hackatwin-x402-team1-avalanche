@@ -1,4 +1,4 @@
-import type { ChainClient, ContractCall, Hex, ReadOptions, ReadResult, Receipt } from '@hackatwin/core';
+import type { Address, ChainClient, ContractCall, Hex, ReadOptions, ReadResult, Receipt } from '@hackatwin/core';
 import { type Abi, type Account, createPublicClient, createWalletClient, http, type Transport } from 'viem';
 import { ChainError } from './chain-error.ts';
 import { chain as lookup, toViemChain } from './registry.ts';
@@ -11,12 +11,16 @@ export interface ChainClientOptions {
   readonly transport?: Transport;
 }
 
+export interface ChainsClient extends ChainClient {
+  codeSize(address: Address, blockNumber?: bigint): Promise<number>;
+}
+
 export async function createChainClient({
   chain: key,
   rpcUrl,
   account,
   transport,
-}: ChainClientOptions): Promise<ChainClient> {
+}: ChainClientOptions): Promise<ChainsClient> {
   const entry = lookup(key);
   const viemChain = toViemChain(key);
   if (entry.status !== 'live') throw new ChainError(`chain "${key}" is not deployed`);
@@ -40,6 +44,10 @@ export async function createChainClient({
   return {
     chainId: entry.chainId,
     blockNumber: () => publicClient.getBlockNumber(),
+    async codeSize(target: Address, blockNumber?: bigint): Promise<number> {
+      const code = await publicClient.getCode({ address: target, ...(blockNumber !== undefined && { blockNumber }) });
+      return code === undefined ? 0 : (code.length - 2) / 2;
+    },
     async read<T>(call: ContractCall, options: ReadOptions = {}): Promise<ReadResult<T>> {
       const blockNumber = options.blockNumber ?? (await publicClient.getBlockNumber());
       const value = await publicClient.readContract({
