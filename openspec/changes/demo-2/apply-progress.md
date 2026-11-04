@@ -7,9 +7,9 @@ Mode: Strict TDD (Solidity: Bulloak tree, red, green; TypeScript: tests in the s
 | Task PR | Branch | Issue | PR | Red | Green | Authored lines |
 |---|---|---|---|---|---|---|
 | 2 | `feature/warp-messenger-stub` | #225 | #226 | c4ca540 | cb248f5 | 297 |
-| 3 | `feature/local-chains` | #227 | #228 | 77b5016 | see PR | 314 |
-| 4 | `feature/local-crosschain-profile` | #229 | #230 | see PR | see PR | 96 |
-| 5 | `feature/simulated-labeling` | #231 | #232 | d666354 | see PR | 178 |
+| 3 | `feature/local-chains` | #227 | #228 | 77b5016 | 58e0f86 | 314 |
+| 4 | `feature/local-crosschain-profile` | #229 | #230 | 4931bca | 0ebc580 | 96 |
+| 5 | `feature/simulated-labeling` | #231 | #232 | d666354 | 7a9fa2f | 178 |
 
 Tasks 2.1 to 2.4, 3.1, 3.2, 4.1, 4.2, 5.1, 5.2 are marked `[x]` in `tasks.md`.
 
@@ -21,7 +21,7 @@ Tasks 2.1 to 2.4, 3.1, 3.2, 4.1, 4.2, 5.1, 5.2 are marked `[x]` in `tasks.md`.
 
 ## Deviations and notes
 
-- `WarpMessengerStub` defines its own `WarpMessage` struct and does not import an upstream `IWarpMessenger` (none exists under `src/interfaces/external/icm/`). Field layout `(bytes32 sourceChainID, address originSenderAddress, bytes payload)` and the `WarpMessageSent(bytes32 indexed messageID, bytes message)` event follow design D7; conformance with the upstream struct is verified by the PR 1 spike (5 of the spike list).
+- `WarpMessengerStub` defines its own `WarpMessage` struct and does not import an upstream `IWarpMessenger` (none exists under `src/interfaces/external/icm/`). Field layout `(bytes32 sourceChainID, address originSenderAddress, bytes payload)` and the `WarpMessageSent(bytes32 indexed messageID, bytes message)` event follow design D7; conformance with the upstream struct is verified by the PR 1 spike (PR 1 task 1.5).
 - Task 4.2 `childEnv` for forge is deferred to the forge wrapper PR (no forge spawn exists in the repo yet).
 - Task 5: the guarded client write does not yet pass `ContractCall.value` through to `writeContract`; it lands with the local sender (PR 11) where it is exercised. Wiring `createEventChannel({ simulated })` from the profile lands with the Demo 2 root (PR 15).
 - The `contracts` CI job on #226 failed twice on a pre-existing probabilistic invariant (`InvariantPaymentHub`, "race never ran"), unrelated to the change; the same job passed on #228, #230 and #232 which contain the same code.
