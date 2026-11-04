@@ -206,3 +206,21 @@ Totals: forge 23 tests, Vitest 44 tests in `packages/contracts`.
 ## Remaining
 
 Superseded by the Batch 5 section: all 33 task rows are done.
+
+## Batch 6: verify fixes
+
+Closes the actionable warnings of `verify-report.md` (PASS WITH WARNINGS). Stacked from `feature/deploy-dry-run`, all PRs target `develop`.
+
+| PR | Branch | Item | Commits | Authored lines |
+|----|--------|------|---------|----------------|
+| #170 (issue #169) | feature/deploy-owner-handoff | W1 | tree 5861bf8, red 04a6957, green 361a0b2 | about 137 |
+| #172 (issue #171) | feature/hub-invariants-extended | W2 | handler 6a3214d, invariants 1acb74b | about 180 |
+| #174 (issue #173) | feature/constructor-zero-checks | zero address suggestion | tree 06564ae, red babd749, green 437c1c1 | about 150 |
+
+- W1: `DeployFuji` and `DeployL1` construct the hub, broker and receiver with the deployer, run the `onlyOwner` config as the deployer, then `transferOwnership(owner)` unless owner equals the deployer. Records hold `pendingOwner` (read from the hub or receiver, zero when none). README documents `acceptOwnership` and that verification args use the deployer. ADR 0010 notes the nonce prediction is unchanged (the offer follows the receiver deployment).
+- W2: handler signs EIP-712 authorizations (key-backed payers), pays through delegates and races exits at the deadline. Invariants 2 (table edges from `StatusChanged` events, one per change), 4 (paid and refunded exits exclusive) and 5 (budget equals ghost budget). Non-vacuity by temporary mutations (budget not decremented, wrong emitted target, refund without deadline check, no transition guard), all caught and reverted. Deep profile 5/5 at 512 runs and depth 200.
+- Zero checks: `PaymentBroker_ZeroAddress` for a zero hub, `SettlementReceiver_ZeroAddress` for the four receiver addresses; existing errors reused, ABI unchanged after a clean regenerate.
+- Gotcha: `vm.getRecordedLogs` keeps logs of reverted calls, so the handler drops them after low-level probe calls.
+- All checks green locally: fmt, clean build, forge test (226 pass, 1 skipped), gas snapshot, bulloak, lintspec, solhint (0 errors), policy, ABI no diff, typecheck, vitest 438, biome.
+
+Carried to archive or later milestones: W3 (accepted spec delta, Fuji fork non-blocking in CI), W4 (viem getContract inference test), W5 (budget 0 reads Unauthorized), W6 (real ICTT semantics, T7.12 and M8), W7 (PR #134 and #158 have no tree commit), W8 (no authorizer-side nonce invalidation, budget replace race), and the remaining suggestions.
