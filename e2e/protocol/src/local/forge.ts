@@ -1,7 +1,11 @@
+import { execFile } from 'node:child_process';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import type { LocalChain } from '@hackatwin/chains';
-import type { Address, Hex } from 'viem';
+import { promisify } from 'node:util';
+import { assertLocalChain, type LocalChain } from '@hackatwin/chains';
+import { childEnv } from '@hackatwin/config';
+import { type Address, type Hex, isAddress } from 'viem';
+import { probeAnvil } from './anvils.ts';
 
 export interface Roles {
   deployer: Address;
@@ -69,4 +73,54 @@ export async function writeForgeFiles(dir: string, f: ForgeFacts): Promise<void>
   };
   for (const [name, value] of Object.entries(files)) await writeFile(join(dir, name), json(value));
   await writeFile(join(dir, 'deployments/.gitkeep'), '');
+}
+
+export type ForgeRunner = (
+  command: 'forge',
+  args: string[],
+  options: { cwd: string; env: Record<string, string> },
+) => Promise<void>;
+
+const exec = promisify(execFile);
+
+// No shell, a fixed argument array and a fixed environment; only the stderr tail is surfaced.
+export const execForge: ForgeRunner = async (command, args, options) => {
+  try {
+    await exec(command, args, { ...options, shell: false, maxBuffer: 64 * 1024 * 1024 });
+  } catch (error) {
+    const stderr = (error as { stderr?: string }).stderr ?? '';
+    throw new Error(`forge ${args[1]} failed: ${stderr.trim().split('\n').slice(-5).join('\n')}`);
+  }
+};
+
+// The sender is an unlocked anvil account: the signing flags of a keystore or a raw key are never used.
+export const forgeScriptArgs = (target: string, rpcUrl: string, sender: Address): string[] => [
+  ...['script', target, '--rpc-url', rpcUrl, '--broadcast'],
+  ...['--unlocked', '--sender', sender],
+];
+
+export interface ForgeScriptOptions {
+  chain: LocalChain;
+  target: string;
+  sender: Address;
+  forgeDir: string;
+  contractsDir: string;
+  run?: ForgeRunner;
+  probe?: (chain: LocalChain) => Promise<void>;
+}
+
+// Runs a deploy script unlocked, only on a loopback anvil that passed the probe.
+export async function runForgeScript(o: ForgeScriptOptions): Promise<void> {
+  if (!isAddress(o.sender, { strict: false })) throw new Error('sender must be an address');
+  assertLocalChain(o.chain);
+  await (o.probe ?? probeAnvil)(o.chain);
+  const env = childEnv({
+    CHAIN_REGISTRY_DIR: join(o.forgeDir, 'registry'),
+    DEPLOY_PARAMS_DIR: join(o.forgeDir, 'params'),
+    DEPLOY_DEPLOYMENTS_DIR: join(o.forgeDir, 'deployments'),
+  });
+  await (o.run ?? execForge)('forge', forgeScriptArgs(o.target, o.chain.rpcUrl, o.sender), {
+    cwd: o.contractsDir,
+    env,
+  });
 }

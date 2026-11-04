@@ -1,3 +1,4 @@
+import { join } from 'node:path';
 import { ConfigError, type ConfigIssue } from './config-error.ts';
 import { envSchemas, isRpcUrl } from './env.ts';
 import {
@@ -31,6 +32,15 @@ const rawKeyIssues = (env: Env): ConfigIssue[] => {
 // True when the environment names a keystore for the role, so a script must not generate one.
 export const keystoreNamedInEnv = (role: string, env: Env = process.env): boolean =>
   Boolean(env[`${role.toUpperCase()}_KEYSTORE`]);
+
+const SYSTEM_PATH = '/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin';
+
+// The only environment a spawned tool sees: HOME, a fixed PATH and the extras, never the parent's secrets.
+export function childEnv(extra: Record<string, string> = {}, env: Env = process.env): Record<string, string> {
+  const home = env.HOME;
+  if (!home) throw new Error('HOME is required to run a child process');
+  return { HOME: home, PATH: `${join(home, '.foundry', 'bin')}:${SYSTEM_PATH}`, LC_ALL: 'C', ...extra };
+}
 
 const isProfileName = (name: string): name is ProfileName => (PROFILE_NAMES as readonly string[]).includes(name);
 
