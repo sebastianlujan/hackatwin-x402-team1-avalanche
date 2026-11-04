@@ -72,15 +72,15 @@ PR 3
 ## Phase 3: Identity, policy, LLM, runner (PRs 7 to 10)
 
 - [x] 7.1 Verify `getSummary` and `getClients` against `erc-8004-contracts` 2.0.0. 7.2 RED fake-client tests: `Registered` decode, `SelfFeedbackError`, feedback args. 7.3 GREEN `erc8004-identity.ts`, `abi.ts`, `errors.ts`; `adapters/registration.ts`, `scripts/register.ts` (`identities.json`). 7.4 Fork test: reputation count 1 (live fork). ~350 (agent-identity)
-- [ ] 8.1 RED `budget-policy.test.ts` at and above both caps; 8.2 GREEN `budget-policy.ts`, `above_max_amount` reason. ~150 (budget-policy)
-- [ ] 9.1 Confirm Claude 1.4.0 thinking block shape. 9.2 RED `claude-llm.test.ts` (fake SDK): refusal maps, one 529 then success, always 500 gives `LlmError` without key, thinking replay. 9.3 GREEN `claude-llm.ts`. ~300 (claude-llm; no key needed)
-- [ ] 10.1 RED `create-agent.test.ts`: `max-steps` at 3, unknown or invalid tool ends with `error`, refusal and error reasons; `EventChannel.until`. 10.2 GREEN `create-agent.ts`, `event-channel.ts`, `tool.ts`, `scripted-plan-llm.ts`. ~250 (agent-runner)
+- [x] 8.1 RED `budget-policy.test.ts` at and above both caps; 8.2 GREEN `budget-policy.ts`, `above_max_amount` reason. ~150 (budget-policy)
+- [x] 9.1 Confirm Claude 1.4.0 thinking block shape. 9.2 RED `claude-llm.test.ts` (fake SDK): refusal maps, one 529 then success, always 500 gives `LlmError` without key, thinking replay. 9.3 GREEN `claude-llm.ts`. ~300 (claude-llm; no key needed)
+- [x] 10.1 RED `create-agent.test.ts`: `max-steps` at 3, unknown or invalid tool ends with `error`, refusal and error reasons; `EventChannel.until`. 10.2 GREEN `create-agent.ts`, `event-channel.ts`, `tool.ts`, `scripted-plan-llm.ts`. ~250 (agent-runner)
 
 ## Phase 4: Buyer and wiring (PRs 11, 12)
 
-- [ ] 11.1 RED `tools.test.ts`: `buy` with a `cap` key still meets profile caps; `rate_seller` only after a 200 and when `ownerOf` equals paid `payTo`. 11.2 GREEN `buyer-agent/{main,tools,scripted-plan,prompt,format}.ts`, `adapters/balances.ts`; preflight (guard, fork at `N`, clock, identities, funding, services). Run `pnpm demo1 --scripted`. ~380 (demo-1-buyer)
-- [ ] 12.1 RED `test/demo-1-runbook.test.ts` fails on unknown script; 12.2 GREEN `docs/demos.md` Demo 1 commands; import test from another workspace. ~200
+- [x] 11.1 RED `tools.test.ts`: `buy` with a `cap` key still meets profile caps; `rate_seller` only after a 200 and when `ownerOf` equals paid `payTo`. 11.2 GREEN `buyer-agent/{main,tools,scripted-plan,prompt,format}.ts`, `adapters/balances.ts`; preflight (guard, fork at `N`, clock, identities, funding, services). Run `pnpm demo1 --scripted`. ~380 (demo-1-buyer)
+- [x] 12.1 RED `test/demo-1-runbook.test.ts` fails on unknown script; 12.2 GREEN `docs/demos.md` Demo 1 commands; import test from another workspace. ~200
 
 ## Phase 5: E2E (PR 13)
 
-- [ ] 13.1 `e2e/protocol/src/support/fork-setup.ts` (port 8546, `evm_snapshot` per test, fresh keys, `FakePriceOracle` 1658.36 via `child()`). 13.2 `demo-1.test.ts`: 402 to 200, deltas equal quote, one feedback on seller id, reputation 1; ceiling refusal signs nothing (live fork, scripted, no key). ~320
+- [x] 13.1 `e2e/protocol/src/support/fork-setup.ts` (port 8546, `evm_snapshot` per test, fresh keys, `FakePriceOracle` 1658.36 via `child()`). 13.2 `demo-1.test.ts`: 402 to 200, deltas equal quote, one feedback on seller id, reputation 1; ceiling refusal signs nothing (live fork, scripted, no key). ~320

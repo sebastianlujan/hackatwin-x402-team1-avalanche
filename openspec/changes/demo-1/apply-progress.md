@@ -1,4 +1,4 @@
-# Apply progress: demo-1 (M5), batches 1 and 2 (PRs 1 to 7)
+# Apply progress: demo-1 (M5), batches 1 to 3 (all tasks, PRs 1 to 13)
 
 Mode: Standard (strict TDD does not apply). Chain: stacked, every PR targets `develop`, review budget 400 authored lines (lockfile excluded). No `size:exception`.
 
@@ -13,6 +13,12 @@ Mode: Standard (strict TDD does not apply). Chain: stacked, every PR targets `de
 - [x] 5.1, 5.2 (PR 5 #82).
 - [x] 6.1, 6.2 (PR 6a #85 engine, PR 6b #86 gateway): PR 6 split into two.
 - [x] 7.1 to 7.4 (PR 7a #88 adapter, PR 7b #90 register script and fork test): PR 7 split into two.
+- [x] 8.1, 8.2 (PR 8 #92).
+- [x] 9.1, 9.2, 9.3 (PR 9 #94).
+- [x] 10.1, 10.2 (PR 10a #97 primitives and ADR 0008, PR 10b #98 runner): PR 10 split into two.
+- [x] 11.1, 11.2 (PR 11a #101 tools, balances, format; PR 11b #102 `pnpm demo1`, plan, preflight, wiring): PR 11 split into two.
+- [x] 12.1, 12.2 (PR 12 #104).
+- [x] 13.1, 13.2 (PR 13 #106).
 
 ## PRs (all base `develop`, stacked in this order)
 
@@ -32,6 +38,14 @@ Mode: Standard (strict TDD does not apply). Chain: stacked, every PR targets `de
 | 12 | #86 | `feature/x402-client` | #83 | 360 | `X402PaymentGateway`, `usdAtRate` |
 | 13 | #88 | `feature/erc8004-identity` | #87 | 313 | `Erc8004Identity`, ABI subset, `viem` dep |
 | 14 | #90 | `feature/erc8004-registration` | #89 | 334 | `registerRoles`, `pnpm demo1:register`, live feedback fork test |
+| 15 | #92 | `feature/budget-policy` | #91 | 141 | `BudgetPolicy`, `policy.record` after a settled payment |
+| 16 | #94 | `feature/claude-llm` | #93 | 281 | `ClaudeLLM`, `LlmError`, `@anthropic-ai/sdk` dep |
+| 17 | #97 | `feature/agent-runner-kit` | #95 | 287 | `Tool`, `EventChannel`, `ScriptedPlanLLM`, ADR 0008, `zod` dep |
+| 18 | #98 | `feature/agent-runner` | #96 | 277 | `createAgent` |
+| 19 | #101 | `feature/demo-1-buyer-agent` | #100 | 365 | buyer tools, `createBalances`, `formatEvent` |
+| 20 | #102 | `feature/demo-1-buyer-main` | #99 | 377 | `pnpm demo1`, preflight, buyer plan, Buyer/Balances/AgentPolicy wiring |
+| 21 | #104 | `feature/demo-1-module` | #103 | 101 | runbook in `docs/demos.md`, `test/demo-1-runbook.test.ts`, workspace import |
+| 22 | #106 | `feature/e2e-demo-1` | #105 | 272 | protocol E2E, `fork-setup.ts`, module config, `runBuyer` |
 
 Batch 1 (seven PRs): CI green, including the `fork` job. Batch 2 (seven PRs #79, #80, #82, #85, #86, #88, #90): CI green, including `fork`.
 
@@ -85,6 +99,35 @@ Batch 1 (seven PRs): CI green, including the `fork` job. Batch 2 (seven PRs #79,
 - The gateway throws typed errors (`AboveMaxAmountError`, `AllowanceShortfallError`, `PaymentDeniedError`, `PaymentRequirementsError`) for refusals; it returns a `PaidResponse` only for paid or non-402 answers. Its `usdValue` option carries the buyer's rate (`usdAtRate`).
 - Tokens `FacilitatorApp`, `SellerApp`, `Registration` now have real types; `Buyer` and `Balances` stay `unknown`.
 
+## Batch 3 (PRs #92 to #106): all CI green (11 checks each, including `fork`)
+
+Final state: `pnpm typecheck`, `pnpm lint` clean, `pnpm test` 380 tests green, `pnpm test:fork` 11 tests green.
+
+### Batch 3 evidence (live local fork at 99388000, loopback only, throwaway keys, facilitator and seller running)
+
+`pnpm demo1:fork && pnpm demo1:fund && pnpm demo1:register`, then `pnpm demo1 --scripted` (exit 0):
+
+- 402 payment required 16.583687258560899952 ARGt (source curve), policy decision allowed (within_budget), Permit2 signature, payment Pending to Settled (tx `0x452332b42ddc9e06c1fc844e0dc4b73c831c39b8b18247bb557f8c76d4b913b3`), 200 resource received, feedback for seller agentId 1851 (tx `0x964371381f66bfacfec571d7fb29c83f4b945ffc93f9e816a83891af605aa447`), run finished done.
+- ARGt before: agent 16583.687091406446008011, seller 0. After: agent 16567.103404147885108059, seller 16.583687258560899952. Moved: agent -16.583687258560899952, seller +16.583687258560899952.
+- `pnpm demo1` without a key exits 1 with `ANTHROPIC_API_KEY: is required` before any chain call. The real Claude path was not run (no key).
+- E2E (`pnpm vitest run --project fork e2e/protocol/src/demo-1.fork.test.ts`): 2 tests green (402 to 200 with exact deltas, one feedback on the seller id, reputation 1; ceiling refusal signs nothing).
+
+### Findings (batch 3)
+
+- Claude SDK 1.4.0 thinking shape (from the published types): `ThinkingBlock { type: 'thinking'; thinking: string; signature: string }`, `RedactedThinkingBlock { type: 'redacted_thinking'; data: string }`; both must be passed back unmodified and in order. `ThinkingConfigParam` accepts `{ type: 'adaptive', display: 'summarized' | 'omitted' }`; `StopReason` includes `refusal`; `Model` lists `claude-sonnet-5-5`. The adapter requests adaptive summarized thinking and replays raw blocks by `tool_use` id. Whether `claude-sonnet-5-5` accepts adaptive thinking is not verified without a key.
+- The SDK retries 429, 5xx and 529 itself (`maxRetries: 3`), so the adapter tests run the real SDK client over a fake `fetch` with `retry-after-ms: 1`; the exhausted error becomes `LlmError` with the status only.
+- The gateway never called `policy.record`, so the total cap could not trip; PR 8 records after a settled payment.
+- The `fork` project only matches `*.fork.test.ts` and `e2e` is not in the default project, so the E2E file is `demo-1.fork.test.ts` (design said `demo-1.test.ts`).
+- Environment: GitHub returned 500 and 502 on several pushes and PR creations; the retry loop in the push helper and PR creation handled them. PR #94 got no CI run after a rejected first push response, so it was closed and reopened to trigger the workflows. A force push was denied by the sandbox, so a fix commit was added to #97 instead of an amend.
+
+### Deviations from design (batch 3)
+
+- PR 10 became two PRs (primitives plus ADR 0008, then the runner loop) and PR 11 two (tools, balances, format; then main, plan, preflight, wiring) to stay under 400 lines.
+- `buyer-agent/preflight.ts` and `buyer-agent/run.ts` are new files (testable preflight; run shared by `pnpm demo1` and the E2E).
+- `registerX402Module(container, config)` takes lazy `facilitatorUrl` and `sellerUrl` so the E2E uses ephemeral ports, and re-exports `Tokens`, `serveLoopback`, `runBuyer`, `buyerPlan`.
+- `BudgetPolicy` takes `(budget, emit, now)`; `PolicyReason` includes `above_max_amount`, which the gateway emits.
+- `Tokens.Buyer` is `{ tools, policy }`, `Tokens.Balances` is a reader; `composeRoot` takes `llm` and `events`.
+
 ## Remaining
 
-Tasks 8.1 onward (PRs 8 to 13). ADR 0008 and its README row are uncommitted in the working tree, for the scripted-LLM PR.
+None. All 13 task groups are done; next is verify.
