@@ -554,6 +554,25 @@ export const abis = {
     },
     {
       "type": "function",
+      "name": "statusOf",
+      "inputs": [
+        {
+          "name": "_messageId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "_status",
+          "type": "uint8",
+          "internalType": "enum IPaymentBroker.Status"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
       "name": "supportsInterface",
       "inputs": [
         {
@@ -605,6 +624,50 @@ export const abis = {
           "type": "address",
           "indexed": false,
           "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "MessageAccepted",
+      "inputs": [
+        {
+          "name": "_messageId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_laneId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "Id"
+        },
+        {
+          "name": "_paymentId",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "MessageRejected",
+      "inputs": [
+        {
+          "name": "_messageId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_reason",
+          "type": "bytes4",
+          "indexed": false,
+          "internalType": "bytes4"
         }
       ],
       "anonymous": false
@@ -684,6 +747,33 @@ export const abis = {
       "type": "error",
       "name": "PaymentBroker_InvalidPayload",
       "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "PaymentBroker_MessageAlreadyProcessed",
+      "inputs": [
+        {
+          "name": "_messageId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "PaymentBroker_PayerMismatch",
+      "inputs": [
+        {
+          "name": "_expected",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_actual",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
     },
     {
       "type": "error",
@@ -2324,6 +2414,25 @@ export const abis = {
       "stateMutability": "nonpayable"
     },
     {
+      "type": "function",
+      "name": "statusOf",
+      "inputs": [
+        {
+          "name": "_messageId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "_status",
+          "type": "uint8",
+          "internalType": "enum IPaymentBroker.Status"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
       "type": "event",
       "name": "AllowedSenderSet",
       "inputs": [
@@ -2349,9 +2458,80 @@ export const abis = {
       "anonymous": false
     },
     {
+      "type": "event",
+      "name": "MessageAccepted",
+      "inputs": [
+        {
+          "name": "_messageId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_laneId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "Id"
+        },
+        {
+          "name": "_paymentId",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "MessageRejected",
+      "inputs": [
+        {
+          "name": "_messageId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_reason",
+          "type": "bytes4",
+          "indexed": false,
+          "internalType": "bytes4"
+        }
+      ],
+      "anonymous": false
+    },
+    {
       "type": "error",
       "name": "PaymentBroker_InvalidPayload",
       "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "PaymentBroker_MessageAlreadyProcessed",
+      "inputs": [
+        {
+          "name": "_messageId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "PaymentBroker_PayerMismatch",
+      "inputs": [
+        {
+          "name": "_expected",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_actual",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
     },
     {
       "type": "error",
