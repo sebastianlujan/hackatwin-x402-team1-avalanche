@@ -8,5 +8,11 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hackatwin/chains": "workspace:*",
+    "@hackatwin/config": "workspace:*",
+    "@hackatwin/core": "workspace:*",
+    "viem": "catalog:"
   }
 }
