@@ -1,9 +1,11 @@
+import { Erc8004Identity } from '@hackatwin/agent-kit';
 import { chain, type LiveChain } from '@hackatwin/chains';
 import { type Container, Ports } from '@hackatwin/core';
 import { createGuardedOracle } from '@hackatwin/pricing';
 import { HTTPFacilitatorClient } from '@x402/core/server';
 import { createFacilitatorApp } from './adapters/facilitator-app.ts';
 import { createFundingChain, fund } from './adapters/funding.ts';
+import { type RoleIdentity, registerRoles } from './adapters/registration.ts';
 import { assertSdkAddresses } from './adapters/sdk-addresses.ts';
 import { createSellerApp } from './adapters/seller-app.ts';
 import { createX402Facilitator } from './adapters/x402-facilitator.ts';
@@ -84,4 +86,29 @@ export function registerX402Module(container: Container): void {
       facilitator: new HTTPFacilitatorClient({ url: `http://127.0.0.1:${PORTS.facilitator}` }),
     }),
   );
+  container.register(Tokens.Registration, (resolver) => {
+    const [fork, accounts, state] = [
+      resolver.resolve(Tokens.Fork),
+      resolver.resolve(Tokens.Accounts),
+      resolver.resolve(Tokens.State),
+    ];
+    const cchain = live('cchain');
+    const identityFor = (account: (typeof accounts)['agent']): RoleIdentity => {
+      const adapter = new Erc8004Identity({
+        chain: fork.chainClient(account),
+        identity: contract(cchain, 'erc8004Identity').address,
+        reputation: contract(cchain, 'erc8004Reputation').address,
+        signer: account.address,
+      });
+      return {
+        address: account.address,
+        register: (uri) => adapter.register(uri),
+        ownerOf: (id) => adapter.ownerOf(id),
+      };
+    };
+    return {
+      register: () =>
+        registerRoles(state, { agent: identityFor(accounts.agent), seller: identityFor(accounts.seller) }),
+    };
+  });
 }

@@ -316,6 +316,9 @@ importers:
 
   demos/01-x402-twin:
     dependencies:
+      '@hackatwin/agent-kit':
+        specifier: workspace:*
+        version: link:../../packages/agent-kit
       '@hackatwin/chains':
         specifier: workspace:*
         version: link:../../packages/chains

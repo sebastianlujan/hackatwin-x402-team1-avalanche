@@ -18,7 +18,8 @@
     "demo1:fork-block": "node demos/01-x402-twin/scripts/fork-block.ts",
     "demo1:fund": "node --env-file-if-exists=.demo1/demo1.env --env-file-if-exists=.env demos/01-x402-twin/scripts/fund.ts",
     "demo1:facilitator": "node --env-file-if-exists=.demo1/demo1.env --env-file-if-exists=.env demos/01-x402-twin/facilitator/main.ts",
-    "demo1:seller": "node --env-file-if-exists=.demo1/demo1.env --env-file-if-exists=.env demos/01-x402-twin/seller-api/main.ts"
+    "demo1:seller": "node --env-file-if-exists=.demo1/demo1.env --env-file-if-exists=.env demos/01-x402-twin/seller-api/main.ts",
+    "demo1:register": "node --env-file-if-exists=.demo1/demo1.env --env-file-if-exists=.env demos/01-x402-twin/scripts/register.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

@@ -42,6 +42,20 @@ describe('registerX402Module', () => {
     expect(typeof container.resolve(Tokens.SellerApp).request).toBe('function');
   });
 
+  it('builds the registration service over the guarded fork client without sending anything', () => {
+    const container = createContainer();
+    const wrote: unknown[] = [];
+    container.register(Tokens.Accounts, () => ({ agent: account(1), seller: account(2) }) as never);
+    container.register(
+      Tokens.Fork,
+      () => ({ chainClient: () => ({ write: (call: unknown) => wrote.push(call) }) }) as never,
+    );
+    container.register(Tokens.State, () => ({ dir: '/mem', read: () => undefined, write: () => undefined }));
+    registerX402Module(container);
+    expect(typeof container.resolve(Tokens.Registration).register).toBe('function');
+    expect(wrote).toEqual([]);
+  });
+
   it('lets a child container override the oracle', () => {
     const container = createContainer();
     container.register(Tokens.ReadChains, () => ({ arbitrum: new FakeChainClient(), base: new FakeChainClient() }));
