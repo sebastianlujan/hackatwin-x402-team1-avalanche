@@ -952,7 +952,6 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 
 **T8.2 `feat(demo-2): add hop tracker`**
 
-- Local base (B0): local hops carry no explorer links; links stay open until T6.7 and T7.12.
 - Branch: `feature/hop-tracker`
 - Depends on: T7.12
 - What: Map CCIP status, hub `StatusChanged`, ICTT `CallSucceeded`/`CallFailed`, and receiver `StatusChanged` to
