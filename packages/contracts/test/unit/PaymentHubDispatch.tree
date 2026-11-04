@@ -1,0 +1,18 @@
+UnitPaymentHubDispatch
+└── when anyone dispatches a payment
+    ├── given a pending cross chain payment before its deadline
+    │   └── it sets Dispatched, hands exactly the escrow to the messenger and leaves a zero allowance
+    ├── given a pending cross chain payment at its deadline
+    │   └── it dispatches
+    ├── given a payment that is not pending
+    │   └── it reverts with PaymentHub_InvalidTransition
+    ├── given a local payment
+    │   └── it reverts with PaymentHub_WrongLaneKind
+    ├── given a cross chain payment after its deadline
+    │   └── it reverts with PaymentHub_DeadlinePassed
+    ├── given a messenger whose send reverts
+    │   └── it reverts, keeps the payment pending and refundable after the deadline
+    ├── given a messenger that pulls less than the escrow
+    │   └── it reverts with PaymentHub_AllowanceNotConsumed and keeps the payment pending
+    └── given a dispatched payment past its deadline
+        └── it rejects a refund with PaymentHub_InvalidTransition
