@@ -131,6 +131,19 @@ abstract contract PaymentHub is IPaymentHub, Ownable2Step, EIP712, Nonces, Reent
   }
 
   /// @inheritdoc IPaymentHub
+  function refund(Id _id, bytes32 _paymentId) external nonReentrant {
+    _transition(_id, _paymentId, Status.Pending, Status.Refunded);
+
+    Payment storage _payment = _payments[_id][_paymentId];
+    if (block.timestamp <= _payment.deadline) revert PaymentHub_DeadlineNotReached();
+
+    address _payer = _payment.payer;
+    uint256 _escrow = _payment.amount;
+    _payment.amount = 0;
+    IERC20(_lanes[_id].token).safeTransfer(_payer, _escrow);
+  }
+
+  /// @inheritdoc IPaymentHub
   function statusOf(Id _id, bytes32 _paymentId) external view returns (Status _status) {
     _status = _payments[_id][_paymentId].status;
   }

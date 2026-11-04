@@ -52,10 +52,6 @@ contract PaymentHubHarness is PaymentHub {
     revert();
   }
 
-  function refund(Id, bytes32) external pure {
-    revert();
-  }
-
   function withdraw(address) external pure {
     revert();
   }
