@@ -35,3 +35,7 @@ no AI credits.
 ## Principles
 
 KISS · DRY · YAGNI. Less is more.
+
+## Comments
+
+Hard rule for code: a comment is one line and simple. If it can't be, don't write it.
