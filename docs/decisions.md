@@ -31,6 +31,7 @@ Anything not listed under [Verified facts](#verified-facts) is **to be verified*
 | Q18 | LayerZero is not in the code. The talk mentions it as how real ARGt moves across chains in production (Twin's OFT adapter). | Out of demo scope, still worth explaining. |
 | Q19 | **Infra is self-hosted** with `docker-compose` in `infra/`: one validator node and one ICM relayer on a small VM (2 vCPU, 4 GB RAM, 100 GB disk). Builder Hub managed testnet nodes and relayer only for quick experiments. | Managed testnet nodes expire after 3–7 days, and the L1 halts when its validator expires. |
 | Q20 | The agent wallet on the fork is a fresh key never funded on mainnet. Keys live in encrypted keystores (`cast wallet import`). | The fork keeps chain ID 43114, so signatures made on the fork are valid on mainnet. A key with no mainnet funds has nothing to replay. |
+| Q21 | **Strict TDD for smart contracts.** Every contract change starts with a Bulloak `.tree`, then a failing `forge test` (red), then the implementation (green), then refactor. TypeScript code needs tests but not strict TDD. | It is how smart contracts are built: behavior is specified before code, and money-moving logic is never written without a failing test first. |
 
 ### Cross-cutting decisions
 
