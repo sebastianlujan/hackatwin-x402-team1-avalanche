@@ -1,0 +1,27 @@
+:root {
+  --hk-bg: #141210;
+  --hk-fg: #f2ead8;
+  --hk-fg-muted: #a9a08c;
+  --hk-accent: #e8804a;
+  --hk-accent-ink: #a04a1c;
+  --hk-paper: #f6f1e4;
+  --hk-line: color-mix(in srgb, var(--hk-fg) 18%, transparent);
+  --hk-surface: color-mix(in srgb, var(--hk-fg) 5%, var(--hk-bg));
+
+  --hk-font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Consolas, monospace;
+  --hk-text-sm: 0.8125rem;
+  --hk-text-md: 0.9375rem;
+  --hk-text-lg: 1.25rem;
+  --hk-leading: 1.55;
+
+  --hk-space-1: 0.25rem;
+  --hk-space-2: 0.5rem;
+  --hk-space-3: 0.75rem;
+  --hk-space-4: 1rem;
+  --hk-space-6: 1.5rem;
+  --hk-space-8: 2.5rem;
+
+  --hk-radius: 2px;
+  --hk-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --hk-blink: 1.1s;
+}

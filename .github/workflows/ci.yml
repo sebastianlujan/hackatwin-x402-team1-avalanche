@@ -106,6 +106,7 @@ jobs:
                 - .github/workflows/ci.yml
               - docs/**
               - apps/docs/**
+              - packages/ui/**
             web:
               - *root
               - apps/web/**
