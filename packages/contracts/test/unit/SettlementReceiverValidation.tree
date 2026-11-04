@@ -1,0 +1,18 @@
+UnitSettlementReceiverValidation
+└── when the transferrer delivers tokens
+    ├── given all five source values match
+    │   └── it continues to payload decoding
+    ├── given a caller or source value that differs from the configuration
+    │   └── it reverts with the named error and writes no status
+    ├── given several wrong source values
+    │   └── it reverts with the first error in check order
+    ├── given a bad source and a malformed payload
+    │   └── it returns the source error
+    ├── given a zero amount
+    │   └── it reverts with SettlementReceiver_ZeroAmount
+    ├── given a payload that is not 64 bytes or has a dirty merchant word
+    │   └── it reverts with SettlementReceiver_InvalidPayload
+    ├── given an unused payment id
+    │   └── it emits StatusChanged from None to Received
+    └── given a payment id that is not None
+        └── it reverts with SettlementReceiver_InvalidTransition
