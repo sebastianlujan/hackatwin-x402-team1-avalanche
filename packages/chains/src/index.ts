@@ -1,3 +1,4 @@
+export * from './anvil.ts';
 export * from './chain-client.ts';
 export * from './chain-error.ts';
 export * from './guarded-clients.ts';
