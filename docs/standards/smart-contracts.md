@@ -99,8 +99,11 @@ library PaymentStateLib {
 }
 ```
 
-**Tests**
+**Tests (strict TDD, [Q21](../decisions.md))**
 
+- Order is fixed: write the `.tree`, run `pnpm test:bulloak:scaffold`, watch `forge test` fail (red), implement until
+  green, then refactor with the suite green. No production Solidity lands without a test that failed first.
+- `bulloak check` runs in CI so trees and tests never drift.
 - One Bulloak tree per transition; branches are the possible from-states.
 - Handler-based invariants: terminal states are absorbing, only table edges occur, and tokens are conserved
   (escrowed = pending payments).
