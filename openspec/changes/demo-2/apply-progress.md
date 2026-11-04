@@ -48,6 +48,15 @@ Tasks 7.1 and 7.2 are marked `[x]`. Method A lives in `teleporter.ts`; the spike
 Tasks 8.1 to 8.3 are marked `[x]`. `relay.ts` exports `relayOnce`, `sendMessage`, `messageReceived`, and the Teleporter ABI and events; the spike round trip reuses them. CI job `local` passed on #240 in 1m16s (cache miss).
 Notes: `waitForTransactionReceipt` does not throw on a reverted receipt, so delivery does a `simulateContract` dry run first (revert reason) and also checks the receipt status. The revert case uses `allowedRelayerAddresses` with another address, which makes Teleporter revert with "unauthorized relayer". The `local` job runs when `ts` or `contracts` paths change and builds `packages/contracts` (the stub artifact) before `pnpm test:local`.
 
+## Batch 6 (PR 9): done
+
+| Task PR | Branch | Issue | PR | Red | Green | Authored lines |
+|---|---|---|---|---|---|---|
+| 9 | `feature/local-world-contracts` | #241 | #242 | d539477 | ab1f5ed | about 353 added, 5 removed |
+
+Tasks 9.1 and 9.2 are marked `[x]`. `world.ts` `deployContracts` deploys `LocalUsdc`, `CCIPLocalSimulator`, `ERC20TokenHome` (hub) and `ERC20TokenRemote` (L1) from `packages/contracts/out` and the cached ICTT build, relays `registerWithHome` with `relayOnce`, then `forge.ts` writes registry (`fuji`, `twinpay-l1`, `local-ccip`), params and deployments under `.cache/local-crosschain/<instance>/forge`. `foundry.toml` has one added read-write `fs_permissions` entry for `../../.cache/local-crosschain`. CI passed on #242 including `local`.
+Notes: roles by `eth_accounts` index (1 Fuji deployer and owner, 2 L1 receiver deployer at nonce 0, 3 treasury as broker payer, 4 agent as broker sender, 5 merchant, 6 fallback); `accountAt` added to `teleporter.ts`. `world.ts` and `relay.ts` import each other (functions only, no top-level use), so the ESM cycle is safe. PR 10 still has to run the real scripts against these files.
+
 ## Deviations and notes
 
 - `WarpMessengerStub` defines its own `WarpMessage` struct and does not import an upstream `IWarpMessenger` (none exists under `src/interfaces/external/icm/`). Field layout `(bytes32 sourceChainID, address originSenderAddress, bytes payload)` and the `WarpMessageSent(bytes32 indexed messageID, bytes message)` event follow design D7; conformance with the upstream struct is verified by the PR 1 spike (PR 1 task 1.5).

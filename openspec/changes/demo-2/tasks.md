@@ -91,8 +91,8 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 9: World contracts steps 4 and 5
 
-- [ ] 9.1 RED: Registry untouched, Source key `local-ccip`, Remote registered
-- [ ] 9.2 GREEN `world.ts` `LocalUsdc`, `CCIPLocalSimulator`, `ERC20TokenHome`/`Remote`, `registerWithHome`; `forge.ts` registry, params, deployments in `.cache/local-crosschain/<instance>/forge`; `packages/contracts/foundry.toml` `fs_permissions`
+- [x] 9.1 RED: Registry untouched, Source key `local-ccip`, Remote registered
+- [x] 9.2 GREEN `world.ts` `LocalUsdc`, `CCIPLocalSimulator`, `ERC20TokenHome`/`Remote`, `registerWithHome`; `forge.ts` registry, params, deployments in `.cache/local-crosschain/<instance>/forge`; `packages/contracts/foundry.toml` `fs_permissions`
 
 ## PR 10: Deploy and dev command (specs: contracts-deployment)
 
