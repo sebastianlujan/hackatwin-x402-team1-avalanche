@@ -64,14 +64,14 @@ PR 3
 
 ## Phase 2: x402 services (PRs 4, 5, 6)
 
-- [ ] 4.1 RED `facilitator-app` tests: loopback bind, oversize and malformed bodies 4xx, unsupported network rejected (Threat: HTTP). 4.2 GREEN `facilitator-app.ts`, `sdk-addresses.ts` (constants equal registry), `facilitator/main.ts`. ~220 (x402-facilitator)
-- [ ] 4.3 Fork settle test plus expired deadline (live fork). ~130
-- [ ] 5.1 RED `seller-app.test.ts` against the real middleware, fake facilitator: paid body shape, settle failure gives no 200 and no `quote`, oracle error gives 503. 5.2 GREEN `seller-app.ts`, `argt-money-parser.ts`, `seller-api/main.ts`. Verify whether `extra.quote` reaches the 402 body, else rate source in route description. ~330 (x402-seller-api)
-- [ ] 6.1 RED `payment-gateway.test.ts`: ask `maxAmount + 1` emits `above_max_amount`, signs nothing; allowance shortfall typed error; approval extensions rejected; 200 Settled, else Rejected. 6.2 GREEN `payment-gateway.ts`, `engine.ts`, `errors.ts`; add `@x402/core`, `@x402/evm`. ~300 (x402-client)
+- [x] 4.1 RED `facilitator-app` tests: loopback bind, oversize and malformed bodies 4xx, unsupported network rejected (Threat: HTTP). 4.2 GREEN `facilitator-app.ts`, `sdk-addresses.ts` (constants equal registry), `facilitator/main.ts`. ~220 (x402-facilitator)
+- [x] 4.3 Fork settle test plus expired deadline (live fork). ~130
+- [x] 5.1 RED `seller-app.test.ts` against the real middleware, fake facilitator: paid body shape, settle failure gives no 200 and no `quote`, oracle error gives 503. 5.2 GREEN `seller-app.ts`, `argt-money-parser.ts`, `seller-api/main.ts`. Verify whether `extra.quote` reaches the 402 body, else rate source in route description. ~330 (x402-seller-api)
+- [x] 6.1 RED `payment-gateway.test.ts`: ask `maxAmount + 1` emits `above_max_amount`, signs nothing; allowance shortfall typed error; approval extensions rejected; 200 Settled, else Rejected. 6.2 GREEN `payment-gateway.ts`, `engine.ts`, `errors.ts`; add `@x402/core`, `@x402/evm`. ~300 (x402-client)
 
 ## Phase 3: Identity, policy, LLM, runner (PRs 7 to 10)
 
-- [ ] 7.1 Verify `getSummary` and `getClients` against `erc-8004-contracts` 2.0.0. 7.2 RED fake-client tests: `Registered` decode, `SelfFeedbackError`, feedback args. 7.3 GREEN `erc8004-identity.ts`, `abi.ts`, `errors.ts`; `adapters/registration.ts`, `scripts/register.ts` (`identities.json`). 7.4 Fork test: reputation count 1 (live fork). ~350 (agent-identity)
+- [x] 7.1 Verify `getSummary` and `getClients` against `erc-8004-contracts` 2.0.0. 7.2 RED fake-client tests: `Registered` decode, `SelfFeedbackError`, feedback args. 7.3 GREEN `erc8004-identity.ts`, `abi.ts`, `errors.ts`; `adapters/registration.ts`, `scripts/register.ts` (`identities.json`). 7.4 Fork test: reputation count 1 (live fork). ~350 (agent-identity)
 - [ ] 8.1 RED `budget-policy.test.ts` at and above both caps; 8.2 GREEN `budget-policy.ts`, `above_max_amount` reason. ~150 (budget-policy)
 - [ ] 9.1 Confirm Claude 1.4.0 thinking block shape. 9.2 RED `claude-llm.test.ts` (fake SDK): refusal maps, one 529 then success, always 500 gives `LlmError` without key, thinking replay. 9.3 GREEN `claude-llm.ts`. ~300 (claude-llm; no key needed)
 - [ ] 10.1 RED `create-agent.test.ts`: `max-steps` at 3, unknown or invalid tool ends with `error`, refusal and error reasons; `EventChannel.until`. 10.2 GREEN `create-agent.ts`, `event-channel.ts`, `tool.ts`, `scripted-plan-llm.ts`. ~250 (agent-runner)

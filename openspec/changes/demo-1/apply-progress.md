@@ -1,4 +1,4 @@
-# Apply progress: demo-1 (M5), batch 1 (PRs 1, 2a, 2b, 3)
+# Apply progress: demo-1 (M5), batches 1 and 2 (PRs 1 to 7)
 
 Mode: Standard (strict TDD does not apply). Chain: stacked, every PR targets `develop`, review budget 400 authored lines (lockfile excluded). No `size:exception`.
 
@@ -8,6 +8,11 @@ Mode: Standard (strict TDD does not apply). Chain: stacked, every PR targets `de
 - [x] 2.1, 2.2, 2.3 (PR 2a). `cheats()` split into the next PR to stay under 400.
 - [x] 2.4, 2.5, 2.6 (PR 2b, split into three PRs).
 - [x] 3.1, 3.2, 3.3 (PR 3, split into two PRs).
+
+- [x] 4.1, 4.2 (PR 4a #79), 4.3 (PR 4b #80): PR 4 split into two.
+- [x] 5.1, 5.2 (PR 5 #82).
+- [x] 6.1, 6.2 (PR 6a #85 engine, PR 6b #86 gateway): PR 6 split into two.
+- [x] 7.1 to 7.4 (PR 7a #88 adapter, PR 7b #90 register script and fork test): PR 7 split into two.
 
 ## PRs (all base `develop`, stacked in this order)
 
@@ -20,8 +25,15 @@ Mode: Standard (strict TDD does not apply). Chain: stacked, every PR targets `de
 | 5 | #72 | `feature/demo-1-fork-scripts` | #71 | 235 | `pnpm demo1:fork`, `demo1:fork-block`, `fork` Vitest project, CI `fork` job |
 | 6 | #75 | `feature/demo-1-funding` | #74 | 295 | `fund`, `createFundingChain`, `fileState`, demo env RPC defaults |
 | 7 | #76 | `feature/demo-1-fund` | #73 | 282 | `module.ts`, `tokens.ts`, `pnpm demo1:fund`, fork test, `cacheTime: 0` fix |
+| 8 | #79 | `feature/x402-facilitator` | #77 | 333 | facilitator app, `assertSdkAddresses`, `serveLoopback`, `FacilitatorApp` token |
+| 9 | #80 | `feature/x402-facilitator-service` | #78 | 230 | `composeRoot`, `pnpm demo1:facilitator`, live settle and expired-deadline fork test |
+| 10 | #82 | `feature/x402-seller-api` | #81 | 263 | `createSellerApp`, `createArgtMoneyParser`, `pnpm demo1:seller` |
+| 11 | #85 | `feature/x402-engine` | #84 | 140 | `X402Engine`, typed errors, `@x402/*` deps in agent-kit |
+| 12 | #86 | `feature/x402-client` | #83 | 360 | `X402PaymentGateway`, `usdAtRate` |
+| 13 | #88 | `feature/erc8004-identity` | #87 | 313 | `Erc8004Identity`, ABI subset, `viem` dep |
+| 14 | #90 | `feature/erc8004-registration` | #89 | 334 | `registerRoles`, `pnpm demo1:register`, live feedback fork test |
 
-All seven PRs: CI green (including the new `fork` job on #72, #75, #76).
+Batch 1 (seven PRs): CI green, including the `fork` job. Batch 2 (seven PRs #79, #80, #82, #85, #86, #88, #90): CI green, including `fork`.
 
 ## Work Unit Evidence (per PR)
 
@@ -48,6 +60,31 @@ All seven PRs: CI green (including the new `fork` job on #72, #75, #76).
 - Bug fixed in PR 3b: viem cached head made reads after writes stale; `getBlockNumber({ cacheTime: 0 })`.
 - Tokens for Registration, FacilitatorApp, SellerApp, Buyer, Balances are typed `unknown` until their PR.
 
+## Batch 2 evidence (live local fork at 99388000, loopback only, throwaway keys)
+
+- Facilitator service (real HTTP, `pnpm demo1:facilitator`): verify `isValid: true`, settle tx `0xda5cc69a2141033036f09d2feed1ac17a8c2cc108fdc1c2f357c6f37f01748cf`; agent ARGt 16583645864138479263121 to 16582645864138479263121, seller 0 to 1000000000000000000 (1 ARGt).
+- Seller 402 to 200 (real oracle on Arbitrum and Base): 402 amount 16583659286758589132, settle tx `0x22595c5c8765a9fc6ccdc7686029680edda9ed6bead120f9cbd39a0513aeec6c`; seller 1 ARGt to 17.583659286758589132 ARGt.
+- Gateway (real engine): events payment.required, payment.signed, payment.status, resource.received; a ceiling of 10 ARGt gave `AboveMaxAmountError` with `policy.decision` `above_max_amount` and the seller balance unchanged.
+- ERC-8004: `pnpm demo1:register` printed agentId 1852 and 1853, rerun printed the same with the block number unchanged (99388011); feedback tx `0x25ff488a79e845c587923d3ceb983f78df5be0a1f132439da34790c486ce6445`, reputation count 1; self-feedback `SelfFeedbackError`, registry reverts when the guard is bypassed.
+
+## Findings
+
+- `extra.quote` (Open Question, PR 5): a custom `extra.quote` DOES reach the 402, in the `PAYMENT-REQUIRED` header `accepts[0].extra.quote`; the body is `{"error":"Payment required"}`. The paid request is priced again and the client's `accepted.extra` must contain the advertised one, so `extra.quote` carries no expiry; the oracle freeze keeps the amount stable. No route-description fallback needed.
+- `@x402/hono` catches parser errors and answers its own 500, so an oracle error reaches 503 only through a wrapper that flags the failure (`AsyncLocalStorage`).
+- `x402Client` default `spendControls` reject non-default assets such as ARGt; the engine and the fork test turn them off, the gateway ceiling replaces them.
+- A 402 `extensions` entry (`erc20ApprovalGasSponsoring`, `eip2612GasSponsoring`) could make the signer sign an approval transaction; the gateway rejects them and the engine drops server extensions.
+- ERC-8004 v2.0.0 signatures (Open Question, PR 7), verified against `erc-8004/erc-8004-contracts` and the deployed fork: `giveFeedback(uint256,int128,uint8,string,string,string,string,bytes32)`, `getClients(uint256) returns (address[])`, `getSummary(uint256,address[],string,string) returns (uint64,int128,uint8)` (reverts without clients), `register(string)`, `Registered(uint256 indexed agentId, string agentURI, address indexed owner)`, `isAuthorizedOrOwner(address,uint256)` (the reputation registry reverts with "Self-feedback not allowed" on it, so the adapter uses it as the pre-check).
+- `register(string)` is one of three overloads; the ABI subset lists only that one.
+- Environment: this run pushed over HTTPS with the `gh` credential helper (SSH was denied in the sandbox); a transient GitHub 500 needed a retry loop. `git commit` needs `~/.nvm/versions/node/v26.13.0/bin` on PATH (husky runs pnpm).
+
+## Deviations from design
+
+- PR 4 became two PRs (app plus address check; service plus fork test) and PR 6 two (engine; gateway), PR 7 two (adapter; script and fork test) to stay under 400 lines.
+- `composeRoot` (`root.ts`) was added in PR 4b so facilitator, seller and fund share one start; `ports.ts` holds 4020 and 4021.
+- `Erc8004Identity` pre-checks with the registry's `isAuthorizedOrOwner` instead of `ownerOf` plus approvals (the same check the registry reverts on).
+- The gateway throws typed errors (`AboveMaxAmountError`, `AllowanceShortfallError`, `PaymentDeniedError`, `PaymentRequirementsError`) for refusals; it returns a `PaidResponse` only for paid or non-402 answers. Its `usdValue` option carries the buyer's rate (`usdAtRate`).
+- Tokens `FacilitatorApp`, `SellerApp`, `Registration` now have real types; `Buyer` and `Balances` stay `unknown`.
+
 ## Remaining
 
-Tasks 4.1 onward (PRs 4 to 13). ADR 0008 and its README row are uncommitted in the working tree, for the scripted-LLM PR.
+Tasks 8.1 onward (PRs 8 to 13). ADR 0008 and its README row are uncommitted in the working tree, for the scripted-LLM PR.
