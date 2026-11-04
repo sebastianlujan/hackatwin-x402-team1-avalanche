@@ -19,7 +19,8 @@ contract UnitSettlementReceiverValidation is Test {
   SettlementReceiverHarness internal _receiver;
 
   function setUp() external {
-    _receiver = new SettlementReceiverHarness(_transferrer, _SOURCE, _originTransferrer, _originSender, _token);
+    _receiver =
+      new SettlementReceiverHarness(_transferrer, _SOURCE, _originTransferrer, _originSender, _token, address(this));
   }
 
   modifier whenTheTransferrerDeliversTokens() {

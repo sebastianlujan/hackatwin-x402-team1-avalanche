@@ -10,9 +10,10 @@ contract SettlementReceiverHarness is SettlementReceiver {
     bytes32 _sourceBlockchainId,
     address _originTransferrer,
     address _originSender,
-    address _token
+    address _token,
+    address _owner
   )
-    SettlementReceiver(_transferrer, _sourceBlockchainId, _originTransferrer, _originSender, _token)
+    SettlementReceiver(_transferrer, _sourceBlockchainId, _originTransferrer, _originSender, _token, _owner)
   { }
 
   function exposed_setStatus(bytes32 _paymentId, Status _status) external {
