@@ -1,0 +1,16 @@
+{
+  "deployer": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+  "owner": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+  "fallbackRecipient": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+  "requiredGasLimit": 500000,
+  "recipientGasLimit": 300000,
+  "receiverDeployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "receiverDeployerNonce": 0,
+  "brokerPairs": [
+    {
+      "chain": "sepolia",
+      "sender": "0x4444444444444444444444444444444444444444",
+      "payer": "0x5555555555555555555555555555555555555555"
+    }
+  ]
+}

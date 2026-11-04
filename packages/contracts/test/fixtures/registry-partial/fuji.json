@@ -1,0 +1,15 @@
+{
+  "key": "fuji",
+  "chainId": 43113,
+  "ccip": {
+    "chainSelector": "14767482510784806043"
+  },
+  "contracts": {
+    "usdc": {
+      "address": "0x5425890298aed601595a70AB815c96711a31Bc65"
+    },
+    "ccipRouter": {
+      "address": "0xF694E193200268f9a4868e4Aa017A0118C9a8177"
+    }
+  }
+}
