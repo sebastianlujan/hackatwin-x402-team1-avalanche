@@ -44,55 +44,55 @@ Seams if a forecast overruns: P2 (CI job after rules), P4 (replay source after h
 
 ## P1 web-scaffold (branch `feature/web-scaffold`, base `feature/constructor-zero-checks`)
 
-- [ ] 1.1 Spike: Turbopack with `.ts` specifiers and JSON import attributes; fallback `next build --webpack` in the build script. Record the outcome in `apps/web/next.config.ts` (one-line comment).
-- [ ] 1.2 Spike: `next typegen && tsc --noEmit` as `typecheck`; fallback commit `next-env.d.ts`.
-- [ ] 1.3 Spike: add pnpm `allowBuilds` entries (for example `sharp`) to `pnpm-workspace.yaml`; fallback `ignoredBuiltDependencies`.
-- [ ] 1.4 Catalog D1 versions in `pnpm-workspace.yaml`; edit `apps/web/{package.json,tsconfig.json}`, pin `typescript 5.9.3`, add D8 `dev`/`start` env-file flags.
-- [ ] 1.5 Create `apps/web/next.config.ts` (D2: `transpilePackages`, `turbopack.root`, `outputFileTracingRoot`).
-- [ ] 1.6 Create `src/app/{layout,page}.tsx` and `src/server/root.ts` (D5, imports `server-only`); delete `src/index.ts`; add `test/stubs/server-only.ts`, update `vitest.config.ts` (alias, automatic JSX).
-- [ ] 1.7 Tests: `root.ts` import reads no env; build passes with no env (web-shell "Build without environment").
+- [x] 1.1 Spike: Turbopack with `.ts` specifiers and JSON import attributes; fallback `next build --webpack` in the build script. Record the outcome in `apps/web/next.config.ts` (one-line comment).
+- [x] 1.2 Spike: `next typegen && tsc --noEmit` as `typecheck`; fallback commit `next-env.d.ts`.
+- [x] 1.3 Spike: add pnpm `allowBuilds` entries (for example `sharp`) to `pnpm-workspace.yaml`; fallback `ignoredBuiltDependencies`.
+- [x] 1.4 Catalog D1 versions in `pnpm-workspace.yaml`; edit `apps/web/{package.json,tsconfig.json}`, pin `typescript 5.9.3`, add D8 `dev`/`start` env-file flags.
+- [x] 1.5 Create `apps/web/next.config.ts` (D2: `transpilePackages`, `turbopack.root`, `outputFileTracingRoot`).
+- [x] 1.6 Create `src/app/{layout,page}.tsx` and `src/server/root.ts` (D5, imports `server-only`); delete `src/index.ts`; add `test/stubs/server-only.ts`, update `vitest.config.ts` (alias, automatic JSX).
+- [x] 1.7 Tests: `root.ts` import reads no env; build passes with no env (web-shell "Build without environment").
 
 ## P2 web-guardrails (`feature/web-guardrails`)
 
-- [ ] 2.1 Rule tests first, in `test/dependency-rule.test.ts`: R10 hook (fail) and clean atom (pass); R11 config, chains root, agent-kit, pricing (fail), `chains/registry` (pass), server file (pass).
-- [ ] 2.2 Implement R10 and R11 detection in `test/dependency-rule.ts`; violation type and snapshot self-test stay green.
-- [ ] 2.3 Create `apps/web/scripts/scan-static.ts` plus `scan-static.test.ts` (clean tree passes; planted sentinel, `ANTHROPIC_API_KEY`, `KEYSTORE`, `anvil_` fail; CI sentinels match the script).
-- [ ] 2.4 Edit `.github/workflows/ci.yml` (D19): `web` and `docs` filters, `web-build` job, add to `ci-gate` needs; root `package.json` `web` script.
+- [x] 2.1 Rule tests first, in `test/dependency-rule.test.ts`: R10 hook (fail) and clean atom (pass); R11 config, chains root, agent-kit, pricing (fail), `chains/registry` (pass), server file (pass).
+- [x] 2.2 Implement R10 and R11 detection in `test/dependency-rule.ts`; violation type and snapshot self-test stay green.
+- [x] 2.3 Create `apps/web/scripts/scan-static.ts` plus `scan-static.test.ts` (clean tree passes; planted sentinel, `ANTHROPIC_API_KEY`, `KEYSTORE`, `anvil_` fail; CI sentinels match the script).
+- [x] 2.4 Edit `.github/workflows/ci.yml` (D19): `web` and `docs` filters, `web-build` job, add to `ci-gate` needs; root `package.json` `web` script.
 - [ ] 2.5 Acceptance: failing build fails the gate; docs-only change skips `web-build` (ci-workspace-jobs).
 
 ## P3 web-event-stream-core (`feature/web-event-stream`)
 
-- [ ] 3.1 `lib/envelope.ts` plus test: live frame round trip, same schema for `live` and `replay`, `version: 2` error.
-- [ ] 3.2 `server/redact.ts` plus test: URL and absolute path replaced (D11).
-- [ ] 3.3 `server/run-store.ts` plus test: 409 with active id, synchronous reservation, seq without gaps, throw yields synthetic `run.finished` `error`, `globalThis` reload keeps the run, balances on the record.
+- [x] 3.1 `lib/envelope.ts` plus test: live frame round trip, same schema for `live` and `replay`, `version: 2` error.
+- [x] 3.2 `server/redact.ts` plus test: URL and absolute path replaced (D11).
+- [x] 3.3 `server/run-store.ts` plus test: 409 with active id, synchronous reservation, seq without gaps, throw yields synthetic `run.finished` `error`, `globalThis` reload keeps the run, balances on the record.
 
 ## P4 web-event-stream-http (`feature/web-event-stream-http`)
 
-- [ ] 4.1 `server/sse.ts` plus test: headers, `id: seq`, `Last-Event-ID: 4` yields 5..7, close after `run.finished`, abort only unsubscribes.
-- [ ] 4.2 `server/handlers.ts` plus test: 202, 409, 400, 422 (names `ANTHROPIC_API_KEY`), 503 (names `pnpm demo1:*` or variable), GET never starts, 404, redaction, preflight and fork guard refusals.
-- [ ] 4.3 `server/replay-source.ts` plus fixtures `replay.jsonl`, `replay-bad-line.jsonl`: all frames `source: replay` with "Replay" label; bad line 3 ends with `run.finished` `error` naming line 3, rendered visibly (D24).
+- [x] 4.1 `server/sse.ts` plus test: headers, `id: seq`, `Last-Event-ID: 4` yields 5..7, close after `run.finished`, abort only unsubscribes.
+- [x] 4.2 `server/handlers.ts` plus test: 202, 409, 400, 422 (names `ANTHROPIC_API_KEY`), 503 (names `pnpm demo1:*` or variable), GET never starts, 404, redaction, preflight and fork guard refusals.
+- [x] 4.3 `server/replay-source.ts` plus fixtures `replay.jsonl`, `replay-bad-line.jsonl`: all frames `source: replay` with "Replay" label; bad line 3 ends with `run.finished` `error` naming line 3, rendered visibly (D24).
 
 ## P5 demo-run-entry (`feature/demo-1-run-entry`)
 
-- [ ] 5.1 Tests first in `demos/01-x402-twin`: CLI parity, `PreflightError` before writes, Claude key checked before chain calls, relative `KEYSTORE_DIR` fails naming the variable.
-- [ ] 5.2 Create `state-dir.ts`; update `state.ts`, `root.ts` (`KEYSTORE_DIR ?? stateDir`), CLI entries `buyer-agent/main.ts`, `facilitator/main.ts`, `seller-api/main.ts`, `scripts/{fork,fund,register}.ts` (D8).
-- [ ] 5.3 Create `buyer-agent/entry.ts` (`startDemo1Run`, child container, D6) and barrel `index.ts`; point `package.json` `./module` at it; `module.ts` keeps only `registerX402Module` (D7).
+- [x] 5.1 Tests first in `demos/01-x402-twin`: CLI parity, `PreflightError` before writes, Claude key checked before chain calls, relative `KEYSTORE_DIR` fails naming the variable.
+- [x] 5.2 Create `state-dir.ts`; update `state.ts`, `root.ts` (`KEYSTORE_DIR ?? stateDir`), CLI entries `buyer-agent/main.ts`, `facilitator/main.ts`, `seller-api/main.ts`, `scripts/{fork,fund,register}.ts` (D8).
+- [x] 5.3 Create `buyer-agent/entry.ts` (`startDemo1Run`, child container, D6) and barrel `index.ts`; point `package.json` `./module` at it; `module.ts` keeps only `registerX402Module` (D7).
 
 ## P6 web-live-api (`feature/web-live-api`)
 
-- [ ] 6.1 Rule tests: server file with `server-only` importing `@hackatwin/demo-*/module` passes; non-server, no-`server-only`, client, deep and relative imports fail; non-web packages stay forbidden.
-- [ ] 6.2 Implement R2 exception in `test/dependency-rule.ts`; add demo dependency to `apps/web/package.json`.
-- [ ] 6.3 `docs/adr/0012-web-imports-demo-modules.md` (design draft) and `docs/adr/README.md` row.
-- [ ] 6.4 Routes `api/runs/{route.ts,[id]/route.ts,[id]/events/route.ts}` (nodejs, force-dynamic, async `params`); test that the `app/api` list equals these three (no Fuji route, no server-held key).
+- [x] 6.1 Rule tests: server file with `server-only` importing `@hackatwin/demo-*/module` passes; non-server, no-`server-only`, client, deep and relative imports fail; non-web packages stay forbidden.
+- [x] 6.2 Implement R2 exception in `test/dependency-rule.ts`; add demo dependency to `apps/web/package.json`.
+- [x] 6.3 `docs/adr/0012-web-imports-demo-modules.md` (design draft) and `docs/adr/README.md` row.
+- [x] 6.4 Routes `api/runs/{route.ts,[id]/route.ts,[id]/events/route.ts}` (nodejs, force-dynamic, async `params`); test that the `app/api` list equals these three (no Fuji route, no server-held key).
 
 ## P7 web-live-page (`feature/web-live-page`, checkpoint)
 
-- [ ] 7.1 `lib/starter.ts` plus test: one POST for two presses, Claude disabled with "the server has no ANTHROPIC_API_KEY", Scripted badge from `run.started.llm`.
-- [ ] 7.2 `containers/demo-1-run.tsx` (EventSource, "Reconnecting", decode-error state, POST error command text) with component markup tests; no replay control.
-- [ ] 7.3 `app/demo-1/page.tsx` passes latest run id and Claude availability (D17).
-- [ ] 7.4 Root scripts `web` and `web:demo1` (D20); update `docs/demos.md`.
-- [ ] 7.5 Run `pnpm --filter @hackatwin/web build` and the scan.
-- [ ] 7.6 Browser checkpoint: run `pnpm demo1:fork` (or existing scripts), `pnpm web:demo1`, or `pnpm --filter @hackatwin/web dev`; open `/demo-1`, start a Scripted run, see the live stream through 200 and the ERC-8004 feedback; reload mid run resumes.
+- [x] 7.1 `lib/starter.ts` plus test: one POST for two presses, Claude disabled with "the server has no ANTHROPIC_API_KEY", Scripted badge from `run.started.llm`.
+- [x] 7.2 `containers/demo-1-run.tsx` (EventSource, "Reconnecting", decode-error state, POST error command text) with component markup tests; no replay control.
+- [x] 7.3 `app/demo-1/page.tsx` passes latest run id and Claude availability (D17).
+- [x] 7.4 Root scripts `web` and `web:demo1` (D20); update `docs/demos.md`.
+- [x] 7.5 Run `pnpm --filter @hackatwin/web build` and the scan.
+- [x] 7.6 Browser checkpoint: run `pnpm demo1:fork` (or existing scripts), `pnpm web:demo1`, or `pnpm --filter @hackatwin/web dev`; open `/demo-1`, start a Scripted run, see the live stream through 200 and the ERC-8004 feedback; reload mid run resumes.
 
 ## P8 ui-tokens (`feature/ui-tokens`)
 
