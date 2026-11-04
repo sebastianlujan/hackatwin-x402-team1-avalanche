@@ -112,7 +112,7 @@ More context: [Twin Finance contracts](references/twin-finance-contracts.md).
 | Chainlink L2 sequencer uptime feed (Base) | `0xBCF85224fc0756B9Fa45aA7892530B47e10b6433`; `answer` 0 means up; `startedAt` is the time of the last status change | https://docs.chain.link/data-feeds/l2-sequencer-feeds (re-checked and read on-chain 2026-11-04) |
 | Chainlink Data Streams USD/ARS (optional future adapter) | Feed ID `0x000848d3adb3429cb99a6392b6679fc45852536a17f3353356825c4eb282c765`, verifiable on Avalanche, needs credentials | https://docs.chain.link/data-streams |
 | Other providers | Pyth: no ARS feed. DIA: ARS/USDT on Arbitrum only. | Provider catalogs |
-| Reference rates (2026-11-04) | ARGt tracks the dólar cripto/CCL rate (≈ 1658), about 5.6% above the official rate (≈ 1570) | Curve pool and Chainlink feed above |
+| Reference rates (2026-11-04) | ARGt tracks the market (dólar cripto/CCL) rate, and so does the Base ARS/USD feed: Chainlink 1657.91 ARS per USD (Base block 53495781) against Curve 1658.36 ARGt per USD, a delta of about 0.03%, inside the ±2% band | Live read-only reads of the Curve pool and the Chainlink feed above (`chainlink-feed-oracle.nightly.test.ts`), 2026-11-04 |
 
 ### Avalanche, ICM, and the L1
 
