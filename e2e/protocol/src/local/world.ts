@@ -67,6 +67,7 @@ export interface WorldContracts {
   selector: bigint;
   home: Address;
   remote: Address;
+  roles: Roles;
   forgeDir: string;
 }
 
@@ -151,6 +152,7 @@ export async function deployContracts(
   const report = await relayOnce({ hub: hubChain, l1: l1Chain }, infra.ids);
   if (report.failed.length > 0) throw new Error(`registerWithHome relay failed: ${report.failed[0]?.reason}`);
 
+  const roles = await rolesOf(hub);
   const dir = forgeDir(repoRoot, instance);
   await writeForgeFiles(dir, {
     chains: { hub: hubChain, l1: l1Chain },
@@ -160,7 +162,7 @@ export async function deployContracts(
     selector,
     home,
     remote,
-    roles: await rolesOf(hub),
+    roles,
   });
-  return { usdc, simulator, router, selector, home, remote, forgeDir: dir };
+  return { usdc, simulator, router, selector, home, remote, roles, forgeDir: dir };
 }
