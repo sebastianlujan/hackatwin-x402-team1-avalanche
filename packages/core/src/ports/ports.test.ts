@@ -3,7 +3,7 @@ import { createContainer } from '../container.ts';
 import { money } from '../domain/money.ts';
 import type { AgentIdentity } from './agent-identity.ts';
 import type { AgentPolicy } from './agent-policy.ts';
-import type { ChainClient } from './chain-client.ts';
+import type { ChainClient, ReadResult } from './chain-client.ts';
 import type { CrossChainMessenger, Hop } from './cross-chain-messenger.ts';
 import type { LLM } from './llm.ts';
 import type { PaymentGateway } from './payment-gateway.ts';
@@ -35,8 +35,11 @@ class IdentityStub implements AgentIdentity {
 }
 class ChainStub implements ChainClient {
   readonly chainId = 1;
+  async blockNumber() {
+    return 1n;
+  }
   async read<T>() {
-    return undefined as T;
+    return { value: undefined as T, blockNumber: 1n };
   }
   async write() {
     return '0x00' as const;
@@ -63,6 +66,18 @@ class MessengerStub implements CrossChainMessenger {
 }
 
 const request = { url: 'https://x', method: 'GET' as const, maxAmount: money(1n, 6, 'USD') };
+
+describe('ChainClient', () => {
+  const call = { address: `0x${'1'.repeat(40)}` as const, abi: [], functionName: 'f' };
+
+  it('reads at the head or at a pinned block and reports the block', async () => {
+    const chain: ChainClient = new ChainStub();
+    const head: ReadResult<string> = await chain.read<string>(call);
+    const pinned = await chain.read<string>(call, { blockNumber: 7n });
+    expect([head.blockNumber, pinned.blockNumber]).toEqual([1n, 1n]);
+    expect(await chain.blockNumber()).toBe(1n);
+  });
+});
 
 describe('Ports', () => {
   it('has seven distinct tokens', () => {

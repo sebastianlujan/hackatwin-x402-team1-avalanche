@@ -86,13 +86,39 @@ describe('FakeAgentPolicy', () => {
 });
 
 describe('FakeChainClient', () => {
-  const call = { address: addr, abi: [], functionName: 'balanceOf' };
+  const call = { address: addr, abi: [], functionName: 'balanceOf', args: [addr] };
+  const key = `${addr}:balanceOf(${addr})`;
 
-  it('reads from the address:functionName map', async () => {
-    const chain = new FakeChainClient({ reads: { [`${addr}:balanceOf`]: 42n } });
-    expect(await chain.read<bigint>(call)).toBe(42n);
+  it('reads from the address:fn(args) script and reports the head block', async () => {
+    const chain = new FakeChainClient({ blockNumber: 9n, reads: { [key]: 42n } });
+    expect(await chain.read<bigint>(call)).toEqual({ value: 42n, blockNumber: 9n });
+    expect(await chain.blockNumber()).toBe(9n);
     expect(chain.chainId).toBe(31337);
-    await expect(chain.read({ ...call, functionName: 'other' })).rejects.toThrow(/no read for/);
+  });
+
+  it('separates the same function with different args and keeps bigint args exact', async () => {
+    const other = `0x${'2'.repeat(40)}` as Address;
+    const chain = new FakeChainClient({
+      reads: { [key]: 1n, [`${addr}:balanceOf(${other})`]: 2n, [`${addr}:at(12345678901234567890)`]: 3n },
+    });
+    expect((await chain.read<bigint>({ ...call, args: [other] })).value).toBe(2n);
+    expect((await chain.read<bigint>(call)).value).toBe(1n);
+    expect((await chain.read<bigint>({ ...call, functionName: 'at', args: [12345678901234567890n] })).value).toBe(3n);
+  });
+
+  it('rejects an Error value and an unscripted call naming address, function and args', async () => {
+    const chain = new FakeChainClient({ reads: { [key]: new Error('boom') } });
+    await expect(chain.read(call)).rejects.toThrow('boom');
+    const miss = chain.read({ ...call, functionName: 'other', args: [5n, 'x'] });
+    await expect(miss).rejects.toThrow(`${addr}:other(5,x)`);
+    await expect(miss).rejects.toThrow(/address 0x1+, function other/);
+  });
+
+  it('records the requested block and echoes a pinned one', async () => {
+    const chain = new FakeChainClient({ blockNumber: 9n, reads: { [key]: 42n } });
+    expect((await chain.read(call, { blockNumber: 5n })).blockNumber).toBe(5n);
+    await chain.read(call);
+    expect(chain.calls.map((c) => c.blockNumber)).toEqual([5n, undefined]);
   });
 
   it('issues sequential tx hashes and scripted receipt logs', async () => {
