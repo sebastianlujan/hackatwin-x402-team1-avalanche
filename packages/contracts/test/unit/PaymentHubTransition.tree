@@ -1,0 +1,10 @@
+UnitPaymentHubTransition
+├── when a transition is requested
+│   ├── given the stored status equals the from status and the edge is in the table
+│   │   └── it writes the status and emits exactly one StatusChanged
+│   ├── given the stored status differs from the from status
+│   │   └── it reverts with PaymentHub_InvalidTransition and emits nothing
+│   └── given the edge is not in the table
+│       └── it reverts with PaymentHub_InvalidTransition
+└── when an unknown payment is read
+    └── it reads as None
