@@ -31,3 +31,8 @@
   margin: 0;
   color: var(--hk-fg-muted);
 }
+
+.table th[scope="row"] {
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
