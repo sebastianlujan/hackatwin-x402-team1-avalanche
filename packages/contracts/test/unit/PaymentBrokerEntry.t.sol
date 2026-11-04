@@ -123,7 +123,7 @@ contract UnitPaymentBrokerEntry is BrokerFixture {
     assertEq(_broker.payerOf(_SELECTOR_A, _senderX), _payerP);
   }
 
-  function test_GivenTheDefaultCcipConfig() external whenTheOwnerConfiguresTheBroker {
+  function test_GivenTheDefaultCcipConfig() external view whenTheOwnerConfiguresTheBroker {
     // it keeps full finality and no custom CCVs
     (address[] memory _required, address[] memory _optional, uint8 _threshold, bytes4 _finality) =
       _broker.getCCVsAndFinalityConfig(_SELECTOR_A, abi.encode(_senderX));
