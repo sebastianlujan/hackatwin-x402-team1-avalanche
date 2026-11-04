@@ -1,0 +1,12 @@
+UnitSettlementReceiverConstructor
+└── when deploying the receiver
+    ├── given a zero transferrer
+    │   └── it reverts with SettlementReceiver_ZeroAddress
+    ├── given a zero origin transferrer
+    │   └── it reverts with SettlementReceiver_ZeroAddress
+    ├── given a zero origin sender
+    │   └── it reverts with SettlementReceiver_ZeroAddress
+    ├── given a zero token
+    │   └── it reverts with SettlementReceiver_ZeroAddress
+    └── given every address set
+        └── it stores each address
