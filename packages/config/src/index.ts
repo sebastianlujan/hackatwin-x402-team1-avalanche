@@ -6,6 +6,7 @@ export {
   forkStaticsSchema,
   type LlmConfig,
   type LlmProvider,
+  localStaticsSchema,
   PROFILE_NAMES,
   type Profile,
   type ProfileName,

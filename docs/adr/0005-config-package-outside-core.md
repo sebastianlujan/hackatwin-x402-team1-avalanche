@@ -19,8 +19,8 @@ environment by hand duplicates zod with weaker errors. Composition roots must no
 ## Decision
 
 - A new workspace, `packages/config` (`@hackatwin/config`), depends on `@hackatwin/core` and `zod`. It holds the
-  schemas for the four profiles (`cchain-fork`, `fuji-crosschain`, `twinpay-l1`, `fuji-cchain`) and
-  `loadProfile(name, env = process.env)`.
+  schemas for the five profiles (`cchain-fork`, `fuji-crosschain`, `twinpay-l1`, `fuji-cchain`,
+  `local-crosschain`) and `loadProfile(name, env = process.env)`.
 - `loadProfile` is the only code that reads `process.env`. Composition roots call it once and register the result;
   tests pass a plain record.
 - Core keeps the container, domain types, ports, and fakes, and declares no `dependencies`. The dependency-rule test
