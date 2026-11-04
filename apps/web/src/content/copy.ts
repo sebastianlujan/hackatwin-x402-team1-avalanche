@@ -1,6 +1,19 @@
+import { CLAUDE_DISABLED_REASON } from '../lib/starter.ts';
+
 // Every user-facing string lives here; components receive their slice as props.
 export const copy = {
   demo1: {
+    brand: '> HACKATWIN',
+    title: 'Demo 1',
+    lead: 'An agent buys one ARGt quote over x402 on a local Avalanche C-Chain fork.',
+    start: {
+      claude: 'Run with Claude',
+      scripted: 'Run scripted',
+      badge: 'Scripted',
+      claudeOff: 'Claude is off',
+      claudeReason: CLAUDE_DISABLED_REASON,
+    },
+    status: { reconnecting: 'Reconnecting', error: 'Stream error' },
     strip: {
       label: 'Payment',
       steps: { required: '402', paid: 'pay', received: '200' },
