@@ -36,10 +36,6 @@ contract PaymentHubHarness is PaymentHub {
     _budget = _budgets[_authorizer][_authorized][_token];
   }
 
-  function setAuthorizationWithSig(Authorization calldata, bytes calldata) external pure {
-    revert();
-  }
-
   function pay(Id, address, uint256, uint256) external pure returns (bytes32) {
     revert();
   }
