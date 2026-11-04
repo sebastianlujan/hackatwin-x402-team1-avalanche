@@ -30,6 +30,7 @@ contract PaymentBroker is IPaymentBroker, CCIPReceiver, Ownable2Step {
   /// @param _hub The payment hub
   /// @param _owner The owner, who only manages the allowlist
   constructor(address _router, address _hub, address _owner) CCIPReceiver(_router) Ownable(_owner) {
+    if (_hub == address(0)) revert PaymentBroker_ZeroAddress();
     HUB = IPaymentHub(_hub);
   }
 
