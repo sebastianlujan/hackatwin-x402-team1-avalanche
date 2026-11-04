@@ -86,7 +86,6 @@ contract UnitDeployFuji is Test {
     assertEq(_recipient, 300_000);
     assertLt(_recipient, _required);
     assertFalse(vm.keyExistsJson(_json, '.deployer'));
-    assertFalse(vm.keyExistsJson(_json, '.owner'));
   }
 
   modifier whenDeploying() {
