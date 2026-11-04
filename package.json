@@ -12,7 +12,10 @@
     "test": "vitest run --coverage --project default",
     "build": "pnpm -r --if-present build",
     "chains:verify": "node packages/chains/scripts/verify.ts",
-    "quote": "node packages/pricing/scripts/quote.ts"
+    "quote": "node packages/pricing/scripts/quote.ts",
+    "test:fork": "vitest run --project fork",
+    "demo1:fork": "node --env-file-if-exists=.demo1/demo1.env --env-file-if-exists=.env demos/01-x402-twin/scripts/fork.ts",
+    "demo1:fork-block": "node demos/01-x402-twin/scripts/fork-block.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
