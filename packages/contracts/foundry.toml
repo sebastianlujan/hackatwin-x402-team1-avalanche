@@ -1,0 +1,44 @@
+[profile.default]
+solc_version = '0.8.30'
+evm_version = 'cancun'
+optimizer = true
+optimizer_runs = 10_000
+src = 'src'
+test = 'test'
+script = 'script'
+out = 'out'
+libs = []
+allow_paths = ['../../node_modules']
+fs_permissions = [
+  { access = 'read', path = '../chains/registry' },
+  { access = 'read', path = './script/params' },
+  { access = 'read', path = './test/fixtures' },
+  { access = 'read-write', path = '../chains/deployments' },
+]
+
+[profile.default.fuzz]
+runs = 256
+
+[profile.default.invariant]
+runs = 64
+depth = 100
+fail_on_revert = true
+
+[profile.deep.fuzz]
+runs = 5_000
+
+[profile.deep.invariant]
+runs = 512
+depth = 200
+fail_on_revert = true
+
+[fmt]
+line_length = 120
+tab_width = 2
+bracket_spacing = true
+multiline_func_header = 'all'
+quote_style = 'single'
+sort_imports = true
+
+[rpc_endpoints]
+fuji = '${FUJI_RPC_URL}'
