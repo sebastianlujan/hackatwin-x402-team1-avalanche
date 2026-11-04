@@ -73,3 +73,56 @@ describe('rejection', () => {
     expect(() => decodeAgentEvent(JSON.stringify(noQuote))).toThrow(/quote must be an object/);
   });
 });
+
+describe('simulated marker', () => {
+  const hop: AgentEvent = {
+    ...base,
+    type: 'hop',
+    messageId: 'm1',
+    hop: { index: 1, transport: 'local', chainId: 31337, status: 'Pending', txHash: tx },
+  };
+  const marked = (event: AgentEvent): AgentEvent => ({ ...event, simulated: 'local-crosschain' });
+
+  it.each(events.map((e) => [e.type, e] as const))('round trips on %s (the base, not only hop)', (_type, event) => {
+    const decoded = decodeAgentEvent(encodeAgentEvent(marked(event)));
+    expect(decoded).toEqual(marked(event));
+    expect(decoded.simulated).toBe('local-crosschain');
+  });
+
+  it('adds none when the event has none', () => {
+    for (const event of events) expect('simulated' in decodeAgentEvent(encodeAgentEvent(event))).toBe(false);
+  });
+
+  it.each(['fuji', '', 'true', null, 1])('rejects simulated %j with a readable error', (value) => {
+    const bad = { ...base, type: 'llm.reasoning', text: 't', simulated: value };
+    expect(() => decodeAgentEvent(JSON.stringify(bad))).toThrow(/simulated must be local-crosschain/);
+  });
+
+  it('keeps the marker off the Hop object', () => {
+    const decoded = decodeAgentEvent(encodeAgentEvent(marked(hop)));
+    expect(decoded.type === 'hop' && 'simulated' in decoded.hop).toBe(false);
+  });
+});
+
+describe('optional explorerUrl', () => {
+  const noLink: AgentEvent = {
+    ...base,
+    type: 'hop',
+    messageId: 'm1',
+    hop: { index: 1, transport: 'local', chainId: 31337, status: 'Pending', txHash: tx },
+  };
+
+  it('parses a hop without a link and leaves it absent', () => {
+    const decoded = decodeAgentEvent(encodeAgentEvent(noLink));
+    expect(decoded).toEqual(noLink);
+    expect(decoded.type === 'hop' && 'explorerUrl' in decoded.hop).toBe(false);
+  });
+
+  it('keeps the link identical when present', () => {
+    const withLink = {
+      ...noLink,
+      hop: { ...(noLink as { hop: object }).hop, explorerUrl: 'https://e/x' },
+    } as AgentEvent;
+    expect(decodeAgentEvent(encodeAgentEvent(withLink))).toEqual(withLink);
+  });
+});

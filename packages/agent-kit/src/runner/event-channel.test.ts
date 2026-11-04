@@ -59,3 +59,22 @@ describe('EventChannel.until', () => {
     await expect(generator.next()).rejects.toThrow('boom');
   });
 });
+
+describe('EventChannel simulated stamping', () => {
+  it('stamps an event emitted without the field when the channel is simulated', async () => {
+    const channel = createEventChannel({ simulated: 'local-crosschain' });
+    channel.emit(event('a'));
+    channel.emit({ version: 1, type: 'run.finished', at: 2, reason: 'done' });
+    const { events } = await drain(channel.until(Promise.resolve()));
+    expect(events).toHaveLength(2);
+    expect(events.map((e) => e.simulated)).toEqual(['local-crosschain', 'local-crosschain']);
+  });
+
+  it('adds no marker on a channel without the option', async () => {
+    const channel = createEventChannel();
+    channel.emit(event('a'));
+    const { events } = await drain(channel.until(Promise.resolve()));
+    expect(events).toHaveLength(1);
+    expect('simulated' in (events[0] as AgentEvent)).toBe(false);
+  });
+});
