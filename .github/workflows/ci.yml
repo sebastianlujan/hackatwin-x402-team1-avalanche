@@ -305,6 +305,38 @@ jobs:
         working-directory: .
         run: test -z "$(git status --porcelain)"
 
+  local:
+    name: local
+    needs: changes
+    if: needs.changes.outputs.ts == 'true' || needs.changes.outputs.contracts == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: foundry-rs/foundry-toolchain@dba66c27052e63476d886f22216e119ba7e615bf # v1.9.2
+        with:
+          version: v1.5.1
+          cache: false
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .cache/icm-services
+          key: icm-services-${{ hashFiles('e2e/protocol/src/local/icm-fetch.ts') }}
+      - run: pnpm local:icm
+      - name: Build the contracts that the local world deploys
+        run: forge build
+        working-directory: packages/contracts
+      - run: pnpm test:local
+      - name: Check the local tests wrote nothing tracked or unignored
+        run: test -z "$(git status --porcelain)"
+
   docs-build:
     name: docs build
     needs: changes
@@ -359,7 +391,7 @@ jobs:
     name: ci-gate
     if: always()
     needs:
-      [pr-title, commits, branch-name, lint, changes, biome, typecheck, test, fork, contracts, contracts-dry-run, docs-build, web-build]
+      [pr-title, commits, branch-name, lint, changes, biome, typecheck, test, fork, contracts, contracts-dry-run, local, docs-build, web-build]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions: {}
