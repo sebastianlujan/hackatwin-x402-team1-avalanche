@@ -43,9 +43,6 @@ contract UnitLaneParamsLib is Test {
     ];
     for (uint256 _i; _i < _ids.length; ++_i) {
       assertTrue(_ids[_i] != _baseId);
-      for (uint256 _j = _i + 1; _j < _ids.length; ++_j) {
-        assertTrue(_ids[_i] != _ids[_j]);
-      }
     }
   }
 

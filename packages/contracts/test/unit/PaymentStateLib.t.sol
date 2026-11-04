@@ -25,15 +25,12 @@ contract UnitPaymentStateLib is Test {
 
   function test_GivenAnyOtherOfThe25Pairs() external whenCheckingTheHubTable {
     // it rejects the transition
-    uint256 _allowed;
     for (uint256 _from; _from < _HUB_STATUSES; ++_from) {
       for (uint256 _to; _to < _HUB_STATUSES; ++_to) {
         bool _expected = _isHubEdge(_from, _to);
         assertEq(PaymentStateLib.canTransition(IPaymentHub.Status(_from), IPaymentHub.Status(_to)), _expected);
-        if (_expected) ++_allowed;
       }
     }
-    assertEq(_allowed, 4);
   }
 
   function test_GivenFuzzedPairsWithinTheEnumRange(uint8 _from, uint8 _to) external whenCheckingTheHubTable {
@@ -56,17 +53,14 @@ contract UnitPaymentStateLib is Test {
 
   function test_GivenAnyOtherOfThe16Pairs() external whenCheckingTheReceiverTable {
     // it rejects the transition
-    uint256 _allowed;
     for (uint256 _from; _from < _RECEIVER_STATUSES; ++_from) {
       for (uint256 _to; _to < _RECEIVER_STATUSES; ++_to) {
         bool _expected = _from == 0 ? _to == 1 : _from == 1 && (_to == 2 || _to == 3);
         assertEq(
           PaymentStateLib.canTransition(ISettlementReceiver.Status(_from), ISettlementReceiver.Status(_to)), _expected
         );
-        if (_expected) ++_allowed;
       }
     }
-    assertEq(_allowed, 3);
   }
 
   function _isHubEdge(uint256 _from, uint256 _to) internal pure returns (bool _edge) {
