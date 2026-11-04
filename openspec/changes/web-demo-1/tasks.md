@@ -96,24 +96,24 @@ Seams if a forecast overruns: P2 (CI job after rules), P4 (replay source after h
 
 ## P8 ui-tokens (`feature/ui-tokens`)
 
-- [ ] 8.1 CSS tests: contrast at least 4.5:1, no palette literal outside `tokens.css`, accent ink on light.
-- [ ] 8.2 `packages/ui/src/tokens.css`; `packages/ui/package.json` export; web layout imports it.
-- [ ] 8.3 Docs: `customCss` via `createRequire`, Infima map in `apps/docs/src/css/custom.css`, `apps/docs/package.json`; `ci.yml` `docs` filter for `packages/ui/**`. Acceptance: docs build.
+- [x] 8.1 CSS tests: contrast at least 4.5:1, no palette literal outside `tokens.css`, accent ink on light.
+- [x] 8.2 `packages/ui/src/tokens.css`; `packages/ui/package.json` export; web layout imports it.
+- [x] 8.3 Docs: `customCss` via `createRequire`, Infima map in `apps/docs/src/css/custom.css`, `apps/docs/package.json`; `ci.yml` `docs` filter for `packages/ui/**`. Acceptance: docs build.
 
 ## P9 ui-atoms (`feature/ui-atoms`)
 
-- [ ] 9.1 Tests: atoms render without context, `:focus-visible` on Button and TxLink, Cursor blink only under `no-preference`, TxLink no anchor without URL.
-- [ ] 9.2 `atoms.css` plus `atoms/{Button,Badge,Cursor,TxLink,CodeTag}.tsx`, export in `src/index.ts`.
-- [ ] 9.3 `apps/web/test/assets.test.ts`: no logo, Twin, team1, Avalanche or AVAX image or SVG (O4).
+- [x] 9.1 Tests: atoms render without context, `:focus-visible` on Button and TxLink, Cursor blink only under `no-preference`, TxLink no anchor without URL.
+- [x] 9.2 `atoms.css` plus `atoms/{Button,Badge,Cursor,TxLink,CodeTag}.tsx`, export in `src/index.ts`.
+- [x] 9.3 `apps/web/test/assets.test.ts`: no logo, Twin, team1, Avalanche or AVAX image or SVG (O4).
 
 ## P10 web-demo-1-state (`feature/web-demo-1-state`)
 
-- [ ] 10.1 `lib/demo-1-state.ts` plus tests: seq dedupe, happy order, policy refusal, quote from `payment.required` only (healthy, guarded, none), `formatMoney`, balance delta.
+- [x] 10.1 `lib/demo-1-state.ts` plus tests: seq dedupe, happy order, policy refusal, quote from `payment.required` only (healthy, guarded, none), `formatMoney`, balance delta.
 
-## P11 web-demo-1 (`feature/web-demo-1`)
+## P11 web-demo-1 (`feature/web-demo-1`; delivered as P11a to P11d, see apply-progress)
 
-- [ ] 11.1 Organisms: timeline, 402/pay/200 strip, quote panel ("market rate, not official"), balances and fork hashes with no `<a>`; CSS Modules; scenario markup tests.
-- [ ] 11.2 Wire into `app/demo-1/page.tsx` and container; stream-drop and replay-control checks; rerun checkpoint 7.6.
+- [x] 11.1 Organisms: timeline, 402/pay/200 strip, quote panel ("market rate, not official"), balances and fork hashes with no `<a>`; CSS Modules; scenario markup tests.
+- [x] 11.2 Wire into `app/demo-1/page.tsx` and container; stream-drop and replay-control checks; rerun checkpoint 7.6.
 
 ## P12 web-guided-path (`feature/web-guided-path`)
 

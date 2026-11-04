@@ -14,6 +14,30 @@ Queue base: PR #174 (`feature/constructor-zero-checks`). Authored lines exclude 
 | P6 #186 | `feature/web-live-api` | #185 | 165 | 6.1 to 6.4 |
 | P7 #188 | `feature/web-live-page` | #187 | 399 | 7.1 to 7.6 |
 
+## Batch 2 (P8 to P11), mode Standard, stacked PRs to `develop`
+
+Queue continues from P7 (`feature/web-live-page`, #188). P11 measured 548 authored lines, so it ships as four PRs at named seams.
+
+| PR | Branch | Issue | Lines | Tasks |
+|---|---|---|---|---|
+| P8 #190 | `feature/ui-tokens` | #189 | 177 | 8.1 to 8.3 |
+| P9 #192 | `feature/ui-atoms` | #191 | 267 | 9.1 to 9.3 |
+| P10 #194 | `feature/web-demo-1-state` | #193 | 357 | 10.1 |
+| P11a #196 | `feature/web-demo-1-organisms` | #195 | 247 | 11.1 (timeline, strip) |
+| P11b #198 | `feature/web-demo-1-panels` | #197 | 312 | 11.1 (quote, balances, fork hashes) |
+| P11c #200 | `feature/web-demo-1-screen` | #199 | 272 | 11.1 (template, start control) |
+| P11d #202 | `feature/web-demo-1` | #201 | 172 | 11.2 and checkpoint |
+
+Checkpoint (11.2, rerun of 7.6): local anvil fork, scripted run over SSE (15 frames), and a real headless Chrome rendered `/demo-1` with strip, timeline, quote ("market rate, not official"), balances and fork hashes without links. Evidence is in the P11d PR body.
+
+## Batch 2 deviations
+
+- `content/copy.ts` is created in P11a (not P12) because the organisms take copy as props; P12 extends it.
+- Timeline also lists the payment steps (`payment.required`, `payment.signed`, `resource.received`) so the "happy order" scenario holds; policy and finish reasons are there too.
+- `lib/run-record.ts` (not in the design) parses `GET /api/runs/[id]` for balances.
+- Balances row headers needed `white-space: nowrap` (found in the checkpoint screenshot), fixed in P11d.
+- The fork CI job flaked twice on upstream RPC timeouts in `register.fork.test.ts` (unrelated); failed jobs were rerun once.
+
 ## Spike outcomes
 
 - 1.1: Turbopack builds `.ts` specifiers and JSON import attributes (verified with a page importing `@hackatwin/chains`); no `--webpack` fallback.
@@ -33,4 +57,4 @@ Queue base: PR #174 (`feature/constructor-zero-checks`). Authored lines exclude 
 ## Open
 
 - 2.5 acceptance (failing build fails the gate, docs-only skips `web-build`) is true by construction of the `changes` filter and `ci-gate` needs; no experiment was run.
-- Next batch: P8 onward.
+- Next batch: P12 onward (guided path, landing, identity, wallet, first tx).
