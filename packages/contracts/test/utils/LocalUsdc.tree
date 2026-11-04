@@ -1,0 +1,8 @@
+UnitLocalUsdc
+├── when reading the decimals
+│   └── it returns 6
+└── when minting
+    ├── given an amount for a recipient
+    │   └── it credits the recipient and the supply
+    └── given a second mint to another recipient
+        └── it credits each balance separately
