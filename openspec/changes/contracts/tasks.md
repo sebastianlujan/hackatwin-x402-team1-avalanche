@@ -46,28 +46,28 @@ Conventions for every Solidity PR (Q21), as separate commits: (a) `.tree` + `pnp
 
 Spec: contracts-toolchain.
 
-- [ ] 1.1 (1a) Branch `feature/contracts-scaffold` from `feature/e2e-demo-1`. Create `packages/contracts/{foundry.toml,remappings.txt,package.json,.solhint.json,.lintspec.toml}` (0.8.30, cancun, Wonderland `[fmt]`, `allow_paths`, `fs_permissions`, `deep` profile); add exact pins to `pnpm-workspace.yaml`: OZ 5.7.0, CCIP 2.0.0, Chainlink Local 0.3.1, contracts 1.5.0, forge-std v1.9.4. Tests: Cancun is explicit; No submodules.
-- [ ] 1.2 (1a, RED) `test/Probe.t.sol` importing one symbol per dependency and both OZ aliases; `forge build` fails until pins resolve. Test: Probe proves remappings; fallback test-only compiler profile if CCIP pragma breaks.
-- [ ] 1.3 (1a, GREEN) Install pins via pnpm, fix remappings until the probe passes; add `README.md` with the bulloak 0.9.2 and lintspec 0.20.0 install lines. ~45 lines.
-- [ ] 1.4 (1b, RED) Vitest cases for `scripts/check-policy.ts`: floating version, `.gitmodules` or `lib/`, forbidden `.husky/` or `.github/` under the package, `--broadcast` and `--private-key` in files, credentialed URLs, missing pragma. Tests: Floating version rejected; Secrets absent; Root-only tooling.
-- [ ] 1.5 (1b, GREEN) Implement `scripts/check-policy.ts`; add `contracts:policy` script.
-- [ ] 1.6 (1b, RED then GREEN) `scripts/export-abi.ts` with a test for `as const` typed output and fully qualified names; export to `abi/generated/`, add the Biome exclusion in `biome.json`. Tests: Typed ABI; Drift check.
-- [ ] 1.7 (1b) `.github/workflows/ci.yml`: contracts path filter, job `contracts` (fmt check, build, test, `bulloak check` via `smol-ninja/bulloak-toolchain@d4e00e1d...`, lintspec via `beeb/lintspec@a9e8a943...`, solhint, policy, ABI drift), add to `ci-gate`. Tests: Gate requires the job; Untouched package.
+- [x] 1.1 (1a) Branch `feature/contracts-scaffold` from `feature/e2e-demo-1`. Create `packages/contracts/{foundry.toml,remappings.txt,package.json,.solhint.json,.lintspec.toml}` (0.8.30, cancun, Wonderland `[fmt]`, `allow_paths`, `fs_permissions`, `deep` profile); add exact pins to `pnpm-workspace.yaml`: OZ 5.7.0, CCIP 2.0.0, Chainlink Local 0.3.1, contracts 1.5.0, forge-std v1.9.4. Tests: Cancun is explicit; No submodules.
+- [x] 1.2 (1a, RED) `test/Probe.t.sol` importing one symbol per dependency and both OZ aliases; `forge build` fails until pins resolve. Test: Probe proves remappings; fallback test-only compiler profile if CCIP pragma breaks.
+- [x] 1.3 (1a, GREEN) Install pins via pnpm, fix remappings until the probe passes; add `README.md` with the bulloak 0.9.2 and lintspec 0.20.0 install lines. ~45 lines.
+- [x] 1.4 (1b, RED) Vitest cases for `scripts/check-policy.ts`: floating version, `.gitmodules` or `lib/`, forbidden `.husky/` or `.github/` under the package, `--broadcast` and `--private-key` in files, credentialed URLs, missing pragma. Tests: Floating version rejected; Secrets absent; Root-only tooling.
+- [x] 1.5 (1b, GREEN) Implement `scripts/check-policy.ts`; add `contracts:policy` script.
+- [x] 1.6 (1b, RED then GREEN) `scripts/export-abi.ts` with a test for `as const` typed output and fully qualified names; export to `abi/generated/`, add the Biome exclusion in `biome.json`. Tests: Typed ABI; Drift check.
+- [x] 1.7 (1b) `.github/workflows/ci.yml`: contracts path filter, job `contracts` (fmt check, build, test, `bulloak check` via `smol-ninja/bulloak-toolchain@d4e00e1d...`, lintspec via `beeb/lintspec@a9e8a943...`, solhint, policy, ABI drift), add to `ci-gate`. Tests: Gate requires the job; Untouched package.
 
 ## Phase 2: Registry reader and interfaces (PR 2, PR 3)
 
-- [ ] 2.1 (PR 2, tree, ~40 lines) `test/unit/Registry.tree` and scaffold. Spec: chain-registry.
-- [ ] 2.2 (PR 2, RED) Tests: Chain ID to key; Unknown chain ID (`Registry_UnknownChainId`); Address entry; Missing entry (`Registry_EntryNotFound`); Selector parse; Bad selector (`Registry_InvalidSelector`); Read-only access.
-- [ ] 2.3 (PR 2, GREEN) `script/lib/Registry.sol` (`CHAIN_REGISTRY_DIR` override, `keyOf` scan, digit-checked selector); tick the PLAN M4 PR 10 box (Deferred box). ~110 lines.
-- [ ] 3.1 (PR 3, tree and RED) `test/unit/IcmInterfaces.tree`; selector pin test, reordered-field case, ABI round trip. Spec: icm-interfaces.
-- [ ] 3.2 (PR 3, GREEN) `src/interfaces/external/icm/{IERC20SendAndCallReceiver,IERC20TokenTransferrer}.sol` (file-level `SendAndCallInput`), `PROVENANCE.md` with the upstream commit. Test: Nothing extra, Reference present.
-- [ ] 3.3 (PR 3) `docs/adr/0009-own-ictt-interfaces.md`; update `docs/PLAN.md` T7.2, `docs/standards/smart-contracts.md` §4, `docs/decisions.md` O7. Test: Docs updated.
+- [x] 2.1 (PR 2, tree, ~40 lines) `test/unit/Registry.tree` and scaffold. Spec: chain-registry.
+- [x] 2.2 (PR 2, RED) Tests: Chain ID to key; Unknown chain ID (`Registry_UnknownChainId`); Address entry; Missing entry (`Registry_EntryNotFound`); Selector parse; Bad selector (`Registry_InvalidSelector`); Read-only access.
+- [x] 2.3 (PR 2, GREEN) `script/lib/Registry.sol` (`CHAIN_REGISTRY_DIR` override, `keyOf` scan, digit-checked selector); tick the PLAN M4 PR 10 box (Deferred box). ~110 lines.
+- [x] 3.1 (PR 3, tree and RED) `test/unit/IcmInterfaces.tree`; selector pin test, reordered-field case, ABI round trip. Spec: icm-interfaces.
+- [x] 3.2 (PR 3, GREEN) `src/interfaces/external/icm/{IERC20SendAndCallReceiver,IERC20TokenTransferrer}.sol` (file-level `SendAndCallInput`), `PROVENANCE.md` with the upstream commit. Test: Nothing extra, Reference present.
+- [x] 3.3 (PR 3) `docs/adr/0009-own-ictt-interfaces.md`; update `docs/PLAN.md` T7.2, `docs/standards/smart-contracts.md` §4, `docs/decisions.md` O7. Test: Docs updated.
 
 ## Phase 3: PaymentHub (PR 4 to PR 9)
 
 Spec: payment-hub. Each PR is tree, RED, GREEN, per the conventions above.
 
-- [ ] 4.1 (PR 4, ~360) `IPaymentHub`, `PaymentStateLib` (`HUB_EDGES`, `RECEIVER_EDGES`, typed overloads), `LaneParamsLib.id`. RED: Only table edges pass; Fuzzed pairs (all 256); Lane id.
+- [x] 4.1 (PR 4, ~360) `IPaymentHub`, `PaymentStateLib` (`HUB_EDGES`, `RECEIVER_EDGES`, typed overloads), `LaneParamsLib.id`. RED: Only table edges pass; Fuzzed pairs (all 256); Lane id.
 - [ ] 5.1 (PR 5, ~260) `PaymentHub` skeleton: `Ownable2Step`, `enableMessenger`, `createLane`, `_transition` harness. RED: Single write path (Wrong from-state, One event per change); Owner enables; Non-owner; Two-step handover; Create local lane; Messenger not enabled; Invalid shapes.
 - [ ] 6.1 (PR 6, ~330) EIP-712 `setAuthorization` with `SignatureChecker` and `Nonces`; test ERC-1271 wallet in `test/utils`. RED: EOA signature; ERC-1271 wallet; Replay (`InvalidAccountNonce`); Expired and cross-domain.
 - [ ] 7.1 (PR 7, ~380) `pay` (deadline check, budget cap, balance-delta escrow, `ReentrancyGuardTransient`) and `refund`. RED: Happy path; Budget cap; Self-pay needs no authorization; Unauthorized caller; Fee-on-transfer token; Every non-None from-state; Refund after deadline; Too early (including `==`); refund Wrong from-state.
