@@ -16,6 +16,7 @@ decisions stay in [Decisions](../decisions.md).
 | [0004](0004-docs-deploy-from-main.md) | Docs deploy to GitHub Pages from `main` only | Accepted |
 | [0005](0005-config-package-outside-core.md) | Profile schemas and the env loader live in `packages/config`, not core | Accepted |
 | [0006](0006-block-pinned-chain-reads.md) | Chain reads return their block and can be pinned to one | Accepted |
+| [0007](0007-guarded-sdk-clients.md) | SDK signers and anvil cheats get viem clients only from `packages/chains`, behind one guard | Accepted |
 
 ## Add an ADR
 

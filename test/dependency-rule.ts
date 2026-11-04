@@ -16,7 +16,7 @@ export interface Snapshot {
 }
 
 export interface Violation {
-  readonly rule: 'R1' | 'R2' | 'R3' | 'R4' | 'R5' | 'R6' | 'R7' | 'R8';
+  readonly rule: 'R1' | 'R2' | 'R3' | 'R4' | 'R5' | 'R6' | 'R7' | 'R8' | 'R9';
   readonly file: string;
   readonly specifier: string;
   readonly reason: string;
@@ -29,6 +29,8 @@ const DEMO_PREFIX = '@hackatwin/demo-';
 const LOADER = 'packages/config/src/load-profile.ts';
 const KEYSTORE_DIR = 'packages/chains/src/keystore';
 const PRICING_SRC = 'packages/pricing/src/';
+const CHAINS_SRC = 'packages/chains/src/';
+const VIEM_CLIENT = /\bcreate(?:Public|Wallet|Test)Client\b/;
 
 export function readSnapshot(root: string): Snapshot {
   const manifests: Record<string, Manifest> = {};
@@ -143,6 +145,9 @@ export function checkDependencyRule(snapshot: Snapshot): Violation[] {
         add('R6', file, specifier, 'only the config loader reads the environment');
       }
     }
+    const client = VIEM_CLIENT.exec(source)?.[0];
+    if (client !== undefined && !file.startsWith(CHAINS_SRC) && !isTestFile(file))
+      add('R9', file, client, 'viem clients are built only in packages/chains, ask it for a guarded client');
     if (file !== LOADER && usesProcessEnv(source))
       add('R6', file, 'process.env', 'only the config loader reads the environment');
   }
