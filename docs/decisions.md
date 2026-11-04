@@ -48,9 +48,30 @@ Anything not listed under [Verified facts](#verified-facts) is **to be verified*
 
 - Fork block number `N` for Demo 1, and the TwinPay L1 chain ID: chosen during implementation.
 - Sepolia side of Demo 2: the agent sends the CCIP message from its EOA or through a minimal sender contract.
-- Refund function for funds rejected on the L1 (`SettlementReceiver` → `Rejected`).
-- License of the vendored ICM interfaces (`ava-labs/icm-services`): to be verified before vendoring.
-- Backup C-Chain RPC: unverified.
+- Refund function for funds rejected on the L1 (`SettlementReceiver` → `Rejected`). **Closed (2026-11-04):** on `Rejected` the
+  receiver does not pull the tokens, and ICTT sends the unused allowance to `fallbackRecipient` (verified in
+  [PLAN Step 0](PLAN.md#verified)); see [state pattern](standards/smart-contracts.md#2-state-pattern).
+- License of the vendored ICM interfaces (`ava-labs/icm-services`): to be verified before vendoring. Now: Ecosystem License 1.1, human sign-off O7 (see the
+  [drift log](#drift-log-2026-11-04)).
+- Backup C-Chain RPC: unverified. Now: serves recent state only (see the [drift log](#drift-log-2026-11-04)).
+
+### Drift log (2026-11-04)
+
+Changes found by [PLAN Step 0](PLAN.md#drift-since-decisionsmd). No decision above changed; the plan pointer says how
+each item is handled.
+
+| Item | Now | Plan |
+|---|---|---|
+| CCIP Sepolia → Fuji | CCIP API status `MAINTENANCE`; last successful messages on 2026-11-02 | Check in `pnpm preflight` (T12.2); trigger Demo 2 early |
+| Validator image | `v1.15.2` is recommended and moves plugins to version 47 | Pin `v1.15.2` (T6.3) |
+| C-Chain execution | Helicon made execution asynchronous; historical reads still work | Pick `N` from executed blocks, behind the head (T5.1) |
+| ICM license | Ecosystem License 1.1 | Human sign-off (O7) |
+| Backup C-Chain RPC | Serves recent state only | Fallback for a recent `N` only |
+| x402-rs fallback | Permit2 payload format differs from `@x402/evm` | Interop check (T11.3) |
+
+The overview label fix (the L1 box reads "hub, permit2, acl") is tracked by T3.5, not edited here. Items under
+[Still unverified](PLAN.md#still-unverified) stay unverified. Repository and delivery decisions live in the
+[ADRs](adr/README.md).
 
 ## Verified facts
 
