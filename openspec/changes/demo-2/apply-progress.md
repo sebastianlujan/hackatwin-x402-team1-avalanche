@@ -57,10 +57,20 @@ Notes: `waitForTransactionReceipt` does not throw on a reverted receipt, so deli
 Tasks 9.1 and 9.2 are marked `[x]`. `world.ts` `deployContracts` deploys `LocalUsdc`, `CCIPLocalSimulator`, `ERC20TokenHome` (hub) and `ERC20TokenRemote` (L1) from `packages/contracts/out` and the cached ICTT build, relays `registerWithHome` with `relayOnce`, then `forge.ts` writes registry (`fuji`, `twinpay-l1`, `local-ccip`), params and deployments under `.cache/local-crosschain/<instance>/forge`. `foundry.toml` has one added read-write `fs_permissions` entry for `../../.cache/local-crosschain`. CI passed on #242 including `local`.
 Notes: roles by `eth_accounts` index (1 Fuji deployer and owner, 2 L1 receiver deployer at nonce 0, 3 treasury as broker payer, 4 agent as broker sender, 5 merchant, 6 fallback); `accountAt` added to `teleporter.ts`. `world.ts` and `relay.ts` import each other (functions only, no top-level use), so the ESM cycle is safe. PR 10 still has to run the real scripts against these files.
 
+## Batch 7 (PR 10, split by the scripts vs guards seam): done
+
+| Task PR | Branch | Issue | PR | Red | Green | Authored lines |
+|---|---|---|---|---|---|---|
+| 10a guards | `feature/local-crosschain-deploy` | #243 | #245 | de8284e | 56c48a8 | about 229 added, 6 removed |
+| 10b scripts | `feature/local-crosschain-up` | #244 | #246 | 5f3c908 | 2982be4 | about 254 added, 2 removed |
+
+Tasks 10.1 and 10.2 are marked `[x]`. 10a: `forge.ts` `runForgeScript` (`--unlocked --sender` only after loopback check and `probeAnvil`, fixed argv, `shell: false`), `childEnv` in `load-profile.ts` (task 4.2 deferral closed; R6 allows only the loader), the script diff guard pinned to the queue start commit `3a5c8c4`, and `fetch-depth: 0` in the `local` job. 10b: `deploy.ts` (steps 6 and 7), `up.ts`, `world.ts` returns `roles`, root `demo2:local:up`.
+Notes: `origin/develop` is a single initial commit, so the script diff guard compares with `3a5c8c4` (parent of the first demo-2 commit) and must be dropped at archive. `up` refuses to start when a node already answers on the local RPC ports, leaves detached anvils running on success and kills them on failure.
+
 ## Deviations and notes
 
 - `WarpMessengerStub` defines its own `WarpMessage` struct and does not import an upstream `IWarpMessenger` (none exists under `src/interfaces/external/icm/`). Field layout `(bytes32 sourceChainID, address originSenderAddress, bytes payload)` and the `WarpMessageSent(bytes32 indexed messageID, bytes message)` event follow design D7; conformance with the upstream struct is verified by the PR 1 spike (PR 1 task 1.5).
-- Task 4.2 `childEnv` for forge is deferred to the forge wrapper PR (no forge spawn exists in the repo yet).
+- Task 4.2 `childEnv` for forge landed with the forge wrapper PR (PR 10a), inside `load-profile.ts` because R6 allows `process.env` only there.
 - Task 5: the guarded client write does not yet pass `ContractCall.value` through to `writeContract`; it lands with the local sender (PR 11) where it is exercised. Wiring `createEventChannel({ simulated })` from the profile lands with the Demo 2 root (PR 15).
 - The `contracts` CI job on #226 failed twice on a pre-existing probabilistic invariant (`InvariantPaymentHub`, "race never ran"), unrelated to the change; the same job passed on #228, #230 and #232 which contain the same code.
 - Only anvil-free tests ran in this batch (scripted transports and fakes); no anvil or other process was started.

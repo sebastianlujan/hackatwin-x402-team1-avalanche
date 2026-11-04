@@ -96,8 +96,8 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 10: Deploy and dev command (specs: contracts-deployment)
 
-- [ ] 10.1 RED: Both scripts succeed, No private key, Script diff (`src/` and `script/` unchanged), Local unlocked sender, Unlocked on a remote host
-- [ ] 10.2 GREEN `forge.ts` `--unlocked --sender` after probe; steps 6 and 7; `world.json`, `local.env`; `up.ts`; `package.json` `demo2:local:up`
+- [x] 10.1 RED: Both scripts succeed, No private key, Script diff (`src/` and `script/` unchanged), Local unlocked sender, Unlocked on a remote host
+- [x] 10.2 GREEN `forge.ts` `--unlocked --sender` after probe; steps 6 and 7; `world.json`, `local.env`; `up.ts`; `package.json` `demo2:local:up`
 
 ## PR 11: T8.1 sender (specs: crosschain-messaging-local)
 
