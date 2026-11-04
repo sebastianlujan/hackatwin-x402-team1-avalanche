@@ -95,11 +95,11 @@ Spec: ccip-payment-broker.
 
 Spec: contracts-deployment. Dry-run only; the broadcast gate stays closed.
 
-- [ ] 15.1 (PR 15, ~340) Tree and RED: Fuji inputs; Missing fact; Missing parameter; Mainnet fork (`Deploy_UnsupportedChain`); Dry-run writes nothing; No raw keys; Serializer output; Gate closed outside broadcast; Permissions scoped; Fuji fork; No allowlist entry; Pair from params.
-- [ ] 15.2 (PR 15, GREEN) `script/Deploy.sol`, `script/DeployFuji.s.sol`, `script/params/fuji.json`; optional `icm.*` fields in `packages/chains/src/registry.ts`; `docs/adr/0011-deploy-params-out-of-registry.md`.
-- [ ] 16.1 (PR 16, ~300) RED: L1 not yet registered; Addresses agree; Nonce moved (`NonceMismatch`); Stale record; L1 on anvil; Fixture drift; Templates present.
-- [ ] 16.2 (PR 16, GREEN) `script/DeployL1.s.sol`, `test/fixtures/` registry, `script/params/l1.json`; `contracts-dry-run` job in `ci.yml` and `ci-gate`; `README.md` verification templates (Snowtrace, Builder Hub verifier labeled unverified).
+- [x] 15.1 (PR 15, ~340) Tree and RED: Fuji inputs; Missing fact; Missing parameter; Mainnet fork (`Deploy_UnsupportedChain`); Dry-run writes nothing; No raw keys; Serializer output; Gate closed outside broadcast; Permissions scoped; Fuji fork; No allowlist entry; Pair from params.
+- [x] 15.2 (PR 15, GREEN) `script/Deploy.sol`, `script/DeployFuji.s.sol`, `script/params/fuji.json`; optional `icm.*` fields in `packages/chains/src/registry.ts`; `docs/adr/0011-deploy-params-out-of-registry.md`.
+- [x] 16.1 (PR 16, ~300) RED: L1 not yet registered; Addresses agree; Nonce moved (`NonceMismatch`); Stale record; L1 on anvil; Fixture drift; Templates present.
+- [x] 16.2 (PR 16, GREEN) `script/DeployL1.s.sol`, `test/fixtures/` registry, `script/params/l1.json`; `contracts-dry-run` job in `ci.yml` and `ci-gate`; `README.md` verification templates (Snowtrace, Builder Hub verifier labeled unverified).
 
 ## Phase 7: Close-out (inside PR 16)
 
-- [ ] 17.1 Tick the T7.1 to T7.8 and T7.10 Done-when boxes in `docs/PLAN.md`; record T7.9, T7.11, T7.12 as pending; confirm each PR stayed within 400 authored lines (Budget respected).
+- [x] 17.1 Tick the T7.1 to T7.8 and T7.10 Done-when boxes in `docs/PLAN.md`; record T7.9, T7.11, T7.12 as pending; confirm each PR stayed within 400 authored lines (Budget respected).

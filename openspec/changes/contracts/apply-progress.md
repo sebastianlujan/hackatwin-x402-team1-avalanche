@@ -2,6 +2,51 @@
 
 Mode: Strict TDD (forge test; Vitest for TypeScript). Store: hybrid. Chain: stacked-to-main, every PR targets `develop`.
 
+## Batch 5 (PR 15a to PR 16b): tasks 15.1, 15.2, 16.1, 16.2, 17.1 complete (33 of 33 task rows)
+
+PR 15 split at named seams into 15a (registry ICM reads, optional `icm.*` schema fields, ADR 0011), 15b (deploy base), 15c (Fuji script); PR 16 split into 16a (L1 script) and 16b (fixture drift, dry-run CI job, README templates, PLAN close-out). Own issues, later numbering unchanged, no size exception. All PRs target `develop`, stacked from `feature/broker-invariants`. Dry-run only: no broadcast flag, no key, no transaction to any RPC (anvil stayed at block 0; the Fuji fork run only reads).
+
+| PR | Branch | PR / issue | Authored lines | Commits |
+|---|---|---|---|---|
+| 15a | `feature/registry-icm` | #160 / #159 | 250 | tree 88b795c, red 12bc22d, green ea56b12, chains 8677099, ADR 26f6d94 |
+| 15b | `feature/deploy-base` | #162 / #161 | 301 | tree c99720a, red 2b0025e, green c22af54 |
+| 15c | `feature/deploy-fuji` | #164 / #163 | 393 | tree 492a854, red 46e1109, green d0703b5, trim 4d879e5, format d3dd074 |
+| 16a | `feature/deploy-l1` | #166 / #165 | 323 | tree cfa1ec0, red 1f1dc0c, green 40218bf, fixup 0fb6906 |
+| 16b | `feature/deploy-dry-run` | #168 / #167 | 211 | drift red 1b2174b, green 365eee2; templates red 2e92cb0, green fae3933; CI 92eb146; PLAN b173c09 |
+
+All five PRs: CI green (every check including `ci-gate`; 16b also runs the new `contracts dry-run` job).
+
+## Batch 5 TDD Cycle Evidence
+
+| Task | Test file | Layer | Safety net | RED | GREEN | TRIANGULATE | REFACTOR |
+|---|---|---|---|---|---|---|---|
+| 15.1, 15.2 (PR 15a) | `test/unit/RegistryIcm.t.sol`, `packages/chains/src/registry.test.ts` | Unit | 177 baseline | Written, build fails (`Registry.chainIdOf` missing) | 6/6 forge, 11/11 vitest | real and fixture registries, missing file, field and entry; malformed blockchain ID, checksum, unknown icm field | None needed |
+| 15.1, 15.2 (PR 15b) | `test/unit/Deploy.t.sol`, `scripts/deploy-safety.test.ts` | Unit | 177 baseline | Written, build fails (`script/Deploy.sol` missing); vitest guard was already green (standing check) | 8/8 forge, 4/4 vitest | match, another chain, 43114; entry, missing entry, missing file; 4 refused write paths and the allowed one | Harness ordering |
+| 15.1, 15.2 (PR 15c) | `test/unit/DeployFuji.t.sol` | Unit and fork | 185 baseline | Written, build fails (`DeployFuji` missing) | 11/11 pass, fork test 1 pass with `FUJI_FORK=1` | nonce 0 and 7, no pair and one pair, fixture and partial registry, mainnet, committed params | Fixture trims to 393 lines |
+| 16.1, 16.2 (PR 16a) | `test/unit/DeployL1.t.sol` | Unit | 196 baseline | Written, build fails (`DeployL1` missing) | 11/11 pass; anvil simulation succeeds | real registry, fixtures, 43114, no record; Fuji then L1 deploy, moved nonce, stale record, 0 and 2 merchants, dry-run, serializer | Fixed a missing-blockchain-id fixture clash |
+| 16.1, 16.2 (PR 16b) | `scripts/fixture-drift.test.ts`, `scripts/readme-templates.test.ts` | Unit | N/A (new) | Written, imports and sections missing | 3/3 and 3/3 pass | equal facts, 3 drifted facts, fixture-only facts; both commands, settings, label | None needed |
+| 17.1 | n/a (docs) | Docs | n/a | n/a | PLAN.md boxes ticked | n/a | n/a |
+
+Totals after batch 5: forge 207 pass and 1 skipped (Fuji fork), Vitest 438 in the repository.
+
+### Batch 5 deviations and notes
+
+- Splits: 15 into 15a to 15c and 16 into 16a and 16b (each over 400 lines as one PR). Per-PR authored lines 250, 301, 393, 323, 211: all within 400.
+- Params files are named after the chain key (`twinpay-l1.json`, not `l1.json`) because the base reads `<chainKey>.json`. Committed `script/params/fuji.json` holds the gas limits only (500000 required, 300000 recipient); `twinpay-l1.json` holds an empty merchant list. Deployer, owner, fallback recipient, receiver deployer and nonce arrive with T7.12, so a real run reverts `Deploy_ParamNotFound` (and `Registry_EntryNotFound` until M6 fills the ICM facts).
+- The L1 receiver token equals its transferrer (the ICTT remote contract is its own ERC-20).
+- `packages/chains/deployments/.gitkeep` was added: Foundry cannot resolve the read-write `fs_permissions` path while the directory is missing.
+- The Fuji fork test is gated by `FUJI_FORK=1`; CI runs it as a `continue-on-error` informational step so a flaky public RPC cannot block `ci-gate`. The L1 dry-run on anvil is a blocking step and asserts anvil stayed at block 0 and the tree is clean.
+- Fixtures live in `test/fixtures` (registry, params, params-pair, params-merchant, params-missing, registry-partial, deployments). The drift guard is a pure TypeScript function compared against the real registry (facts only the fixture has are not drift).
+- Snowtrace is served by Routescan; the Etherscan-compatible read API answered for Fuji (`getabi` on the USDC contract, 2026-11-04), a verify submit was not exercised. The Builder Hub verifier command is labeled UNVERIFIED.
+- Tests set `vm.chainId` rather than fork mainnet for the unsupported-chain case. Tests that switch to a fork need `vm.makePersistent` on the script contract.
+- After editing a shared fixture (Fuji `icm.blockchainId`) a PR 15a test failed in PR 16a and was fixed with a follow-up commit; read the whole `forge test` tail before committing.
+- 17.1: T7.1 to T7.8 (O7 human sign-off in T7.2 stays open) and T7.10 Done-when boxes ticked in `docs/PLAN.md`; T7.9, T7.11, T7.12 marked pending.
+- Out of scope and still pending: broadcast, real keystores and params (T7.12), T7.9, T7.11, M8 gas re-measurement with the real ICTT messenger.
+
+## Remaining
+
+None in this change: all 33 task rows are done. Next: sdd-verify.
+
 ## Batch 4 (PR 13 to PR 14b): tasks 13.1, 13.2, 14.1, 14.2 complete (28 of 33 task rows)
 
 PR 13 split at named seams into 13, 13b and 13c (own issues, later numbering unchanged). All PRs target `develop`, stacked from `feature/settlement-receiver-invariants`.
@@ -160,4 +205,4 @@ Totals: forge 23 tests, Vitest 44 tests in `packages/contracts`.
 
 ## Remaining
 
-Task 15.1 onward (PR 15 deployment). Next PR starts from `feature/broker-invariants`.
+Superseded by the Batch 5 section: all 33 task rows are done.
