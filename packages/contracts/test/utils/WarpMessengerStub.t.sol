@@ -23,7 +23,7 @@ contract UnitWarpMessengerStub is Test {
     _;
   }
 
-  function test_GivenAnIDWasConfigured() external whenReadingTheBlockchainID {
+  function test_GivenAnIDWasConfigured() external view whenReadingTheBlockchainID {
     // it returns the configured ID
     assertEq(_stub.getBlockchainID(), _CHAIN_ID);
   }
