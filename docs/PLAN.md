@@ -811,16 +811,17 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
   - [ ] CI runs `forge fmt --check`, build, test, lintspec, and Bulloak checks
   - [ ] ABIs export as `as const` TypeScript for viem
 
-**T7.2 `chore(contracts): vendor icm interfaces`**
+**T7.2 `chore(contracts): add own icm interfaces`**
 
-- Branch: `feature/vendor-icm-interfaces`
-- Depends on: T7.1, O7
-- What: `IERC20SendAndCallReceiver`, `IERC20TokenTransferrer`, and `SendAndCallInput` into
-  `src/interfaces/external/icm/`, pinned to a commit.
+- Branch: `feature/icm-interfaces`
+- Depends on: T7.1 (O7 stays a human sign-off)
+- What: Our own MIT `IERC20SendAndCallReceiver`, `IERC20TokenTransferrer` (only `sendAndCall`), and `SendAndCallInput`
+  in `src/interfaces/external/icm/`, written from the documented ABI, with the upstream commit recorded as the
+  reference ([ADR 0009](adr/0009-own-ictt-interfaces.md)). A test pins both selectors and the struct layout.
 - Done when:
-  - [ ] The Ecosystem License is copied unmodified next to the files
-  - [ ] The upstream commit is recorded
-  - [ ] Nothing else from `icm-services` is vendored
+  - [x] The upstream commit is recorded in `PROVENANCE.md`; no upstream license file is needed
+  - [x] Nothing else from `icm-services` is added, and the selectors and struct layout are pinned by a test
+  - [ ] O7 is signed off by a human; if refused, vendor the files with the Ecosystem License copied unmodified
 
 **T7.3 `feat(contracts): add payment state library and hub interface`**
 
@@ -1345,7 +1346,7 @@ sequenceDiagram
 
 The stub lives in `e2e/protocol/support/` and is never deployed. TxAllowList, fee config, and real Warp signatures
 are checked by the testnet smoke (T8.6). Fork tests use the ICTT bytecode already deployed on Fuji and the L1, so no
-`icm-services` implementation is vendored.
+`icm-services` implementation is vendored or copied.
 
 ### 5.4 Hybrid against the alternative architecture
 
@@ -1407,7 +1408,7 @@ Every tool beyond the prompt's stack, with its reason.
 | LLM API outage or refusal | Demo 1 has no recording (Q2) | Retries with backoff; refusal handled as an event; a manual-trigger mode only if O13 allows it | T5.7 |
 | TxAllowList misconfiguration | Relayer, facilitator, or agent transactions rejected on the L1 | Roles set in genesis and checked per role by smoke tests and the funding script | T6.1, T9.4 |
 | Signatures replayable on mainnet | The fork keeps chain ID 43114 | Fresh keys for every role on the fork (Q20) and the fork guard | T4.2, T5.1 |
-| Licenses | Legal exposure | ICM interfaces under the Ecosystem License with sign-off (O7); x402 init code with its Apache-2.0 notice; no code from the unlicensed starter kit; logos only after approval (O4) | T7.2, T7.11, T10.1 |
+| Licenses | Legal exposure | ICM interfaces written by us under MIT, sign-off still open (O7, ADR 0009); x402 init code with its Apache-2.0 notice; no code from the unlicensed starter kit; logos only after approval (O4) | T7.2, T7.11, T10.1 |
 
 ## 7. Talk run-of-show
 
@@ -1436,7 +1437,7 @@ Assumes a 45-minute slot (O1). Scale segments proportionally. Screens are `apps/
 - **O4.** Do Twin, team1, and the Hackatwin organizers approve their logos and key visual in the frontend, and may it show the Avalanche logo or only a "Built on Avalanche" text link?
 - **O5.** Should the Sepolia side send the CCIP message from the agent EOA or from a minimal sender contract?
 - **O6.** In Demo 3, does the seller rate the buyer agent, or does the buyer rate the seller, on the Fuji Reputation Registry?
-- **O7.** Is the Ava Labs Ecosystem License acceptable for the vendored ICM interfaces in this MIT repo?
+- **O7.** Is it acceptable that our own MIT ICM interfaces, written from the documented `icm-services` ABI, ship in this repo ([ADR 0009](adr/0009-own-ictt-interfaces.md))? If not, vendor the upstream files under the Ecosystem License.
 - **O8.** Who provides and pays for the infra VM, and which domain serves the public L1 RPC?
 - **O9.** Where are web and docs previews, staging, and production hosted, and must the hosted web run live demos or replays only?
 - **O10.** Who owns the Anthropic API key, and what is the monthly budget for nightly runs?
