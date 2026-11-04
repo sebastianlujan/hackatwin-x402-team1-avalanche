@@ -542,7 +542,7 @@ after these merges.
   per address, a typed wrapper, and viem chain objects.
 - Done when:
   - [ ] Only addresses from [Verified facts](decisions.md#verified-facts) are present, checksummed and tested
-  - [ ] A forge script reads the JSON with `vm.parseJson`
+  - [x] A forge script reads the JSON with `vm.parseJson` (`packages/contracts/script/lib/Registry.sol`)
   - [ ] L1 entries are optional until deployed
 
 **T4.2 `feat(chains): add viem chain client with fork guard`**
