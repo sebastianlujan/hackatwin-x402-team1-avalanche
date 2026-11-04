@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "catalog:",
     "@hackatwin/core": "workspace:*",
     "@x402/core": "catalog:",
     "@x402/evm": "catalog:",
