@@ -43,3 +43,11 @@ describe('@hackatwin/chains/registry', () => {
     expect(Object.keys(root)).not.toContain('txUrl');
   });
 });
+
+describe('txUrl for local chains', () => {
+  it('is undefined for both local keys with a valid hash', () => {
+    expect(txUrl('local-hub', hash)).toBeUndefined();
+    expect(txUrl('local-l1', hash)).toBeUndefined();
+    expect(txUrl('fuji', hash)).toMatch(/^https:\/\//);
+  });
+});
