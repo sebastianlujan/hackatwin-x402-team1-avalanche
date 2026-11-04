@@ -1,0 +1,20 @@
+UnitDeploy
+├── when checking the chain
+│   ├── given the chain ID matches the registry chain ID of the key
+│   │   └── it passes
+│   ├── given the chain ID is another registered chain
+│   │   └── it reverts with UnsupportedChain naming the chain ID
+│   └── given the chain ID is the Avalanche mainnet
+│       └── it reverts with UnsupportedChain 43114
+├── when reading parameters
+│   ├── given a params file with the entry
+│   │   └── it returns the address and the number
+│   ├── given a params file without the entry
+│   │   └── it reverts with ParamNotFound naming the key and the entry
+│   └── given no params file
+│       └── it reverts with ParamNotFound naming the file
+└── when writing the deployment record
+    ├── given a context that is not a broadcast
+    │   └── it writes no file
+    └── given the project file permissions
+        └── it grants write only to the deployments directory
