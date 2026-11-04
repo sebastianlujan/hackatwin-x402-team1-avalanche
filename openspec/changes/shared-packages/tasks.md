@@ -143,12 +143,12 @@ End state: `CurvePoolOracle` on the port only; nightly Vitest project; rule R8.
 Rollback: revert; remove `curve-pool-oracle.ts`, Vitest projects, R8.
 Depends on: PR 3 (port and registry types); may be built before PR 5 is merged but stacks after it.
 
-- [ ] 6.1 Vitest projects (D14): `nightly` project for `*.nightly.test.ts`, default project excludes them. Edit root `vitest.config.ts`. About 30 lines.
+- [x] 6.1 Vitest projects (D14): `nightly` project for `*.nightly.test.ts`, default project excludes them. Edit root `vitest.config.ts`. About 30 lines.
   - Satisfies: price-oracles "PR CI".
   - Acceptance: `pnpm test` runs zero `*.nightly.test.ts`; `pnpm vitest --project nightly --run` selects them.
-- [ ] 6.2 Rule R8 in `test/dependency-rule.ts` and test: `pricing/src` imports only core. About 40 lines.
+- [x] 6.2 Rule R8 in `test/dependency-rule.ts` and test: `pricing/src` imports only core. About 40 lines.
   - Acceptance: fixture importing `@hackatwin/chains` from `pricing/src` fails.
-- [ ] 6.3 `CurvePoolOracle` (D7, D8). `packages/pricing/src/curve-pool-oracle.ts`: one block, `coins(0)` equals registry `argt`, `coins(1)` equals `usdt0`, `price_oracle()` no args, 18 decimals, returns `RateReading { source, argtPerUsd, chainId, blockNumber }`; USD₮0 = 1 USD. Add `curve-pool-oracle.test.ts` (fake client) and `curve-pool-oracle.nightly.test.ts` (live Arbitrum). About 170 lines. Package scaffold (`package.json`, `tsconfig`, `index.ts`) included.
+- [x] 6.3 `CurvePoolOracle` (D7, D8). `packages/pricing/src/curve-pool-oracle.ts`: one block, `coins(0)` equals registry `argt`, `coins(1)` equals `usdt0`, `price_oracle()` no args, 18 decimals, returns `RateReading { source, argtPerUsd, chainId, blockNumber }`; USD₮0 = 1 USD. Add `curve-pool-oracle.test.ts` (fake client) and `curve-pool-oracle.nightly.test.ts` (live Arbitrum). About 170 lines. Package scaffold (`package.json`, `tsconfig`, `index.ts`) included.
   - Satisfies: price-oracles "Happy read", "Wrong coins", "Nightly integration".
   - Acceptance: unit test asserts reading and block; wrong `coins(0)` or `coins(1)` throws; nightly test run manually once and result recorded.
 
@@ -161,10 +161,10 @@ End state: `ChainlinkFeedOracle` with staleness and sequencer safety.
 Rollback: revert; remove `chainlink-feed-oracle.ts` and the `decisions.md` row.
 Depends on: PR 6.
 
-- [ ] 7.1 `ChainlinkFeedOracle` (D9). One Base block: `decimals()`, `latestRoundData()`, sequencer via V2V3 ABI; reject answer <= 0, `updatedAt` 0 or older than `heartbeatSeconds` (86400 from registry), sequencer answer != 0, `startedAt` 0 or under 3600 s (3600 passes); rate `10^(d+18) / answer`; 1 ARS = 1 ARGt; no `answeredInRound`; injected `now`. About 130 lines code, 130 lines `chainlink-feed-oracle.test.ts`, plus optional `*.nightly.test.ts`.
+- [x] 7.1 `ChainlinkFeedOracle` (D9). One Base block: `decimals()`, `latestRoundData()`, sequencer via V2V3 ABI; reject answer <= 0, `updatedAt` 0 or older than `heartbeatSeconds` (86400 from registry), sequencer answer != 0, `startedAt` 0 or under 3600 s (3600 passes); rate `10^(d+18) / answer`; 1 ARS = 1 ARGt; no `answeredInRound`; injected `now`. About 130 lines code, 130 lines `chainlink-feed-oracle.test.ts`, plus optional `*.nightly.test.ts`.
   - Satisfies: price-oracles "Fresh round", "Stale round", "Sequencer down", "Grace period" (3599 rejected, 3600 accepted), "Sequencer unreadable", "Zero or negative answer".
   - Acceptance: `chainlink-feed-oracle.test.ts` covers each named scenario plus `startedAt` 0; read once live (nightly) and compare with Curve (about 0.03% delta per orchestrator read).
-- [ ] 7.2 Update `docs/decisions.md` reference-rates row: Base feed tracks the market rate. About 20 lines.
+- [x] 7.2 Update `docs/decisions.md` reference-rates row: Base feed tracks the market rate. About 20 lines.
   - Acceptance: row cites the live read and date.
 
 Sequential: 7.1 then 7.2.
@@ -176,13 +176,13 @@ End state: guarded oracle with 200 bps band, 30 s freeze, shared wiring.
 Rollback: revert; remove `guarded-oracle.ts`, `create-guarded-oracle.ts`, doc edits.
 Depends on: PRs 6 and 7.
 
-- [ ] 8.1 `GuardedOracle` (D10). `abs(c - l) * 10000 <= 200 * l` in integers uses Curve, else Chainlink with `guarded: true`; any source error throws; `reading()` returns `{ chosen, curve, chainlink, deltaBps, guarded, validUntil }`. About 100 lines with `guarded-oracle.test.ts`.
+- [x] 8.1 `GuardedOracle` (D10). `abs(c - l) * 10000 <= 200 * l` in integers uses Curve, else Chainlink with `guarded: true`; any source error throws; `reading()` returns `{ chosen, curve, chainlink, deltaBps, guarded, validUntil }`. About 100 lines with `guarded-oracle.test.ts`.
   - Satisfies: price-oracles "Exactly +2%", "Exactly -2%", "Just outside" (one unit beyond on both sides).
   - Acceptance: tests at exactly +2% and -2% choose Curve; one unit beyond chooses Chainlink guarded.
-- [ ] 8.2 Freeze (D11). Per-asset in-flight promise reused while `now < validUntil` (30 s); errors evicted; USDC throws until M9. About 60 lines in the same file and test.
+- [x] 8.2 Freeze (D11). Per-asset in-flight promise reused while `now < validUntil` (30 s); errors evicted; USDC throws until M9. About 60 lines in the same file and test.
   - Satisfies: price-oracles "Frozen quote / Within window", "Expired".
   - Acceptance: 29 s reuses, 30 s refetches; rejected promise is not cached.
-- [ ] 8.3 `createGuardedOracle({ arbitrum, base, addresses, now })` in `create-guarded-oracle.ts`; edit Q12 in `docs/decisions.md` and `docs/demos.md` to say `maxTimeoutSeconds`. About 70 lines.
+- [x] 8.3 `createGuardedOracle({ arbitrum, base, addresses, now })` in `create-guarded-oracle.ts`; edit Q12 in `docs/decisions.md` and `docs/demos.md` to say `maxTimeoutSeconds`. About 70 lines.
   - Satisfies: Scenario Coverage "Docs" (Q12 part).
   - Acceptance: wiring test with fakes passes; `rg "maxTimeoutSeconds" docs/decisions.md docs/demos.md` hits both.
 
@@ -195,13 +195,13 @@ End state: `pnpm quote` prints the documented line; runbook updated.
 Rollback: revert; remove `quote-line.ts`, `scripts/quote.ts`, root script, demos.md edit.
 Depends on: PR 8.
 
-- [ ] 9.1 `formatQuoteLine` and `runQuote(oracle, io)` in `packages/pricing/src/quote-line.ts` (D12): normal line `1 USD = <x> ARGt (Curve, block N) | Chainlink <y> | Δ <z>% ✓`; guarded line `1 USD = <y> ARGt (Chainlink, guarded) | Curve <x> (block N) | Δ <z>% ⚠`; rates half-up 1 decimal, absolute Δ 2 decimals; prints error and returns exit code on failure. About 90 lines with `quote-line.test.ts`.
+- [x] 9.1 `formatQuoteLine` and `runQuote(oracle, io)` in `packages/pricing/src/quote-line.ts` (D12): normal line `1 USD = <x> ARGt (Curve, block N) | Chainlink <y> | Δ <z>% ✓`; guarded line `1 USD = <y> ARGt (Chainlink, guarded) | Curve <x> (block N) | Δ <z>% ⚠`; rates half-up 1 decimal, absolute Δ 2 decimals; prints error and returns exit code on failure. About 90 lines with `quote-line.test.ts`.
   - Satisfies: quote-cli "Within band", "Outside band", "Failure".
   - Acceptance: string equality tests for both lines and a failing source returning non-zero.
-- [ ] 9.2 Root `packages/pricing/scripts/quote.ts` (wires `loadRpcUrls`, `createChainClient`, `createGuardedOracle`; sets `process.exitCode`) and root `quote` script. About 40 lines with `scripts/quote.test.ts` source scan.
+- [x] 9.2 Root `packages/pricing/scripts/quote.ts` (wires `loadRpcUrls`, `createChainClient`, `createGuardedOracle`; sets `process.exitCode`) and root `quote` script. About 40 lines with `scripts/quote.test.ts` source scan.
   - Satisfies: quote-cli "Reuse".
   - Acceptance: source scan finds `createGuardedOracle` and `GuardedOracle` imports from `@hackatwin/pricing` and none of `10000`, `200`, `bps`; `pnpm quote` live output recorded in PR body.
-- [ ] 9.3 Runbook. `docs/demos.md` shows both lines, drops "script added during implementation". About 40 lines.
+- [x] 9.3 Runbook. `docs/demos.md` shows both lines, drops "script added during implementation". About 40 lines.
   - Satisfies: quote-cli "Runbook updated / Docs".
   - Acceptance: `rg "script added during implementation" docs/demos.md` returns nothing.
 
