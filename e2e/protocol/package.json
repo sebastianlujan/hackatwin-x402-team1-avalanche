@@ -10,6 +10,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@hackatwin/demo-01-x402-twin": "workspace:*"
+    "@hackatwin/agent-kit": "workspace:*",
+    "@hackatwin/chains": "workspace:*",
+    "@hackatwin/config": "workspace:*",
+    "@hackatwin/core": "workspace:*",
+    "@hackatwin/demo-01-x402-twin": "workspace:*",
+    "viem": "catalog:"
   }
 }

@@ -16,6 +16,18 @@ import { createBuyerTools } from './buyer-agent/tools.ts';
 import { PORTS } from './ports.ts';
 import { Tokens } from './tokens.ts';
 
+export { serveLoopback } from './adapters/serve.ts';
+export { runBuyer } from './buyer-agent/run.ts';
+export { buyerPlan } from './buyer-agent/scripted-plan.ts';
+export type { Buyer } from './tokens.ts';
+export { Tokens } from './tokens.ts';
+
+// Service URLs default to the loopback ports of the scripts; a test passes ephemeral ones.
+export interface X402ModuleConfig {
+  readonly facilitatorUrl?: () => string;
+  readonly sellerUrl?: () => string;
+}
+
 const live = (key: string): LiveChain => chain(key) as LiveChain;
 const contract = (entry: LiveChain, name: string) => {
   const found = entry.contracts[name];
@@ -24,7 +36,7 @@ const contract = (entry: LiveChain, name: string) => {
 };
 
 // Registers only: the root registers Config, Accounts, Fork, ReadChains, State and Events first.
-export function registerX402Module(container: Container): void {
+export function registerX402Module(container: Container, config: X402ModuleConfig = {}): void {
   container.register(Ports.PriceOracle, (resolver) => {
     const { arbitrum, base } = resolver.resolve(Tokens.ReadChains);
     const [arb, feedChain] = [live('arbitrum'), live('base')];
@@ -87,7 +99,9 @@ export function registerX402Module(container: Container): void {
       oracle: resolver.resolve(Ports.PriceOracle),
       asset: contract(live('cchain'), 'argt').address,
       payTo: resolver.resolve(Tokens.Accounts).seller.address,
-      facilitator: new HTTPFacilitatorClient({ url: `http://127.0.0.1:${PORTS.facilitator}` }),
+      facilitator: new HTTPFacilitatorClient({
+        url: config.facilitatorUrl?.() ?? `http://127.0.0.1:${PORTS.facilitator}`,
+      }),
     }),
   );
   container.register(Tokens.Registration, (resolver) => {
@@ -153,7 +167,7 @@ export function registerX402Module(container: Container): void {
     const tools = createBuyerTools({
       oracle: resolver.resolve(Ports.PriceOracle),
       perPayment: profile.budget.perPayment,
-      url: `http://127.0.0.1:${PORTS.seller}/quote`,
+      url: `${config.sellerUrl?.() ?? `http://127.0.0.1:${PORTS.seller}`}/quote`,
       createGateway: (usdValue) =>
         new X402PaymentGateway({
           engine,

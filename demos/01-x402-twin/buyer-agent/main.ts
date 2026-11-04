@@ -1,13 +1,13 @@
-import { ClaudeLLM, createAgent, createEventChannel, Erc8004Identity, ScriptedPlanLLM } from '@hackatwin/agent-kit';
+import { ClaudeLLM, createEventChannel, Erc8004Identity, ScriptedPlanLLM } from '@hackatwin/agent-kit';
 import { chain, type LiveChain } from '@hackatwin/chains';
-import { type LLM, Ports } from '@hackatwin/core';
+import type { LLM } from '@hackatwin/core';
 import { readIdentities } from '../adapters/registration.ts';
 import { PORTS } from '../ports.ts';
 import { composeRoot } from '../root.ts';
 import { Tokens } from '../tokens.ts';
 import { formatBalances, formatDeltas, formatEvent } from './format.ts';
 import { preflight } from './preflight.ts';
-import { PROMPT, SYSTEM } from './prompt.ts';
+import { runBuyer } from './run.ts';
 import { buyerPlan } from './scripted-plan.ts';
 
 const up = async (url: string, expected: number): Promise<boolean> => {
@@ -55,7 +55,6 @@ async function main(): Promise<number> {
         : up(`http://127.0.0.1:${PORTS.seller}/quote`, 402),
   });
 
-  const buyer = container.resolve(Tokens.Buyer);
   const llm: LLM = scripted
     ? new ScriptedPlanLLM(buyerPlan)
     : new ClaudeLLM({
@@ -65,17 +64,7 @@ async function main(): Promise<number> {
   const before = await balances.read();
   for (const line of formatBalances('before', before)) console.log(line);
   let reason = 'error';
-  for await (const event of createAgent({
-    llm,
-    llmName: scripted ? 'scripted' : 'claude',
-    tools: buyer.tools,
-    policy: container.resolve(Ports.AgentPolicy),
-    channel,
-    system: SYSTEM,
-    prompt: PROMPT,
-    agent: 'buyer',
-    profile: profile.name,
-  })) {
+  for await (const event of runBuyer({ container, channel, llm, llmName: scripted ? 'scripted' : 'claude' })) {
     console.log(formatEvent(event));
     if (event.type === 'run.finished') reason = event.reason;
   }
