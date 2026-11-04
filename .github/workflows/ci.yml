@@ -85,6 +85,7 @@ jobs:
       docs: ${{ steps.filter.outputs.docs }}
       demo-3: ${{ steps.filter.outputs.demo-3 }}
       ts: ${{ steps.filter.outputs.ts }}
+      contracts: ${{ steps.filter.outputs.contracts }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -120,6 +121,10 @@ jobs:
               - demos/**
               - apps/web/**
               - e2e/**
+            contracts:
+              - *root
+              - packages/contracts/**
+              - packages/chains/registry/**
 
   biome:
     name: biome
@@ -202,6 +207,46 @@ jobs:
           key: foundry-rpc-43114-${{ steps.block.outputs.number }}
       - run: pnpm test:fork
 
+  contracts:
+    name: contracts
+    needs: changes
+    if: needs.changes.outputs.contracts == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: packages/contracts
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+        working-directory: .
+      - uses: foundry-rs/foundry-toolchain@dba66c27052e63476d886f22216e119ba7e615bf # v1.9.2
+        with:
+          version: v1.5.1
+          cache: false
+      - run: forge fmt --check
+      - run: forge build
+      - run: forge test
+      - uses: smol-ninja/bulloak-toolchain@d4e00e1dc5673d3e6731ac37b8cdbb3f451863be # v2.2.0
+        with:
+          version: 0.9.2
+          test-dir: packages/contracts/test
+      - if: hashFiles('packages/contracts/src/**/*.sol') != ''
+        uses: beeb/lintspec@a9e8a9437c74d8d4fd30a39e3d25197b98196264 # v0.20.0
+        with:
+          working-directory: packages/contracts
+          version: 0.20.0
+      - run: pnpm lint:sol
+      - run: pnpm contracts:policy
+        working-directory: .
+
   docs-build:
     name: docs build
     needs: changes
@@ -230,7 +275,7 @@ jobs:
   ci-gate:
     name: ci-gate
     if: always()
-    needs: [pr-title, commits, branch-name, lint, changes, biome, typecheck, test, fork, docs-build]
+    needs: [pr-title, commits, branch-name, lint, changes, biome, typecheck, test, fork, contracts, docs-build]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions: {}
