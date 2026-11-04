@@ -35,6 +35,33 @@ contract RegistryHarness {
     _selector = Registry.selectorOf(_key);
   }
 
+  /// @notice Read a chain ID from an explicit directory
+  function chainIdOf(string calldata _dir, string calldata _key) external returns (uint256 _chainId) {
+    _chainId = Registry.chainIdOf(_dir, _key);
+  }
+
+  /// @notice Read the ICM blockchain ID from an explicit directory
+  function blockchainIdOf(string calldata _dir, string calldata _key) external returns (bytes32 _id) {
+    _id = Registry.blockchainIdOf(_dir, _key);
+  }
+
+  /// @notice Read an ICM address from an explicit directory
+  function icmAddressOf(
+    string calldata _dir,
+    string calldata _key,
+    string calldata _entry
+  )
+    external
+    returns (address _address)
+  {
+    _address = Registry.icmAddressOf(_dir, _key, _entry);
+  }
+
+  /// @notice Read the CCIP selector from an explicit directory
+  function selectorOfIn(string calldata _dir, string calldata _key) external returns (uint64 _selector) {
+    _selector = Registry.selectorOf(_dir, _key);
+  }
+
   /// @notice Try to write a file, which the project permissions must refuse for the registry
   function tryWrite(string calldata _path) external {
     _VM.writeFile(_path, 'x');

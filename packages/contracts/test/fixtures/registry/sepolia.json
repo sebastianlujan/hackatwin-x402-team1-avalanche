@@ -1,0 +1,6 @@
+{
+  "key": "sepolia",
+  "chainId": 11155111,
+  "ccip": { "chainSelector": "16015286601757825753" },
+  "contracts": {}
+}
