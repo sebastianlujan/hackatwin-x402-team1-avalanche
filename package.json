@@ -10,7 +10,8 @@
     "format": "biome check --write .",
     "typecheck": "tsc --noEmit && pnpm -r --if-present typecheck",
     "test": "vitest run --coverage",
-    "build": "pnpm -r --if-present build"
+    "build": "pnpm -r --if-present build",
+    "chains:verify": "node packages/chains/scripts/verify.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
