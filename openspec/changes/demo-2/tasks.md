@@ -80,8 +80,8 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 7: World infra steps 1 to 3 (needs spike pass)
 
-- [ ] 7.1 RED `world.local.test.ts`: stub at Warp address with blockchain ID, Teleporter address, Remote registered precursor
-- [ ] 7.2 GREEN `world.ts`: stub `anvil_setCode`, `setBlockchainID`, promote spike winner to `teleporter.ts`, `TeleporterRegistry`
+- [x] 7.1 RED `world.local.test.ts`: stub at Warp address with blockchain ID, Teleporter address, Remote registered precursor
+- [x] 7.2 GREEN `world.ts`: stub `anvil_setCode`, `setBlockchainID`, promote spike winner to `teleporter.ts`, `TeleporterRegistry`
 
 ## PR 8: Relay and CI (specs: icm-relay-simulation, crosschain-protocol-e2e)
 

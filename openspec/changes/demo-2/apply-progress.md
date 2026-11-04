@@ -32,9 +32,12 @@ User approved the fetch ("dale") for `ava-labs/icm-services` at `34deb30f`. The 
 | Task PR | Branch | Issue | PR | Red | Green | Authored lines |
 |---|---|---|---|---|---|---|
 | 1 | `feature/demo-2-local-icm` | #235 | #236 | c3463ef, e00df85, 85518a9 | bf86ebc, 0df8004 (+ fix b5e448d) | 399 |
+| 7 | `feature/local-world-infra` | #237 | #238 | bb2f7cf | 5a525d1 | 160 |
 
 Tasks 1.1 to 1.6 are marked `[x]`; the design Open Question is ticked; findings are in `spike.md`.
 Deviations: the license guard test lives at `e2e/protocol/src/local/license-guard.test.ts` (default Vitest project, beside its module) instead of `test/license-guard.test.ts`; `runGit` is now exported from `icm-services.ts` so the guard can run in the project repo, where `gitIn` refuses the project root. The spike builds its clients through `createGuardedClients` (rule R9 forbids raw viem clients outside `packages/chains`). Method B is not implementable from the approved source (the v1.0.0 raw tx is a release asset, not in the clone); C was not needed.
+
+Tasks 7.1 and 7.2 are marked `[x]`. Method A lives in `teleporter.ts`; the spike now reuses `deployInfra`. The registry precursor for Remote registered is `TeleporterRegistry` listing Teleporter as version 1 (the ICTT pair lands in PR 9).
 
 ## Deviations and notes
 
