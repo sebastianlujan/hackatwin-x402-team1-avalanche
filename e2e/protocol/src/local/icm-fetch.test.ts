@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { ICM_COMMIT, ensureIcmServices, icmCacheDir } from './icm-fetch.ts';
+import { ensureIcmServices, ICM_COMMIT, icmCacheDir } from './icm-fetch.ts';
 
 const made: string[] = [];
 const tempRoot = (): string => {

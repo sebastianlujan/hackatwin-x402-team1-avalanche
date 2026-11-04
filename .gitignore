@@ -164,3 +164,6 @@ packages/contracts/broadcast/
 
 # Next.js generated
 next-env.d.ts
+
+# Fetched third-party sources (never committed)
+.cache/
