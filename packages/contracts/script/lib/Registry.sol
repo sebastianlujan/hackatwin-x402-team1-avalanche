@@ -52,9 +52,43 @@ library Registry {
 
   /// @notice Read the CCIP chain selector of a registry key
   function selectorOf(string memory _key) internal returns (uint64 _selector) {
-    string memory _json = _read(registryDir(), _key);
+    _selector = selectorOf(registryDir(), _key);
+  }
+
+  /// @notice Read the CCIP chain selector of a registry key, from one directory
+  function selectorOf(string memory _dir, string memory _key) internal returns (uint64 _selector) {
+    string memory _json = _read(_dir, _key);
     if (!_VM.keyExistsJson(_json, '.ccip.chainSelector')) revert Registry_EntryNotFound(_key, 'ccip.chainSelector');
     _selector = parseSelector(_key, _VM.parseJsonString(_json, '.ccip.chainSelector'));
+  }
+
+  /// @notice Read the chain ID of a registry key, from one directory
+  function chainIdOf(string memory _dir, string memory _key) internal returns (uint256 _chainId) {
+    string memory _json = _read(_dir, _key);
+    if (!_VM.keyExistsJson(_json, '.chainId')) revert Registry_EntryNotFound(_key, 'chainId');
+    _chainId = _VM.parseJsonUint(_json, '.chainId');
+  }
+
+  /// @notice Read the ICM blockchain ID of a registry key, from one directory
+  function blockchainIdOf(string memory _dir, string memory _key) internal returns (bytes32 _id) {
+    string memory _json = _read(_dir, _key);
+    if (!_VM.keyExistsJson(_json, '.icm.blockchainId')) revert Registry_EntryNotFound(_key, 'icm.blockchainId');
+    _id = _VM.parseJsonBytes32(_json, '.icm.blockchainId');
+  }
+
+  /// @notice Read an ICM address (such as a token transferrer) of a registry key, from one directory
+  function icmAddressOf(
+    string memory _dir,
+    string memory _key,
+    string memory _entry
+  )
+    internal
+    returns (address _address)
+  {
+    string memory _json = _read(_dir, _key);
+    string memory _path = string.concat('.icm.', _entry);
+    if (!_VM.keyExistsJson(_json, _path)) revert Registry_EntryNotFound(_key, string.concat('icm.', _entry));
+    _address = _VM.parseJsonAddress(_json, _path);
   }
 
   /// @notice The registry directory, overridable with CHAIN_REGISTRY_DIR
