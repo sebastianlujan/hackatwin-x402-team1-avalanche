@@ -43,12 +43,12 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 1: Spike and fetch (specs: local-crosschain-environment)
 
-- [ ] 1.1 `.gitignore` add `.cache/`; `package.json` add `local:icm` (about 10 lines)
-- [ ] 1.2 RED `test/license-guard.test.ts`: tracked file with `LicenseRef-Ecosystem` header fails, bare token allowed (License guard, Bare token allowed)
-- [ ] 1.3 GREEN `git grep` guard in same file; `.cache/icm-services/<commit>/` fetch and build script at `34deb30f...` (Cache hit, Clean tree)
-- [ ] 1.4 Spike `e2e/protocol/src/local/spike-teleporter.ts`: try A, B, C in order, assert address, code, round trip (Teleporter address, Round trip)
-- [ ] 1.5 Verify and record: ICTT constructors and structs, `registerWithHome` fee struct, registered-remote view, Teleporter events, `IWarpMessenger` struct, solc, foundry root, submodules, linking; save to `openspec/changes/demo-2/spike.md`, tick the design Open Question
-- [ ] 1.6 Apply the PLAN note to `docs/PLAN.md` (5.3, M8, T8.1 to T8.5)
+- [x] 1.1 `.gitignore` add `.cache/`; `package.json` add `local:icm` (about 10 lines)
+- [x] 1.2 RED `test/license-guard.test.ts`: tracked file with `LicenseRef-Ecosystem` header fails, bare token allowed (License guard, Bare token allowed)
+- [x] 1.3 GREEN `git grep` guard in same file; `.cache/icm-services/<commit>/` fetch and build script at `34deb30f...` (Cache hit, Clean tree)
+- [x] 1.4 Spike `e2e/protocol/src/local/spike-teleporter.ts`: try A, B, C in order, assert address, code, round trip (Teleporter address, Round trip)
+- [x] 1.5 Verify and record: ICTT constructors and structs, `registerWithHome` fee struct, registered-remote view, Teleporter events, `IWarpMessenger` struct, solc, foundry root, submodules, linking; save to `openspec/changes/demo-2/spike.md`, tick the design Open Question
+- [x] 1.6 Apply the PLAN note to `docs/PLAN.md` (5.3, M8, T8.1 to T8.5)
 
 ## PR 2: Stub and token (Q21 order; specs: icm-relay-simulation)
 

@@ -25,10 +25,16 @@ Tasks 6.1 to 6.3 are marked `[x]`. CI green on #234 after one fix commit: the de
 Design choices: unit tests (`*.test.ts` in `e2e/protocol/src/local/`) run in the default project; real-anvil tests (`*.local.test.ts`) run in the serial `local` project via `pnpm test:local`. Local RPC ports are 18545 (hub, 31337) and 18546 (L1, 31338). Real anvils were started and killed in `anvils.local.test.ts`; none remain.
 Environment note: pnpm 12.16.1 self-switch is broken locally (exec error -8); commands and the commit hook run with `npm_config_manage_package_manager_versions=false`.
 
-## Deferred (pending the user's approval to fetch `ava-labs/icm-services`)
+## Batch 3 (PR 1): done
 
-- PR 1 (spike and fetch, tasks 1.1 to 1.6): not started; no external clone, download, build or execution was done.
-- PR 1 will be inserted later in the queue, after the approval.
+User approved the fetch ("dale") for `ava-labs/icm-services` at `34deb30f`. The spike gate passed: method A works.
+
+| Task PR | Branch | Issue | PR | Red | Green | Authored lines |
+|---|---|---|---|---|---|---|
+| 1 | `feature/demo-2-local-icm` | #235 | #236 | c3463ef, e00df85, 85518a9 | bf86ebc, 0df8004 (+ fix b5e448d) | 399 |
+
+Tasks 1.1 to 1.6 are marked `[x]`; the design Open Question is ticked; findings are in `spike.md`.
+Deviations: the license guard test lives at `e2e/protocol/src/local/license-guard.test.ts` (default Vitest project, beside its module) instead of `test/license-guard.test.ts`; `runGit` is now exported from `icm-services.ts` so the guard can run in the project repo, where `gitIn` refuses the project root. The spike builds its clients through `createGuardedClients` (rule R9 forbids raw viem clients outside `packages/chains`). Method B is not implementable from the approved source (the v1.0.0 raw tx is a release asset, not in the clone); C was not needed.
 
 ## Deviations and notes
 

@@ -146,7 +146,7 @@ is labeled simulated and is never a stage demo or replay (C1, Q2).
 
 ## Open Questions
 
-- [ ] PR 1 spike: Teleporter deployer, ICTT constructors, `registerWithHome` fee struct, `SendTokensInput`,
+- [x] PR 1 spike (done, see `spike.md`; method A works): Teleporter deployer, ICTT constructors, `registerWithHome` fee struct, `SendTokensInput`,
   registered-remote view, Teleporter events, `IWarpMessenger` struct, solc, foundry root, submodules, linking.
 - [x] Spec wording (license guard on the SPDX header, `ContractCall.value`, ICTT and broker hop mapping, chain IDs as
   statics): resolved by the updated specs.
