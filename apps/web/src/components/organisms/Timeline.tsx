@@ -16,8 +16,14 @@ export function Timeline({ copy, entries }: TimelineProps) {
         <li key={entry.seq} className={styles.entry} data-failed={entry.failed}>
           <span className={styles.seq}>{entry.seq}</span>
           <span className={styles.kind}>{copy.kinds[entry.kind]}</span>
-          <span className={styles.detail}>{entry.detail}</span>
-          {entry.value === undefined ? null : <code className={styles.value}>{entry.value}</code>}
+          <span className={styles.detail}>
+            {entry.kind === 'policy.decision' ? (copy.decisions[entry.detail] ?? entry.detail) : entry.detail}
+          </span>
+          {entry.value === undefined ? null : (
+            <code className={styles.value} title={entry.valueFull}>
+              {entry.value}
+            </code>
+          )}
           {entry.failed ? <Badge tone="accent">{copy.error}</Badge> : null}
         </li>
       ))}

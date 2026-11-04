@@ -82,9 +82,9 @@ describe('deriveDemo1', () => {
     expect(deriveDemo1(frames(runStarted, reasoning, toolCall)).quote).toBeUndefined();
     expect(deriveDemo1(frames(paymentRequired)).quote).toEqual({
       source: 'curve',
-      rate: '1.000000 USD',
-      amount: '2.500000000000000000 ARGt',
-      price: '1.000000 USDC',
+      rate: { text: '1 USD = 1.0 ARGt', full: '1.000000 USD' },
+      amount: { text: '2.50 ARGt', full: '2.500000000000000000 ARGt' },
+      price: { text: '1.00 USDC', full: '1.000000 USDC' },
       validUntil: '22:14:20 UTC',
       guarded: false,
     });
@@ -96,7 +96,10 @@ describe('deriveDemo1', () => {
 
   it('formats money from units without floating point', () => {
     const exact = quoteWith({ amount: money(2_500_000_000_000_000_001n, 18, 'ARGt') });
-    expect(deriveDemo1(frames(exact)).quote?.amount).toBe('2.500000000000000001 ARGt');
+    expect(deriveDemo1(frames(exact)).quote?.amount).toEqual({
+      text: '2.50 ARGt',
+      full: '2.500000000000000001 ARGt',
+    });
   });
 
   it('lists fork hashes from payment.status and identity.feedback', () => {
@@ -129,17 +132,17 @@ describe('balanceView', () => {
 
   it('shows the moved amount as the difference', () => {
     const view = balanceView(before, after);
-    expect(view?.moved).toBe('2.500000000000000000 ARGt');
+    expect(view?.moved).toEqual({ text: '2.50 ARGt', full: '2.500000000000000000 ARGt' });
     expect(view?.agent).toEqual({
-      before: '16583.687000000000000000 ARGt',
-      after: '16581.187000000000000000 ARGt',
-      change: '-2.500000000000000000 ARGt',
+      before: { text: '16,583.69 ARGt', full: '16583.687000000000000000 ARGt' },
+      after: { text: '16,581.19 ARGt', full: '16581.187000000000000000 ARGt' },
+      change: { text: '-2.50 ARGt', full: '-2.500000000000000000 ARGt' },
     });
-    expect(view?.seller.change).toBe('+2.500000000000000000 ARGt');
+    expect(view?.seller.change?.text).toBe('+2.50 ARGt');
   });
 
   it('shows only the before balance until the run ends, and nothing without it', () => {
-    expect(balanceView(before, undefined)).toMatchObject({ agent: { before: '16583.687000000000000000 ARGt' } });
+    expect(balanceView(before, undefined)).toMatchObject({ agent: { before: { text: '16,583.69 ARGt' } } });
     expect(balanceView(before, undefined)?.moved).toBeUndefined();
     expect(balanceView(undefined, after)).toBeUndefined();
     expect(balanceView({ agent: 'x', seller: '0' }, undefined)).toBeUndefined();

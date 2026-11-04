@@ -1,4 +1,5 @@
-import type { AgentEvent } from '@hackatwin/core';
+import { readFileSync } from 'node:fs';
+import { type AgentEvent, money } from '@hackatwin/core';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { feedback, paymentRequired } from '../../../test/events.ts';
@@ -27,6 +28,8 @@ const quote = (guarded: boolean, source: 'curve' | 'chainlink'): AgentEvent =>
   paymentRequired.type === 'payment.required'
     ? { ...paymentRequired, quote: { ...paymentRequired.quote, guarded, source } }
     : paymentRequired;
+
+const quoteOf = () => (paymentRequired.type === 'payment.required' ? paymentRequired.quote : (undefined as never));
 
 describe('QuotePanel', () => {
   const panel = (...events: AgentEvent[]) =>
@@ -58,9 +61,26 @@ describe('BalancesPanel and ForkHashes', () => {
       { agent: '16581187000000000000000', seller: '2500000000000000000' },
     );
     const markup = renderToStaticMarkup(<BalancesPanel copy={copy.demo1.balances} balances={balances} />);
-    expect(markup).toContain('<code>2.500000000000000000 ARGt</code>');
-    expect(markup).toContain('-2.500000000000000000 ARGt');
-    expect(markup).toContain('+2.500000000000000000 ARGt');
+    expect(markup).toContain('<code title="2.500000000000000000 ARGt">2.50 ARGt</code>');
+    expect(markup).toContain('>-2.50 ARGt<');
+    expect(markup).toContain('>+2.50 ARGt<');
+    expect(markup).toContain('title="16583.687000000000000000 ARGt">16,583.69 ARGt<');
+  });
+
+  it('shows the rate as ARGt per USD and keeps full precision in titles', () => {
+    const rate = money(602_998_486_683_567n, 18, 'USD');
+    const amount = money(16_583_789_546_469_718_423n, 18, 'ARGt');
+    const event: AgentEvent = {
+      version: 1,
+      at,
+      type: 'payment.required',
+      resource: 'r',
+      quote: { ...quoteOf(), rate, amount },
+    };
+    const markup = renderToStaticMarkup(<QuotePanel copy={copy.demo1.quote} quote={view(event).quote} />);
+    expect(markup).toContain('>1 USD = 1658.4 ARGt<');
+    expect(markup).toContain('title="16.583789546469718423 ARGt">16.58 ARGt<');
+    expect(markup).toContain('title="0.000602998486683567 USD"');
   });
 
   it('waits for the after balance and has an empty state', () => {
@@ -78,5 +98,21 @@ describe('BalancesPanel and ForkHashes', () => {
     expect(markup).toContain(`0x${'ab'.repeat(32)}`);
     expect(markup.match(new RegExp(`>${copy.demo1.fork.label}<`, 'g'))).toHaveLength(2);
     expect(markup).not.toContain('<a');
+  });
+});
+
+describe('number layout', () => {
+  const css = (file: string) => readFileSync(new URL(file, import.meta.url), 'utf8');
+
+  it('keeps row headers whole, aligns numbers right and uses tabular figures', () => {
+    const balances = css('./BalancesPanel.module.css');
+    expect(balances).toMatch(/th\[scope="row"\]\s*\{[^}]*white-space: nowrap/);
+    expect(balances).toMatch(/td,[^{]*\{[^}]*text-align: right/);
+    expect(balances).toContain('tabular-nums');
+    expect(css('./QuotePanel.module.css')).toContain('tabular-nums');
+  });
+
+  it('stacks the two columns before the side panel can overflow', () => {
+    expect(css('../templates/Demo1Screen.module.css')).toMatch(/max-width: 1023px/);
   });
 });

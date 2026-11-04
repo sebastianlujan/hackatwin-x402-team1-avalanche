@@ -30,7 +30,7 @@
   gap: var(--hk-space-6);
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .grid {
     grid-template-columns: minmax(0, 1fr);
   }

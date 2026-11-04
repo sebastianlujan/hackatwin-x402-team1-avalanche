@@ -59,6 +59,19 @@ describe('Timeline and PaymentStrip', () => {
     expect(markup).toContain(`>${copy.demo1.timeline.error}<`);
   });
 
+  it('shows policy decisions as copy, never the raw enum, with full precision in a title', () => {
+    const allowed: AgentEvent = {
+      ...refused,
+      allowed: true,
+      reason: 'within_budget',
+      amount: money(1_000_000n, 6, 'USD'),
+    };
+    const markup = renderToStaticMarkup(<Timeline copy={copy.demo1.timeline} entries={view(allowed).timeline} />);
+    expect(markup).toContain('Within budget');
+    expect(markup).not.toContain('within_budget');
+    expect(markup).toContain('title="1.000000 USD">$1.00<');
+  });
+
   it('explains the empty timeline', () => {
     expect(renderToStaticMarkup(<Timeline copy={copy.demo1.timeline} entries={[]} />)).toContain(
       copy.demo1.timeline.empty,
