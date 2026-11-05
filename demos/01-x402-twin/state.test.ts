@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { loadKeystoreAccount } from '@hackatwin/chains/keystore';
 import { describe, expect, it } from 'vitest';
-import { ensureRoleKeystore, ensureStateDir, ROLES, writeDemoEnv, writeSecret } from './state.ts';
+import { ensureRoleKeystore, ensureStateDir, fileState, ROLES, writeDemoEnv, writeSecret } from './state.ts';
 
 const mode = (path: string): number => statSync(path).mode & 0o777;
 const fresh = (): string => {
@@ -55,7 +55,19 @@ describe('writeDemoEnv', () => {
     expect(env).toContain(`KEYSTORE_DIR=${dir}`);
     expect(env).toContain('FACILITATOR_KEYSTORE=facilitator');
     expect(env).toContain(`SELLER_KEYSTORE_PASSWORD_FILE=${join(dir, 'seller.password')}`);
+    expect(env).toContain('ARBITRUM_RPC_URL=https://arb1.arbitrum.io/rpc');
+    expect(env).toContain('CCHAIN_RPC_URL=https://api.avax.network/ext/bc/C/rpc');
     expect(env).not.toMatch(/[0-9a-fA-F]{64}/);
     expect(JSON.stringify(keystores)).not.toMatch(/[0-9a-fA-F]{64}/);
+  });
+});
+
+describe('fileState', () => {
+  it('reads nothing before a write and round trips JSON at 0600', () => {
+    const state = fileState(fresh());
+    expect(state.read('funding.json')).toBeUndefined();
+    state.write('funding.json', { forkBlock: '1', target: '2' });
+    expect(state.read('funding.json')).toEqual({ forkBlock: '1', target: '2' });
+    expect(mode(join(state.dir, 'funding.json'))).toBe(0o600);
   });
 });

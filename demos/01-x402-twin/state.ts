@@ -1,7 +1,9 @@
 import { randomBytes } from 'node:crypto';
 import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { chain, type LiveChain } from '@hackatwin/chains';
 import { encryptKeystore } from '@hackatwin/chains/keystore';
+import { rpcVariable } from '@hackatwin/config';
 import type { Address } from '@hackatwin/core';
 import { getAddress } from 'viem';
 import { generatePrivateKey } from 'viem/accounts';
@@ -49,6 +51,9 @@ export function ensureRoleKeystore(dir: string, role: Role): RoleKeystore {
 // Non-secret variables for the scripts; the shell and `.env` override them.
 export function writeDemoEnv(dir: string, rpcUrl: string, keystores: readonly RoleKeystore[]): string {
   const lines = [`KEYSTORE_DIR=${dir}`, `CCHAIN_FORK_RPC_URL=${rpcUrl}`];
+  // The profile also needs the public read RPCs; the registry defaults are public.
+  for (const key of ['cchain', 'arbitrum', 'base'])
+    lines.push(`${rpcVariable(key)}=${(chain(key) as LiveChain).rpc.public}`);
   for (const { role, name, passwordFile } of keystores) {
     lines.push(
       `${role.toUpperCase()}_KEYSTORE=${name}`,
@@ -59,3 +64,18 @@ export function writeDemoEnv(dir: string, rpcUrl: string, keystores: readonly Ro
   writeFileSync(file, `${lines.join('\n')}\n`, { mode: 0o600 });
   return file;
 }
+
+export interface DemoState {
+  readonly dir: string;
+  read<T>(name: string): T | undefined;
+  write(name: string, value: unknown): void;
+}
+
+export const fileState = (dir: string): DemoState => ({
+  dir,
+  read<T>(name: string): T | undefined {
+    const file = join(dir, name);
+    return existsSync(file) ? (JSON.parse(readFileSync(file, 'utf8')) as T) : undefined;
+  },
+  write: (name, value) => writeFileSync(join(dir, name), `${JSON.stringify(value, null, 2)}\n`, { mode: 0o600 }),
+});
