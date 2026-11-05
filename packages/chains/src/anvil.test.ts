@@ -1,7 +1,8 @@
 import type { ChildProcess, spawn } from 'node:child_process';
 import { EventEmitter } from 'node:events';
 import { describe, expect, it } from 'vitest';
-import { anvilArgs, startAnvil } from './anvil.ts';
+import { anvilArgs, plainAnvilArgs, startAnvil, startLocalAnvil } from './anvil.ts';
+import { type LocalChain, localChain } from './local.ts';
 
 const upstream = 'https://api.avax.network/ext/bc/C/rpc';
 
@@ -66,5 +67,69 @@ describe('startAnvil', () => {
     expect(file).toBe('anvil');
     expect(args).toEqual(anvilArgs({ upstream, forkBlock: 1n, port: 8599 }));
     expect(options).toMatchObject({ shell: false, detached: true });
+  });
+});
+
+describe('plainAnvilArgs', () => {
+  const local = localChain('local-hub', { chainId: 31337, rpcUrl: 'http://127.0.0.1:8546' });
+
+  it('passes the chain ID, hardfork and loopback host and never a fork URL', () => {
+    expect(plainAnvilArgs(local)).toEqual([
+      ...['--chain-id', '31337', '--hardfork', 'cancun', '--host', '127.0.0.1', '--port', '8546'],
+    ]);
+    expect(plainAnvilArgs(local)).not.toContain('--fork-url');
+  });
+
+  it('follows the port of the chain URL and refuses a URL with no explicit port', () => {
+    const other = localChain('local-l1', { chainId: 31338, rpcUrl: 'http://localhost:9000' });
+    expect(plainAnvilArgs(other)).toEqual(expect.arrayContaining(['31338', '9000']));
+    const noPort = localChain('local-l1', { chainId: 31338, rpcUrl: 'http://localhost' });
+    expect(() => plainAnvilArgs(noPort)).toThrow(/explicit port/);
+  });
+});
+
+describe('startLocalAnvil', () => {
+  const fake = (calls: unknown[][]): typeof spawn =>
+    ((...call: unknown[]) => {
+      calls.push(call);
+      const child = new EventEmitter() as ChildProcess;
+      Object.assign(child, { pid: 4243, unref: () => undefined, kill: () => undefined });
+      return child;
+    }) as never;
+
+  it('spawns plain anvil without a shell and kills it when it is not ready in time', async () => {
+    const calls: unknown[][] = [];
+    const chain = localChain('local-hub', { chainId: 31337, rpcUrl: 'http://127.0.0.1:8598' });
+    await expect(startLocalAnvil({ chain, readyTimeoutMs: 300, spawn: fake(calls) })).rejects.toThrow(/not ready/);
+    const [file, args, options] = calls[0] as [string, string[], { shell: boolean; detached: boolean }];
+    expect(file).toBe('anvil');
+    expect(args).toEqual(plainAnvilArgs(chain));
+    expect(options).toMatchObject({ shell: false, detached: true });
+  });
+
+  it('refuses a forbidden chain ID before it spawns', async () => {
+    const calls: unknown[][] = [];
+    const chain = {
+      key: 'local-hub',
+      access: 'fork-only',
+      mode: 'plain',
+      chainId: 43113,
+      rpcUrl: 'http://127.0.0.1:8599',
+    };
+    await expect(startLocalAnvil({ chain: chain as LocalChain, spawn: fake(calls) })).rejects.toThrow(/chain ID 43113/);
+    expect(calls).toEqual([]);
+  });
+
+  it('refuses a non-loopback URL before it spawns', async () => {
+    const calls: unknown[][] = [];
+    const chain = {
+      key: 'local-l1',
+      access: 'fork-only',
+      mode: 'plain',
+      chainId: 31338,
+      rpcUrl: 'https://rpc.test:8545',
+    };
+    await expect(startLocalAnvil({ chain: chain as LocalChain, spawn: fake(calls) })).rejects.toThrow(/not loopback/);
+    expect(calls).toEqual([]);
   });
 });

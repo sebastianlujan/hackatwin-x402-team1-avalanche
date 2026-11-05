@@ -1,6 +1,7 @@
 import { type ChildProcess, spawn } from 'node:child_process';
 import { closeSync, openSync } from 'node:fs';
 import { ChainError } from './chain-error.ts';
+import { assertLocalChain, type LocalChain } from './local.ts';
 
 const HOST = '127.0.0.1';
 const POLL_MS = 250;
@@ -31,11 +32,13 @@ const isHttp = (value: string): boolean => {
   }
 };
 
-export interface StartAnvilOptions extends AnvilOptions {
+interface SpawnOptions {
   readonly logFile?: string;
   readonly readyTimeoutMs?: number;
   readonly spawn?: typeof spawn;
 }
+
+export interface StartAnvilOptions extends AnvilOptions, SpawnOptions {}
 
 export interface StartedAnvil {
   readonly pid: number;
@@ -55,10 +58,7 @@ const isReady = async (url: string): Promise<boolean> => {
   }
 };
 
-// Spawns a detached anvil with no shell and waits until it answers; a timeout or early exit kills it.
-export async function startAnvil(options: StartAnvilOptions): Promise<StartedAnvil> {
-  const args = anvilArgs(options);
-  const url = `http://${HOST}:${options.port ?? 8545}`;
+const spawnAnvil = async (args: string[], url: string, options: SpawnOptions): Promise<StartedAnvil> => {
   const log = options.logFile === undefined ? 'ignore' : openSync(options.logFile, 'a', 0o600);
   let child: ChildProcess;
   try {
@@ -83,4 +83,31 @@ export async function startAnvil(options: StartAnvilOptions): Promise<StartedAnv
   }
   child.kill('SIGINT');
   throw new ChainError(exited ? 'anvil exited before it was ready' : 'anvil was not ready before the timeout');
+};
+
+// Spawns a detached anvil with no shell and waits until it answers; a timeout or early exit kills it.
+export async function startAnvil(options: StartAnvilOptions): Promise<StartedAnvil> {
+  const args = anvilArgs(options);
+  return spawnAnvil(args, `http://${HOST}:${options.port ?? 8545}`, options);
+}
+
+export interface StartLocalAnvilOptions extends SpawnOptions {
+  readonly chain: LocalChain;
+}
+
+// Plain anvil (no fork URL) for a local chain; the chain ID and loopback host are checked first.
+export function plainAnvilArgs(chain: LocalChain): string[] {
+  assertLocalChain(chain);
+  const port = Number(new URL(chain.rpcUrl).port);
+  if (port === 0) throw new ChainError(`local chain "${chain.key}" RPC URL needs an explicit port`);
+  if (port < 1024 || port > 65535) throw new ChainError(`anvil port ${port} is out of range`);
+  return [
+    ...['--chain-id', String(chain.chainId), '--hardfork', 'cancun'],
+    ...['--host', HOST, '--port', String(port)],
+  ];
+}
+
+export async function startLocalAnvil({ chain, ...options }: StartLocalAnvilOptions): Promise<StartedAnvil> {
+  const args = plainAnvilArgs(chain);
+  return spawnAnvil(args, `http://${HOST}:${new URL(chain.rpcUrl).port}`, options);
 }
