@@ -460,6 +460,12 @@ importers:
 
   demos/02-l1-crosschain:
     dependencies:
+      '@hackatwin/chains':
+        specifier: workspace:*
+        version: link:../../packages/chains
+      '@hackatwin/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@hackatwin/core':
         specifier: workspace:*
         version: link:../../packages/core

@@ -19,6 +19,7 @@
     "test:local": "vitest run --project local",
     "local:icm": "node e2e/protocol/src/local/icm-fetch.ts",
     "demo2:local:up": "node e2e/protocol/src/local/up.ts",
+    "demo2:setup": "node --env-file=.cache/local-crosschain/dev/local.env demos/02-l1-crosschain/scripts/setup.ts",
     "web": "pnpm --filter @hackatwin/web dev",
     "web:demo1": "pnpm run \"/^(demo1:facilitator|demo1:seller|web)$/\"",
     "demo1": "node --env-file-if-exists=.demo1/demo1.env --env-file-if-exists=.env demos/01-x402-twin/buyer-agent/main.ts",
