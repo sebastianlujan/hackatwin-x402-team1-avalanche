@@ -247,9 +247,10 @@ versions coexist through pnpm aliases and versioned remappings.
 
 - `forge-std` comes through pnpm as well (version to be verified against the boilerplate).
 - Verify every remapping against the installed packages before the first build.
-- ICM/ICTT has no npm package. Vendor only the interfaces we call (`IERC20SendAndCallReceiver`, the ICTT
-  `sendAndCall` entry point, and `SendAndCallInput`) from `ava-labs/icm-services` into
-  `src/interfaces/external/icm/`, pinned to a commit. Check the license first (to be verified).
+- ICM/ICTT has no npm package. We write our own MIT interfaces for only what we call (`IERC20SendAndCallReceiver`,
+  the ICTT `sendAndCall` entry point, and `SendAndCallInput`) in `src/interfaces/external/icm/`, from the documented
+  ABI, and record the `ava-labs/icm-services` commit used as the reference in `PROVENANCE.md`. A test pins the
+  selectors and the struct layout ([ADR 0009](../adr/0009-own-ictt-interfaces.md)).
 
 ## 5. Lessons from ccip-icm
 

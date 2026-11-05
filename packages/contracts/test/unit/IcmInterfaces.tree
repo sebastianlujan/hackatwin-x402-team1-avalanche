@@ -1,0 +1,13 @@
+UnitIcmInterfaces
+├── when checking the pinned selectors
+│   ├── given the receiveTokens function
+│   │   └── it matches the literal selector
+│   └── given the sendAndCall function
+│       └── it matches the literal selector
+├── when checking the struct layout
+│   ├── given the canonical tuple type string
+│   │   └── it reproduces the interface selector
+│   └── given two fields swapped
+│       └── it no longer reproduces the interface selector
+└── when encoding a call
+    └── it decodes every field with the pinned layout

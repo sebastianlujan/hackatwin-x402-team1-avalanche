@@ -51,8 +51,9 @@ Anything not listed under [Verified facts](#verified-facts) is **to be verified*
 - Refund function for funds rejected on the L1 (`SettlementReceiver` → `Rejected`). **Closed (2026-11-04):** on `Rejected` the
   receiver does not pull the tokens, and ICTT sends the unused allowance to `fallbackRecipient` (verified in
   [PLAN Step 0](PLAN.md#verified)); see [state pattern](standards/smart-contracts.md#2-state-pattern).
-- License of the vendored ICM interfaces (`ava-labs/icm-services`): to be verified before vendoring. Now: Ecosystem License 1.1, human sign-off O7 (see the
-  [drift log](#drift-log-2026-11-04)).
+- License of the ICM interfaces (`ava-labs/icm-services`): we write our own minimal MIT interfaces from the documented ABI and
+  vendor nothing ([ADR 0009](adr/0009-own-ictt-interfaces.md)). Human sign-off O7 stays open; if refused, vendor under
+  the Ecosystem License 1.1 (see the [drift log](#drift-log-2026-11-04)).
 - Backup C-Chain RPC: unverified. Now: serves recent state only (see the [drift log](#drift-log-2026-11-04)).
 
 ### Drift log (2026-11-04)
