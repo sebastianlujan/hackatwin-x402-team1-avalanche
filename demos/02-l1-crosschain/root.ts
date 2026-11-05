@@ -7,7 +7,7 @@ import { type Container, createContainer, Ports } from '@hackatwin/core';
 import type { Account } from 'viem';
 import { ClientLogReader, type LogSource } from './adapters/log-reader.ts';
 import { LocalCcipSender } from './adapters/sender.ts';
-import { HopTracker, type TrackedChain } from './adapters/tracker.ts';
+import { type HopProgress, HopTracker, type TrackedChain } from './adapters/tracker.ts';
 import { parseWorld, type World } from './deployment.ts';
 import { registerCrossChainModule } from './module.ts';
 import { Tokens } from './tokens.ts';
@@ -30,6 +30,8 @@ export interface RootOptions {
   readonly world?: World;
   readonly env?: Env;
   readonly connect?: (chain: LocalChain) => Promise<GuardedClients>;
+  // Where the tracker keeps the hops it emitted; a restarted process passes the stored one to resume.
+  readonly progress?: HopProgress;
 }
 
 const connectLocal = (chain: LocalChain): Promise<GuardedClients> =>
@@ -45,6 +47,7 @@ export async function composeRoot({
   world = readWorld(),
   env,
   connect = connectLocal,
+  progress,
 }: RootOptions = {}): Promise<Root> {
   const profile = loadProfile('local-crosschain', env, llm === undefined ? {} : { llm });
   if (world.chains.hub.chainId !== profile.hubChainId || world.chains.l1.chainId !== profile.l1ChainId)
@@ -72,6 +75,7 @@ export async function composeRoot({
       hub: { chain: hubChain, broker: contracts.broker, hub: contracts.hub },
       l1: { chain: l1Chain, receiver: contracts.receiver, remote: contracts.remote },
       explorerUrl: txUrl,
+      ...(progress === undefined ? {} : { progress }),
     });
     const agent = { address: roles.agent, type: 'json-rpc' } as Account;
     return new LocalCcipSender({
