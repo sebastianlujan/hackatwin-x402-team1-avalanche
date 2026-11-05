@@ -1,4 +1,5 @@
-import { type Address, createContainer, Ports } from '@hackatwin/core';
+import { BudgetPolicy } from '@hackatwin/agent-kit';
+import { type Address, createContainer, money, Ports } from '@hackatwin/core';
 import { FakeChainClient } from '@hackatwin/core/testing';
 import { GuardedOracle } from '@hackatwin/pricing';
 import { describe, expect, it } from 'vitest';
@@ -64,5 +65,51 @@ describe('registerX402Module', () => {
     const child = container.child();
     child.register(Ports.PriceOracle, () => fake);
     expect(child.resolve(Ports.PriceOracle)).toBe(fake);
+  });
+
+  it('builds the buyer, the policy and the balances reader without touching the chain', async () => {
+    const container = createContainer();
+    const sent: unknown[] = [];
+    const agent = { address: account(1).address, type: 'local', signTypedData: async () => '0x' };
+    container.register(
+      Tokens.Config,
+      () => ({ budget: { perPayment: money(1_000_000n, 6, 'USD'), total: money(5_000_000n, 6, 'USD') } }) as never,
+    );
+    container.register(Tokens.Accounts, () => ({ agent, seller: account(2), facilitator: account(3) }) as never);
+    container.register(
+      Tokens.Fork,
+      () =>
+        ({
+          public: { readContract: async () => 0n },
+          wallet: () => ({ account: agent }),
+          chainClient: () => ({ read: (c: unknown) => sent.push(c) }),
+        }) as never,
+    );
+    container.register(Tokens.ReadChains, () => ({ arbitrum: new FakeChainClient(), base: new FakeChainClient() }));
+    container.register(Tokens.Events, () => () => undefined);
+    container.register(Tokens.State, () => ({
+      dir: '/mem',
+      read: () => ({ agent: '1', seller: '2' }) as never,
+      write: () => undefined,
+    }));
+    registerX402Module(container);
+    expect(container.resolve(Tokens.Buyer).tools.map((tool) => tool.name)).toEqual(['quote', 'buy', 'rate_seller']);
+    expect(container.resolve(Ports.AgentPolicy)).toBeInstanceOf(BudgetPolicy);
+    expect(typeof container.resolve(Tokens.Balances).read).toBe('function');
+    expect(sent).toEqual([]);
+  });
+
+  it('fails the buyer with the fix when the seller is not registered', () => {
+    const container = createContainer();
+    container.register(
+      Tokens.Config,
+      () => ({ budget: { perPayment: money(1n, 6, 'USD'), total: money(2n, 6, 'USD') } }) as never,
+    );
+    container.register(Tokens.Accounts, () => ({ agent: account(1) }) as never);
+    container.register(Tokens.Fork, () => ({}) as never);
+    container.register(Tokens.Events, () => () => undefined);
+    container.register(Tokens.State, () => ({ dir: '/mem', read: () => undefined, write: () => undefined }));
+    registerX402Module(container);
+    expect(() => container.resolve(Tokens.Buyer)).toThrow('pnpm demo1:register');
   });
 });
