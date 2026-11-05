@@ -1,0 +1,7 @@
+[lintspec]
+paths = ["src"]
+inheritdoc = true
+notice_or_dev = false
+
+[output]
+compact = true

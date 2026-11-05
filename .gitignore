@@ -156,3 +156,8 @@ apps/docs/build/
 
 # Demo 1 fork state and throwaway keystores
 .demo1/
+
+# Foundry
+packages/contracts/out/
+packages/contracts/cache/
+packages/contracts/broadcast/
