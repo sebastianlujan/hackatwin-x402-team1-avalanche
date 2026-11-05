@@ -319,6 +319,13 @@ Changes from the proposed structure:
 
 ### M8: Demo 2
 
+**M8 order change (2026-11-04).** Option B waits on T6.7, so M8 first builds on option B0: two plain anvils with
+`CCIPLocalSimulator` on the hub, Teleporter and the ICTT pair built from `ava-labs/icm-services` at the PROVENANCE
+commit (fetched at test time into the gitignored `.cache/`, never committed, O7), the `WarpMessengerStub` in
+`packages/contracts/test/utils/`, and the relay in `e2e/protocol/src/local/`. The local T8.1 adapter and T8.2 to T8.5
+run on B0. The real CCIP sender, CCIP API status, hop explorer links, T8.6, and option B still wait on T7.12. B0 output
+is labeled simulated and is never a stage demo or replay (C1, Q2).
+
 - **Acceptance criteria:** the payment agent sends a data-only CCIP message; the broker accepts only the allowlisted
   pair; the hub records `None → Pending → Dispatched`; the receiver records `Received → Settled`; one event per hop;
   the tracker follows the payment end to end.
@@ -934,6 +941,7 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 
 **T8.1 `feat(demo-2): add ccip sender adapter`**
 
+- Local base (B0): the adapter runs against `CCIPLocalSimulator`; CCIP API status stays open until T7.12.
 - Branch: `feature/ccip-sender`
 - Depends on: T7.12 (and T7.9 if O5 picks a contract)
 - What: `CrossChainMessenger.send` from the allowlisted sender, returning the CCIP message ID.
@@ -965,6 +973,7 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 
 **T8.4 `feat(demo-2): add payment agent and module`**
 
+- Local base (B0): output is labeled simulated and is never recorded or replayed.
 - Branch: `feature/demo-2-payment-agent`
 - Depends on: T5.8, T8.1, T8.2, T8.3
 - What: The payment agent root on the shared runner, and `registerCrossChainModule(container, config)`.
@@ -975,6 +984,8 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 
 **T8.5 `test(e2e): add cross-chain protocol e2e with a local relay`**
 
+- Local base (B0): two plain anvils instead of forks; the relay simulator moves ICM messages. Closed on the local
+  pair only.
 - Branch: `feature/e2e-crosschain-relay`
 - Depends on: T8.4
 - What: The [§ 5.3](#53-ictt-paths-in-local-e2e) setup: Fuji and L1 forks, the CCIP leg through the impersonated
@@ -1314,6 +1325,9 @@ export interface Container {
 | Frontend | Route handlers build a container per request from the server root; client components get ports through React context | Secrets stay on the server |
 
 ### 5.3 ICTT paths in local E2E
+
+> M8 first runs on option B0: two plain anvils with the relay simulator and no forks (see the M8 order change note).
+
 
 | Option | What runs | Fidelity | Cost | Verdict |
 |---|---|---|---|---|
