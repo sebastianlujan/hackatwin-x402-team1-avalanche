@@ -1,13 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ConfigError } from '../src/config-error.ts';
 import { keystoreNamedInEnv, loadProfile, loadRpcUrls, rpcVariable } from '../src/load-profile.ts';
-import {
-  CCHAIN_FORK_BLOCK,
-  forkStaticsSchema,
-  localStaticsSchema,
-  PROFILE_NAMES,
-  ProfileToken,
-} from '../src/profiles.ts';
+import { CCHAIN_FORK_BLOCK, forkStaticsSchema, localStaticsSchema, PROFILE_NAMES } from '../src/profiles.ts';
 
 const rpc = 'https://rpc.example.org';
 const base = {
@@ -52,10 +46,6 @@ describe('valid profiles', () => {
   it('keeps only the variables of the profile and the string overload returns a union', () => {
     const profile = loadProfile('fuji-cchain' as string, base);
     expect(Object.keys(profile.env)).not.toContain('CCHAIN_FORK_RPC_URL');
-  });
-
-  it('exposes a typed token', () => {
-    expect(String(ProfileToken.description)).toBe('Profile');
   });
 });
 

@@ -47,5 +47,3 @@ export const envSchemas = {
 } as const;
 
 export type EnvVariable = keyof typeof envSchemas;
-
-export const ENV_VARIABLES = Object.keys(envSchemas) as EnvVariable[];
