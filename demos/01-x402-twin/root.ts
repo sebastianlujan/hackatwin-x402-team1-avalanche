@@ -6,8 +6,6 @@ import { registerX402Module } from './module.ts';
 import { fileState, ROLES, type Role, STATE_DIR } from './state.ts';
 import { Tokens } from './tokens.ts';
 
-export const PORTS = { facilitator: 4020, seller: 4021 } as const;
-
 export interface Root {
   readonly container: Container;
   readonly profile: Profile<'cchain-fork'>;

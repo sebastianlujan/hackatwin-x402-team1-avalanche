@@ -1,5 +1,6 @@
 import { serveLoopback } from '../adapters/serve.ts';
-import { composeRoot, PORTS } from '../root.ts';
+import { PORTS } from '../ports.ts';
+import { composeRoot } from '../root.ts';
 import { Tokens } from '../tokens.ts';
 
 async function main(): Promise<void> {
