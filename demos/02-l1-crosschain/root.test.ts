@@ -1,3 +1,4 @@
+import type { LocalChain } from '@hackatwin/chains';
 import { ConfigError } from '@hackatwin/config';
 import { Ports } from '@hackatwin/core';
 import { describe, expect, it, vi } from 'vitest';
@@ -19,7 +20,7 @@ const fakeClients = (rows: unknown[] = [], refusal?: string) => {
   };
 };
 const connect = (hub = fakeClients(), l1 = fakeClients()) =>
-  vi.fn(async (chain: { key: string }) => (chain.key === 'local-hub' ? hub : l1) as never);
+  vi.fn(async (chain: LocalChain) => (chain.key === 'local-hub' ? hub : l1) as never);
 
 describe('composeRoot', () => {
   it('connects both local chains from the profile and registers World, Hub and the module', async () => {
