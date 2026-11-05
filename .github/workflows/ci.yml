@@ -84,6 +84,7 @@ jobs:
     outputs:
       docs: ${{ steps.filter.outputs.docs }}
       demo-3: ${{ steps.filter.outputs.demo-3 }}
+      ts: ${{ steps.filter.outputs.ts }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -109,6 +110,16 @@ jobs:
               - demos/02-*/**
               - demos/03-*/**
               - packages/**
+            ts:
+              - *root
+              - test/**
+              - vitest.config.ts
+              - tsconfig.json
+              - .env.example
+              - packages/**
+              - demos/**
+              - apps/web/**
+              - e2e/**
 
   biome:
     name: biome
@@ -125,6 +136,42 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
+
+  typecheck:
+    name: typecheck
+    needs: changes
+    if: needs.changes.outputs.ts == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+
+  test:
+    name: test
+    needs: changes
+    if: needs.changes.outputs.ts == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
 
   docs-build:
     name: docs build
@@ -154,7 +201,7 @@ jobs:
   ci-gate:
     name: ci-gate
     if: always()
-    needs: [pr-title, commits, branch-name, lint, changes, biome, docs-build]
+    needs: [pr-title, commits, branch-name, lint, changes, biome, typecheck, test, docs-build]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions: {}

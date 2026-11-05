@@ -14,6 +14,7 @@ decisions stay in [Decisions](../decisions.md).
 | [0002](0002-aggregate-ci-gate.md) | One aggregate CI job is the only required check | Accepted |
 | [0003](0003-docusaurus-reads-docs-in-place.md) | Docusaurus builds the site from `docs/` in place | Accepted |
 | [0004](0004-docs-deploy-from-main.md) | Docs deploy to GitHub Pages from `main` only | Accepted |
+| [0005](0005-config-package-outside-core.md) | Profile schemas and the env loader live in `packages/config`, not core | Accepted |
 
 ## Add an ADR
 

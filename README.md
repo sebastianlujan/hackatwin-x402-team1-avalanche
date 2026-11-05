@@ -48,8 +48,9 @@ composition roots  →  demo modules  →  adapters  →  packages/core (ports)
 
 Dependencies point one way, toward `packages/core`:
 
-1. **`packages/core`** holds domain types, port interfaces, config schemas, and a small typed DI container. It
-   depends on nothing.
+1. **`packages/core`** holds domain types, port interfaces, and a small typed DI container. It depends on
+   nothing. **`packages/config`** holds the profile schemas and the only environment reader
+   ([ADR 0005](docs/adr/0005-config-package-outside-core.md)).
 2. **Adapters** implement core ports (x402, viem, ERC-8004, CCIP, ICTT, Curve, Chainlink, Anthropic).
 3. **Demo modules** register the adapters each demo needs, for example `registerX402Module(container, config)`.
 4. **Composition roots**, one per runnable unit (seller API, agent, facilitator, scripts, E2E suites), load a
@@ -162,7 +163,8 @@ hackatwin-x402-team1-avalanche/
 │   ├── 02-l1-crosschain/       # L1 genesis + platform-cli scripts, payment agent; module.ts for Demo 3
 │   └── 03-agentic-crosschain-commerce/  # config profiles + composition root only
 ├── packages/
-│   ├── core/                   # domain types, ports, config schemas, DI container
+│   ├── core/                   # domain types, ports, DI container; no dependencies
+│   ├── config/                 # zod profile schemas and the env loader
 │   ├── chains/                 # chain registry and addresses (fork, Fuji, Sepolia, L1, Arbitrum and Base read-only)
 │   ├── contracts/              # Foundry: PaymentHub, IcttMessenger, PaymentBroker, SettlementReceiver; ABI types
 │   ├── pricing/                # PriceOracle adapters (Curve, Chainlink, GuardedOracle); powers `pnpm quote`
