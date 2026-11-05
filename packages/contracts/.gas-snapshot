@@ -1,3 +1,5 @@
+GasPaymentBroker:test_GivenARejectedMessage() (gas: 67128)
+GasPaymentBroker:test_GivenAnAcceptedMessage() (gas: 313450)
 GasPaymentHub:test_GivenACreditedMerchant() (gas: 75835)
 GasPaymentHub:test_GivenAFirstPaymentOnACrossChainLane() (gas: 92761)
 GasPaymentHub:test_GivenAFirstPaymentOnALocalLane() (gas: 92795)

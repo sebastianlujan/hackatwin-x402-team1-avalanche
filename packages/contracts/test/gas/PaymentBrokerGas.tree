@@ -1,0 +1,7 @@
+GasPaymentBroker
+└── when the broker hot paths run on fresh state
+    ├── given an accepted message
+    │   ├── it accepts and the gas lands in the snapshot
+    │   └── it fits the documented gas limit
+    └── given a rejected message
+        └── it rejects and the gas lands in the snapshot

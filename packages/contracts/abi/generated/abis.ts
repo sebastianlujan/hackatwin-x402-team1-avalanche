@@ -363,6 +363,19 @@ export const abis = {
     },
     {
       "type": "function",
+      "name": "MIN_RELAY_GAS",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
       "name": "acceptOwnership",
       "inputs": [],
       "outputs": [],
@@ -630,6 +643,31 @@ export const abis = {
     },
     {
       "type": "event",
+      "name": "DispatchFailed",
+      "inputs": [
+        {
+          "name": "_messageId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_paymentId",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_reason",
+          "type": "bytes4",
+          "indexed": false,
+          "internalType": "bytes4"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
       "name": "MessageAccepted",
       "inputs": [
         {
@@ -740,6 +778,22 @@ export const abis = {
           "name": "account",
           "type": "address",
           "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "PaymentBroker_InsufficientGas",
+      "inputs": [
+        {
+          "name": "_available",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "_required",
+          "type": "uint256",
+          "internalType": "uint256"
         }
       ]
     },
@@ -2368,6 +2422,19 @@ export const abis = {
     },
     {
       "type": "function",
+      "name": "MIN_RELAY_GAS",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "_gas",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
       "name": "payerOf",
       "inputs": [
         {
@@ -2459,6 +2526,31 @@ export const abis = {
     },
     {
       "type": "event",
+      "name": "DispatchFailed",
+      "inputs": [
+        {
+          "name": "_messageId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_paymentId",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_reason",
+          "type": "bytes4",
+          "indexed": false,
+          "internalType": "bytes4"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
       "name": "MessageAccepted",
       "inputs": [
         {
@@ -2500,6 +2592,22 @@ export const abis = {
         }
       ],
       "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "PaymentBroker_InsufficientGas",
+      "inputs": [
+        {
+          "name": "_available",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "_required",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
     },
     {
       "type": "error",

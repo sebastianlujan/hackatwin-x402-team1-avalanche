@@ -25,6 +25,12 @@ interface IPaymentBroker {
   /// @param _paymentId The hub payment id
   event MessageAccepted(bytes32 indexed _messageId, Id indexed _laneId, bytes32 _paymentId);
 
+  /// @notice The payment exists but its dispatch failed; anyone can dispatch it before its deadline
+  /// @param _messageId The CCIP message id
+  /// @param _paymentId The pending hub payment id
+  /// @param _reason The first four bytes of the revert data, zero when shorter
+  event DispatchFailed(bytes32 indexed _messageId, bytes32 _paymentId, bytes4 _reason);
+
   /// @notice A message was refused and recorded without reverting
   /// @param _messageId The CCIP message id
   /// @param _reason The first four bytes of the revert data, zero when shorter
@@ -38,6 +44,11 @@ interface IPaymentBroker {
   /// @notice The message id was already processed
   /// @param _messageId The CCIP message id
   error PaymentBroker_MessageAlreadyProcessed(bytes32 _messageId);
+
+  /// @notice Too little gas is left to run the hub calls, so the message can be re-executed
+  /// @param _available The gas left
+  /// @param _required The minimum gas needed
+  error PaymentBroker_InsufficientGas(uint256 _available, uint256 _required);
 
   /// @notice The payload payer differs from the payer bound to the pair, used only as a rejection reason
   /// @param _expected The payer bound to the pair
@@ -58,6 +69,10 @@ interface IPaymentBroker {
   /// @param _sender The sender on the source chain
   /// @param _payer The payer whose budget the pair may spend, zero to remove the pair
   function setAllowedSender(uint64 _sourceChainSelector, address _sender, address _payer) external;
+
+  /// @notice The minimum gas left before the hub calls
+  /// @return _gas The gas floor
+  function MIN_RELAY_GAS() external view returns (uint256 _gas);
 
   /// @notice The hub the broker pays into
   /// @return _hub The hub
