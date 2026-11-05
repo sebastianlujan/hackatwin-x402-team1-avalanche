@@ -1,6 +1,5 @@
-import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { type NavKeyEvent, nextPath, position, TALK_PATH } from './talk-path.ts';
+import { type NavKeyEvent, nextPath, position } from './talk-path.ts';
 
 const press = (key: string, patch: Partial<NavKeyEvent> = {}): NavKeyEvent => ({
   key,
@@ -11,15 +10,6 @@ const press = (key: string, patch: Partial<NavKeyEvent> = {}): NavKeyEvent => ({
   defaultPrevented: false,
   target: { tagName: 'BODY' },
   ...patch,
-});
-
-describe('TALK_PATH', () => {
-  it('equals the Screen column of PLAN section 7, in talk order', () => {
-    const plan = readFileSync(new URL('../../../../docs/PLAN.md', import.meta.url), 'utf8');
-    const section = plan.slice(plan.indexOf('## 7. Talk run-of-show'), plan.indexOf('## 8. Open questions'));
-    const rows = [...section.matchAll(/^\| (\d\d:\d\d[^|]*) \| [^|]+ \| `([^`]+)` \|/gm)].map((m) => m[2]);
-    expect([...new Set(rows)]).toEqual([...TALK_PATH]);
-  });
 });
 
 describe('nextPath', () => {

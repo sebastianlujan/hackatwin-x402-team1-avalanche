@@ -1,8 +1,3 @@
----
-title: Decisions
-sidebar_position: 2
----
-
 # Decisions
 
 The single source for design decisions and verified facts. Other docs link here instead of repeating details.
@@ -40,8 +35,8 @@ Anything not listed under [Verified facts](#verified-facts) is **to be verified*
 | C1 | **No mainnet transactions, no mocks.** Reading mainnet price data off-chain is fine. Demo 1 transacts only on the local fork. Unit tests may still fake ports through DI and use Chainlink Local's CCIP simulator. | Real contracts on stage, zero mainnet risk. |
 | C2 | **CCIP** on the Sepolia → Fuji lane with `@chainlink/contracts-ccip@2.0.0`. Build extraArgs with `ExtraArgsCodec._getBasicEncodedExtraArgsV3(gasLimit, bytes4(0))`. Fees in native (`feeToken = address(0)`) or LINK. | The lane is active. CCIP 2.0 deprecates `allowOutOfOrderExecution`. |
 | C3 | **ERC-8004** official registries for agent identity and reputation. Register with `register(string agentURI)`. The Validation registry is not used. | Official deployments exist on Avalanche mainnet (present on the fork) and Fuji. The Validation registry is not finalized. |
-| C4 | **Contract stack**: Wonderland boilerplate conventions (`dev` branch), our gitflow (`feature/`), and repo-root hooks, commitlint, and CI. MockARGt is removed. | A strict, proven standard. Details in [Smart contract standards](standards/smart-contracts.md). |
-| C5 | **State machines**: one per entity, a single write path, and a pure transition table. | Every state change is checked and observable. Details in [Smart contract standards](standards/smart-contracts.md#2-state-pattern). |
+| C4 | **Contract stack**: Wonderland boilerplate conventions (`dev` branch), our gitflow (`feature/`), and repo-root hooks, commitlint, and CI. MockARGt is removed. | A strict, proven standard. |
+| C5 | **State machines**: one per entity, a single write path, and a pure transition table. | Every state change is checked and observable. |
 | C6 | **Agent tooling**: vendor `chainlink-ccip-skill` and `chainlink-data-feeds-skill` from `smartcontractkit/chainlink-agent-skills`. Reject `chainlink-for-agents`. Add the OpenZeppelin MCP. | `chainlink-for-agents` is a hosted gateway that pays USDC on Base mainnet and has no Fuji, L1, or ICM support. |
 
 ### Open points
@@ -49,17 +44,15 @@ Anything not listed under [Verified facts](#verified-facts) is **to be verified*
 - Fork block number `N` for Demo 1, and the TwinPay L1 chain ID: chosen during implementation.
 - Sepolia side of Demo 2: the agent sends the CCIP message from its EOA or through a minimal sender contract.
 - Refund function for funds rejected on the L1 (`SettlementReceiver` → `Rejected`). **Closed (2026-11-04):** on `Rejected` the
-  receiver does not pull the tokens, and ICTT sends the unused allowance to `fallbackRecipient` (verified in
-  [PLAN Step 0](PLAN.md#verified)); see [state pattern](standards/smart-contracts.md#2-state-pattern).
+  receiver does not pull the tokens, and ICTT sends the unused allowance to `fallbackRecipient` (verified).
 - License of the ICM interfaces (`ava-labs/icm-services`): we write our own minimal MIT interfaces from the documented ABI and
-  vendor nothing ([ADR 0009](adr/0009-own-ictt-interfaces.md)). Human sign-off O7 stays open; if refused, vendor under
-  the Ecosystem License 1.1 (see the [drift log](#drift-log-2026-11-04)).
+  vendor nothing. Human sign-off O7 stays open; if refused, vendor under the Ecosystem License 1.1 (see the
+  [drift log](#drift-log-2026-11-04)).
 - Backup C-Chain RPC: unverified. Now: serves recent state only (see the [drift log](#drift-log-2026-11-04)).
 
 ### Drift log (2026-11-04)
 
-Changes found by [PLAN Step 0](PLAN.md#drift-since-decisionsmd). No decision above changed; the plan pointer says how
-each item is handled.
+Changes found on 2026-11-04. No decision above changed; the Plan column says how each item is handled.
 
 | Item | Now | Plan |
 |---|---|---|
@@ -70,9 +63,7 @@ each item is handled.
 | Backup C-Chain RPC | Serves recent state only | Fallback for a recent `N` only |
 | x402-rs fallback | Permit2 payload format differs from `@x402/evm` | Interop check (T11.3) |
 
-The overview label fix (the L1 box reads "hub, permit2, acl") is tracked by T3.5, not edited here. Items under
-[Still unverified](PLAN.md#still-unverified) stay unverified. Repository and delivery decisions live in the
-[ADRs](adr/README.md).
+The overview label fix (the L1 box reads "hub, permit2, acl") is tracked by T3.5, not edited here.
 
 ## Verified facts
 
@@ -91,8 +82,6 @@ Verified as of 2026-11-04. Re-check on-chain values before a deploy or a talk re
 | ARGt on testnets | None. Twin's deployer has nonce 0 on Sepolia, Arbitrum Sepolia, Base Sepolia, Amoy, and Fuji. | Explorers for each network |
 | Lookalikes **not** issued by Twin | Sepolia `0x5bC627379b6b961A8c8480bC4C32b98c12a9373B`, Base Sepolia `0xaA4C6c348566e4A1EF947aCe1C37b5de4416D285` | Explorers; Twin's registry |
 | Address reuse | Twin's Arbitrum token addresses on Avalanche hold different symbols with zero supply. Never reuse an address across chains. | Explorers |
-
-More context: [Twin Finance contracts](references/twin-finance-contracts.md).
 
 ### x402
 
@@ -113,7 +102,7 @@ More context: [Twin Finance contracts](references/twin-finance-contracts.md).
 | Chainlink L2 sequencer uptime feed (Base) | `0xBCF85224fc0756B9Fa45aA7892530B47e10b6433`; `answer` 0 means up; `startedAt` is the time of the last status change | https://docs.chain.link/data-feeds/l2-sequencer-feeds (re-checked and read on-chain 2026-11-04) |
 | Chainlink Data Streams USD/ARS (optional future adapter) | Feed ID `0x000848d3adb3429cb99a6392b6679fc45852536a17f3353356825c4eb282c765`, verifiable on Avalanche, needs credentials | https://docs.chain.link/data-streams |
 | Other providers | Pyth: no ARS feed. DIA: ARS/USDT on Arbitrum only. | Provider catalogs |
-| Reference rates (2026-11-04) | ARGt tracks the market (dólar cripto/CCL) rate, and so does the Base ARS/USD feed: Chainlink 1657.91 ARS per USD (Base block 53495781) against Curve 1658.36 ARGt per USD, a delta of about 0.03%, inside the ±2% band | Live read-only reads of the Curve pool and the Chainlink feed above (`chainlink-feed-oracle.nightly.test.ts`), 2026-11-04 |
+| Reference rates (2026-11-04) | ARGt tracks the market (dólar cripto/CCL) rate, and so does the Base ARS/USD feed: Chainlink 1657.91 ARS per USD (Base block 53495781) against Curve 1658.36 ARGt per USD, a delta of about 0.03%, inside the ±2% band | Live read-only reads of the Curve pool and the Chainlink feed above, 2026-11-04 |
 
 ### Avalanche, ICM, and the L1
 

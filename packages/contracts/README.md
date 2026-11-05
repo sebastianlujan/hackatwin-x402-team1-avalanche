@@ -61,7 +61,7 @@ recorded as a final `Rejected`.
 ## Deploy dry-runs
 
 `script/DeployFuji.s.sol` (hub, messenger, broker) and `script/DeployL1.s.sol` (receiver) read chain facts from
-`../chains/registry` and choices from `script/params/<chainKey>.json` (ADR 0011). Directories are overridable with
+`../chains/registry` and choices from `script/params/<chainKey>.json`. Directories are overridable with
 `CHAIN_REGISTRY_DIR`, `DEPLOY_PARAMS_DIR` and `DEPLOY_DEPLOYMENTS_DIR`; dry-runs use `test/fixtures`:
 
 ```bash

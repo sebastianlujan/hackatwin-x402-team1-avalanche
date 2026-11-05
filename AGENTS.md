@@ -29,7 +29,5 @@ Read https://ethskills.com/SKILL.md and follow it before writing Solidity or shi
 ## Project
 
 - Decisions and verified addresses: [`docs/decisions.md`](docs/decisions.md). Read it before planning or coding.
-- Smart contract standards: [`docs/standards/smart-contracts.md`](docs/standards/smart-contracts.md).
-- Planning prompt: [`docs/plan-prompt.md`](docs/plan-prompt.md)
 - Follow [`CONTRIBUTING.md`](CONTRIBUTING.md) (issue → branch → commits → PR → merge; Conventional Commits; English;
   no AI attribution; code comments are one line or none).
