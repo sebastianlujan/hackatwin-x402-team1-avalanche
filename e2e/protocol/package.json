@@ -15,6 +15,7 @@
     "@hackatwin/config": "workspace:*",
     "@hackatwin/core": "workspace:*",
     "@hackatwin/demo-01-x402-twin": "workspace:*",
+    "@hackatwin/demo-02-l1-crosschain": "workspace:*",
     "viem": "catalog:"
   }
 }
