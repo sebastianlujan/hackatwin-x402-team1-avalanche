@@ -466,6 +466,9 @@ importers:
       viem:
         specifier: 'catalog:'
         version: 2.57.16(typescript@7.0.2)(zod@4.6.7)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
 
   demos/03-agentic-crosschain-commerce: {}
 
