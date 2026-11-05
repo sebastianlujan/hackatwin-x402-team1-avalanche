@@ -67,10 +67,19 @@ Notes: roles by `eth_accounts` index (1 Fuji deployer and owner, 2 L1 receiver d
 Tasks 10.1 and 10.2 are marked `[x]`. 10a: `forge.ts` `runForgeScript` (`--unlocked --sender` only after loopback check and `probeAnvil`, fixed argv, `shell: false`), `childEnv` in `load-profile.ts` (task 4.2 deferral closed; R6 allows only the loader), the script diff guard pinned to the queue start commit `3a5c8c4`, and it runs in the `local` project (full history; the shallow `test` job cannot see the base). CI passed on #245 and #246 including `local`. 10b: `deploy.ts` (steps 6 and 7), `up.ts`, `world.ts` returns `roles`, root `demo2:local:up`.
 Notes: `origin/develop` is a single initial commit, so the script diff guard compares with `3a5c8c4` (parent of the first demo-2 commit) and must be dropped at archive. `up` refuses to start when a node already answers on the local RPC ports, leaves detached anvils running on success and kills them on failure.
 
+## Batch 8 (PR 11): done
+
+| Task PR | Branch | Issue | PR | Red | Green | Authored lines |
+|---|---|---|---|---|---|---|
+| 11 | `feature/ccip-sender-local` | #247 | #248 | d774163 | 448628e | 244 added, 1 removed |
+
+Tasks 11.1 and 11.2 are marked `[x]`. `adapters/sender.ts` `LocalCcipSender` (checks `isChainSupported`, `getFee`, then `ccipSend` with `value` = fee; message ID from the router `MessageExecuted` event; `transport = 'local'`), `adapters/extra-args.ts` `extraArgsV3`, `tokens.ts`. The router ABI is a viem `parseAbi` human-readable ABI (IRouterClient is not in the generated `src/` ABIs). The carried item is closed: guarded `write` passes `ContractCall.value`.
+Notes: `destinationChainId` maps to a selector through a `lanes` option; the message is data-only (amount travels in the payload). `track` throws until the hop tracker (PR 12). The demo package gained `@hackatwin/core` and `viem` dependencies and `types: ["node"]`. The lockfile is pnpm 12 format, so installs ran with the cached 12.16.1 binary.
+
 ## Deviations and notes
 
 - `WarpMessengerStub` defines its own `WarpMessage` struct and does not import an upstream `IWarpMessenger` (none exists under `src/interfaces/external/icm/`). Field layout `(bytes32 sourceChainID, address originSenderAddress, bytes payload)` and the `WarpMessageSent(bytes32 indexed messageID, bytes message)` event follow design D7; conformance with the upstream struct is verified by the PR 1 spike (PR 1 task 1.5).
 - Task 4.2 `childEnv` for forge landed with the forge wrapper PR (PR 10a), inside `load-profile.ts` because R6 allows `process.env` only there.
-- Task 5: the guarded client write does not yet pass `ContractCall.value` through to `writeContract`; it lands with the local sender (PR 11) where it is exercised. Wiring `createEventChannel({ simulated })` from the profile lands with the Demo 2 root (PR 15).
+- Task 5: the guarded client write `ContractCall.value` passthrough landed in PR 11 (#248). Wiring `createEventChannel({ simulated })` from the profile lands with the Demo 2 root (PR 15).
 - The `contracts` CI job on #226 failed twice on a pre-existing probabilistic invariant (`InvariantPaymentHub`, "race never ran"), unrelated to the change; the same job passed on #228, #230 and #232 which contain the same code.
 - Only anvil-free tests ran in this batch (scripted transports and fakes); no anvil or other process was started.

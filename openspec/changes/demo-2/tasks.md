@@ -101,8 +101,8 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 11: T8.1 sender (specs: crosschain-messaging-local)
 
-- [ ] 11.1 RED `demos/02-l1-crosschain/adapters/sender.test.ts`: Happy path, Fee paid, Unsupported, Fake client, Unscripted call, Transport; no selector literal
-- [ ] 11.2 GREEN `adapters/sender.ts`, `extraArgsV3`, `tokens.ts`
+- [x] 11.1 RED `demos/02-l1-crosschain/adapters/sender.test.ts`: Happy path, Fee paid, Unsupported, Fake client, Unscripted call, Transport; no selector literal
+- [x] 11.2 GREEN `adapters/sender.ts`, `extraArgsV3`, `tokens.ts`
 
 ## PR 12: T8.2 tracker (specs: hop-tracking)
 
