@@ -1,0 +1,21 @@
+UnitWarpMessengerStub
+├── when reading the blockchain ID
+│   ├── given an ID was configured
+│   │   └── it returns the configured ID
+│   └── given the ID was changed again
+│       └── it returns the latest ID
+├── when sending a warp message
+│   ├── given one payload
+│   │   ├── it records the payload
+│   │   ├── it returns a message ID
+│   │   └── it emits WarpMessageSent
+│   └── given two different payloads in order
+│       ├── it records both in send order
+│       └── it returns different IDs
+└── when reading a verified message
+    ├── given a message injected at index 0
+    │   └── it returns the message with valid true
+    ├── given nothing injected at the index
+    │   └── it returns valid false
+    └── given index 0 already holds a message
+        └── it returns the second message after an overwrite
