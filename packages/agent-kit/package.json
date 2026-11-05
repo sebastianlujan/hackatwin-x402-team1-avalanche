@@ -8,5 +8,10 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hackatwin/core": "workspace:*",
+    "@x402/core": "catalog:",
+    "@x402/evm": "catalog:"
   }
 }

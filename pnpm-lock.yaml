@@ -360,7 +360,17 @@ importers:
 
   e2e/ui: {}
 
-  packages/agent-kit: {}
+  packages/agent-kit:
+    dependencies:
+      '@hackatwin/core':
+        specifier: workspace:*
+        version: link:../core
+      '@x402/core':
+        specifier: 'catalog:'
+        version: 2.29.0
+      '@x402/evm':
+        specifier: 'catalog:'
+        version: 2.29.0(typescript@7.0.2)
 
   packages/chains:
     dependencies:
