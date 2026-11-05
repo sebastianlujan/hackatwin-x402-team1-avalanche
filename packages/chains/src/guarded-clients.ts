@@ -4,6 +4,7 @@ import {
   type Account,
   type Chain,
   createPublicClient,
+  createTestClient,
   createWalletClient,
   http,
   type LocalAccount,
@@ -18,6 +19,16 @@ import { ChainError } from './chain-error.ts';
 import { chain as lookup, toViemChain } from './registry.ts';
 import { isLoopback, needsClientVersion, writeRefusal } from './write-guard.ts';
 
+export interface AnvilCheats {
+  impersonate(address: Address): Promise<void>;
+  stopImpersonating(address: Address): Promise<void>;
+  setBalance(address: Address, wei: bigint): Promise<void>;
+  syncClock(nowSeconds: bigint): Promise<bigint>;
+  forkBlock(): Promise<bigint | undefined>;
+  snapshot(): Promise<Hex>;
+  revert(id: Hex): Promise<void>;
+}
+
 export type GuardedWallet = WalletClient<Transport, Chain, Account> & PublicActions<Transport, Chain, Account>;
 
 export interface GuardedClients {
@@ -26,6 +37,7 @@ export interface GuardedClients {
   readonly public: PublicClient;
   wallet(account: Account): GuardedWallet;
   chainClient(account?: Account): ChainsClient;
+  cheats(): AnvilCheats;
 }
 
 export interface GuardedClientsOptions {
@@ -41,6 +53,7 @@ const READ_METHODS: ReadonlySet<string> = new Set(
   eth_getStorageAt eth_getTransactionByHash eth_getTransactionCount eth_getTransactionReceipt`.split(/\s+/),
 );
 const CHEAT_METHOD = /^(anvil|evm|hardhat)_/;
+const CLOCK_SLACK_SECONDS = 30n;
 
 export async function createGuardedClients({
   chain: key,
@@ -149,6 +162,31 @@ export async function createGuardedClients({
           const logs = receipt.logs.map(({ address, topics, data }) => ({ address, topics, data }));
           return { txHash, status: receipt.status, blockNumber: receipt.blockNumber, logs };
         },
+      };
+    },
+    cheats(): AnvilCheats {
+      if (cheatRefusal !== undefined) throw new ChainError(`anvil cheats refused: ${cheatRefusal}`);
+      const test = createTestClient({ mode: 'anvil', chain: viemChain, transport: guarded });
+      return {
+        impersonate: (address) => test.impersonateAccount({ address }),
+        stopImpersonating: (address) => test.stopImpersonatingAccount({ address }),
+        setBalance: (address, wei) => test.setBalance({ address, value: wei }),
+        async syncClock(nowSeconds) {
+          const head = (await publicClient.getBlock()).timestamp;
+          if (nowSeconds - head <= CLOCK_SLACK_SECONDS) return head;
+          await test.setNextBlockTimestamp({ timestamp: nowSeconds });
+          await test.mine({ blocks: 1 });
+          return (await publicClient.getBlock()).timestamp;
+        },
+        async forkBlock() {
+          const info = (await test.request({ method: 'anvil_nodeInfo' } as never)) as {
+            forkConfig?: { forkBlockNumber?: number | string };
+          };
+          const block = info.forkConfig?.forkBlockNumber;
+          return block === undefined ? undefined : BigInt(block);
+        },
+        snapshot: () => test.snapshot(),
+        revert: (id) => test.revert({ id }),
       };
     },
   };
