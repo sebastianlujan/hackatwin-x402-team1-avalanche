@@ -25,6 +25,7 @@ export default function config(phase: string): NextConfig {
       '@hackatwin/core',
       '@hackatwin/demo-01-x402-twin',
       '@hackatwin/pricing',
+      '@hackatwin/ui',
     ],
     turbopack: { root },
     outputFileTracingRoot: root,

@@ -13,6 +13,7 @@
     "@docusaurus/faster": "catalog:",
     "@docusaurus/preset-classic": "catalog:",
     "@docusaurus/theme-mermaid": "catalog:",
+    "@hackatwin/ui": "workspace:*",
     "@mdx-js/react": "catalog:",
     "clsx": "catalog:",
     "prism-react-renderer": "catalog:",

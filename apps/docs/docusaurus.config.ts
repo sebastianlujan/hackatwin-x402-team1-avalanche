@@ -1,5 +1,9 @@
+import { createRequire } from 'node:module';
 import type { Config } from '@docusaurus/types';
 import { themes as prismThemes } from 'prism-react-renderer';
+
+// The shared tokens file is the only palette source; the docs theme maps it onto Infima.
+const tokensCss = createRequire(import.meta.url).resolve('@hackatwin/ui/tokens.css');
 
 const config: Config = {
   title: 'hackatwin x402 team 1',
@@ -21,7 +25,7 @@ const config: Config = {
       {
         docs: { path: '../../docs', routeBasePath: '/', sidebarPath: './sidebars.ts' },
         blog: false,
-        theme: { customCss: './src/css/custom.css' },
+        theme: { customCss: [tokensCss, './src/css/custom.css'] },
       },
     ],
   ],

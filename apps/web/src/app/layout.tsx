@@ -1,3 +1,5 @@
+import '@hackatwin/ui/tokens.css';
+import './globals.css';
 import type { ReactNode } from 'react';
 
 export const metadata = { title: 'hackatwin' };

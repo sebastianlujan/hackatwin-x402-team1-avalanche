@@ -1,3 +1,30 @@
 :root {
-  --ifm-color-primary: #e84142;
+  --ifm-font-family-base: var(--hk-font-mono);
+  --ifm-font-family-monospace: var(--hk-font-mono);
+  --ifm-background-color: var(--hk-paper);
+  --ifm-background-surface-color: var(--hk-paper);
+  --ifm-font-color-base: var(--hk-bg);
+  --ifm-color-primary: var(--hk-accent-ink);
+  --ifm-color-primary-dark: color-mix(in srgb, var(--hk-accent-ink) 92%, var(--hk-bg));
+  --ifm-color-primary-darker: color-mix(in srgb, var(--hk-accent-ink) 86%, var(--hk-bg));
+  --ifm-color-primary-darkest: color-mix(in srgb, var(--hk-accent-ink) 72%, var(--hk-bg));
+  --ifm-color-primary-light: color-mix(in srgb, var(--hk-accent-ink) 92%, var(--hk-paper));
+  --ifm-color-primary-lighter: color-mix(in srgb, var(--hk-accent-ink) 86%, var(--hk-paper));
+  --ifm-color-primary-lightest: color-mix(in srgb, var(--hk-accent-ink) 72%, var(--hk-paper));
+  --ifm-link-color: var(--hk-accent-ink);
+  --ifm-global-radius: var(--hk-radius);
+}
+
+[data-theme="dark"] {
+  --ifm-background-color: var(--hk-bg);
+  --ifm-background-surface-color: var(--hk-bg);
+  --ifm-font-color-base: var(--hk-fg);
+  --ifm-color-primary: var(--hk-accent);
+  --ifm-color-primary-dark: color-mix(in srgb, var(--hk-accent) 92%, var(--hk-bg));
+  --ifm-color-primary-darker: color-mix(in srgb, var(--hk-accent) 86%, var(--hk-bg));
+  --ifm-color-primary-darkest: color-mix(in srgb, var(--hk-accent) 72%, var(--hk-bg));
+  --ifm-color-primary-light: color-mix(in srgb, var(--hk-accent) 92%, var(--hk-fg));
+  --ifm-color-primary-lighter: color-mix(in srgb, var(--hk-accent) 86%, var(--hk-fg));
+  --ifm-color-primary-lightest: color-mix(in srgb, var(--hk-accent) 72%, var(--hk-fg));
+  --ifm-link-color: var(--hk-accent);
 }
