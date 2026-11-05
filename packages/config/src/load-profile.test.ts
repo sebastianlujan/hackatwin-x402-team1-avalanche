@@ -1,11 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { ConfigError } from './config-error.ts';
 import { loadProfile, loadRpcUrls, rpcVariable } from './load-profile.ts';
-import { PROFILE_NAMES, ProfileToken } from './profiles.ts';
+import { CCHAIN_FORK_BLOCK, forkStaticsSchema, PROFILE_NAMES, ProfileToken } from './profiles.ts';
 
 const rpc = 'https://rpc.example.org';
 const base = {
-  ANTHROPIC_API_KEY: 'sk-test',
   AGENT_KEYSTORE: 'agent',
   AGENT_KEYSTORE_PASSWORD_FILE: '/run/secrets/agent',
   SELLER_KEYSTORE: 'seller',
@@ -32,7 +31,7 @@ describe('valid profiles', () => {
     ['fuji-cchain', 'USDC', 'eip3009'],
   ] as const)('%s', (name, asset, x402) => {
     const profile = loadProfile(name, base);
-    expect(profile).toMatchObject({ name, asset, x402, llm: { provider: 'claude', model: 'claude-sonnet-5-5' } });
+    expect(profile).toMatchObject({ name, asset, x402 });
     expect(profile.budget.perPayment).toEqual({ units: 1_000_000n, decimals: 6, currency: 'USD' });
     expect(profile.budget.total.units).toBe(5_000_000n);
   });
@@ -51,6 +50,45 @@ describe('valid profiles', () => {
 
   it('exposes a typed token', () => {
     expect(String(ProfileToken.description)).toBe('Profile');
+  });
+});
+
+describe('llm selection', () => {
+  it('requires ANTHROPIC_API_KEY for claude and names it', () => {
+    const error = catchConfigError(() => loadProfile('cchain-fork', base, { llm: 'claude' }));
+    expect(error.issues).toEqual([{ variable: 'ANTHROPIC_API_KEY', message: 'is required' }]);
+  });
+
+  it('uses claude-sonnet-5-5 by default with a key', () => {
+    const profile = loadProfile('cchain-fork', { ...base, ANTHROPIC_API_KEY: 'sk-test' }, { llm: 'claude' });
+    expect(profile.llm).toEqual({ provider: 'claude', model: 'claude-sonnet-5-5' });
+    expect(profile.env.ANTHROPIC_API_KEY).toBe('sk-test');
+  });
+
+  it('needs no key for scripted', () => {
+    const profile = loadProfile('cchain-fork', base, { llm: 'scripted' });
+    expect(profile.llm).toEqual({ provider: 'scripted' });
+    expect(profile.env.ANTHROPIC_API_KEY).toBeUndefined();
+  });
+
+  it('returns a profile without an llm field when none is selected', () => {
+    const profile = loadProfile('cchain-fork', base);
+    expect('llm' in profile).toBe(false);
+  });
+});
+
+describe('keystore dir', () => {
+  it('carries an absolute KEYSTORE_DIR', () => {
+    expect(loadProfile('cchain-fork', { ...base, KEYSTORE_DIR: '/abs/.demo1' }).env.KEYSTORE_DIR).toBe('/abs/.demo1');
+  });
+
+  it('is optional', () => {
+    expect(loadProfile('cchain-fork', base).env.KEYSTORE_DIR).toBeUndefined();
+  });
+
+  it('rejects a relative KEYSTORE_DIR naming it', () => {
+    const error = catchConfigError(() => loadProfile('cchain-fork', { ...base, KEYSTORE_DIR: '.demo1' }));
+    expect(error.issues).toEqual([{ variable: 'KEYSTORE_DIR', message: 'must be an absolute path' }]);
   });
 });
 
@@ -140,6 +178,23 @@ describe('fork guard', () => {
   it('does not guard CCHAIN_RPC_URL', () => {
     const url = 'https://api.avax.network/ext/bc/C/rpc';
     expect(loadProfile('cchain-fork', { ...base, CCHAIN_RPC_URL: url }).env.CCHAIN_RPC_URL).toBe(url);
+  });
+});
+
+describe('fork block', () => {
+  it('reports the static CCHAIN_FORK_BLOCK on cchain-fork only', () => {
+    expect(loadProfile('cchain-fork', base).forkBlock).toBe(CCHAIN_FORK_BLOCK);
+    expect('forkBlock' in loadProfile('fuji-cchain', base)).toBe(false);
+  });
+
+  it.each([undefined, 0n, -1n])('schema rejects forkBlock %s naming it', (forkBlock) => {
+    const result = forkStaticsSchema.safeParse({ forkBlock });
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0]?.path).toEqual(['forkBlock']);
+  });
+
+  it('schema accepts the static', () => {
+    expect(forkStaticsSchema.safeParse({ forkBlock: CCHAIN_FORK_BLOCK }).success).toBe(true);
   });
 });
 

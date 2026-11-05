@@ -21,9 +21,10 @@ const chainId = z
   .transform(Number)
   .refine(Number.isSafeInteger, 'must be a safe integer');
 const keystore = z.string(required).regex(/^[A-Za-z0-9._-]+$/, 'must be a keystore name, not a path');
-const passwordFile = z.string(required).regex(/^(\/|[A-Za-z]:[\\/])/, 'must be an absolute path');
+const absolutePath = z.string(required).regex(/^(\/|[A-Za-z]:[\\/])/, 'must be an absolute path');
 
 export const envSchemas = {
+  KEYSTORE_DIR: absolutePath.optional(),
   ANTHROPIC_API_KEY: z.string(required).min(1),
   CCHAIN_FORK_RPC_URL: forkRpcUrl,
   CCHAIN_RPC_URL: rpcUrl,
@@ -34,13 +35,13 @@ export const envSchemas = {
   TWINPAY_L1_RPC_URL: rpcUrl,
   TWINPAY_L1_CHAIN_ID: chainId,
   AGENT_KEYSTORE: keystore,
-  AGENT_KEYSTORE_PASSWORD_FILE: passwordFile,
+  AGENT_KEYSTORE_PASSWORD_FILE: absolutePath,
   SELLER_KEYSTORE: keystore,
-  SELLER_KEYSTORE_PASSWORD_FILE: passwordFile,
+  SELLER_KEYSTORE_PASSWORD_FILE: absolutePath,
   FACILITATOR_KEYSTORE: keystore,
-  FACILITATOR_KEYSTORE_PASSWORD_FILE: passwordFile,
+  FACILITATOR_KEYSTORE_PASSWORD_FILE: absolutePath,
   TREASURY_KEYSTORE: keystore,
-  TREASURY_KEYSTORE_PASSWORD_FILE: passwordFile,
+  TREASURY_KEYSTORE_PASSWORD_FILE: absolutePath,
 } as const;
 
 export type EnvVariable = keyof typeof envSchemas;
