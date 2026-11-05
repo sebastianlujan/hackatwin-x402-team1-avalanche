@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { Badge, Button, CodeTag, Cursor, TxLink } from '../../src/index.ts';
+import { Badge, Button, Cursor, TxLink } from '../../src/index.ts';
 
 const css = readFileSync(resolve(import.meta.dirname, '../../src/atoms.css'), 'utf8');
 const hash = `0x${'ab'.repeat(32)}`;
@@ -24,9 +24,6 @@ describe('atoms', () => {
     expect(renderToStaticMarkup(<Button>Start</Button>)).toContain('<button type="button" class="hk-button');
     expect(renderToStaticMarkup(<Button disabled>Start</Button>)).toContain('disabled=""');
     expect(renderToStaticMarkup(<Badge tone="accent">Scripted</Badge>)).toContain('hk-badge--accent');
-    expect(renderToStaticMarkup(<CodeTag>pnpm demo1:fund</CodeTag>)).toBe(
-      '<code class="hk-code">pnpm demo1:fund</code>',
-    );
     expect(renderToStaticMarkup(<Cursor text="> HACKATWIN" />)).toContain('&gt; HACKATWIN<span');
   });
 
