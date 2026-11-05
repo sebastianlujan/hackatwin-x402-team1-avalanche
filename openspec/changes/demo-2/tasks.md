@@ -111,8 +111,8 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 13: T8.3 setup (specs: demo-2-payment-flow)
 
-- [ ] 13.1 RED: First run, Second run, Profile budget, Missing budget (names `budget.total`), Output
-- [ ] 13.2 GREEN `scripts/setup.ts`, `deployment.ts` (`world.json` schema); budget probe D10
+- [x] 13.1 RED: First run, Second run, Profile budget, Missing budget (names `budget.total`), Output
+- [x] 13.2 GREEN `scripts/setup.ts`, `deployment.ts` (`world.json` schema); budget probe D10
 
 ## PR 14: T8.4 module
 
