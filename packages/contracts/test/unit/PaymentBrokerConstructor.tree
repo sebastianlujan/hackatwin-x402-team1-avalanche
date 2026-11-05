@@ -1,0 +1,8 @@
+UnitPaymentBrokerConstructor
+└── when deploying the broker
+    ├── given a zero hub
+    │   └── it reverts with PaymentBroker_ZeroAddress
+    ├── given a zero router
+    │   └── it reverts with InvalidRouter
+    └── given a router a hub and an owner
+        └── it stores the hub and the owner

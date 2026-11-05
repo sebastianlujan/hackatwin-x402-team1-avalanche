@@ -53,7 +53,7 @@ interface ISettlementReceiver {
   /// @param _token The delivered token
   error SettlementReceiver_InvalidToken(address _token);
 
-  /// @notice The merchant is the zero address
+  /// @notice The merchant or a constructor address is the zero address
   error SettlementReceiver_ZeroAddress();
 
   /// @notice The delivered amount is zero

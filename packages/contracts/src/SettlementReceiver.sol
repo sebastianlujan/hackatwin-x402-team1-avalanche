@@ -56,6 +56,8 @@ contract SettlementReceiver is ISettlementReceiver, IERC20SendAndCallReceiver, O
   )
     Ownable(_owner)
   {
+    if (_transferrer == address(0) || _originTransferrer == address(0)) revert SettlementReceiver_ZeroAddress();
+    if (_originSender == address(0) || _token == address(0)) revert SettlementReceiver_ZeroAddress();
     TRANSFERRER = _transferrer;
     SOURCE_BLOCKCHAIN_ID = _sourceBlockchainId;
     ORIGIN_TRANSFERRER = _originTransferrer;

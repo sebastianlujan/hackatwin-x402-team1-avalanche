@@ -61,7 +61,7 @@ interface IPaymentBroker {
   /// @notice The data is not exactly the four encoded words
   error PaymentBroker_InvalidPayload();
 
-  /// @notice The sender is the zero address
+  /// @notice The sender or the hub is the zero address
   error PaymentBroker_ZeroAddress();
 
   /// @notice Bind a source pair to one payer, or remove it with the zero payer
