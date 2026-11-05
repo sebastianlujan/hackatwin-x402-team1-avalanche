@@ -44,18 +44,24 @@ const up = async (url: string, expected: number): Promise<boolean> => {
 const cchainContract = (name: 'erc8004Identity' | 'erc8004Reputation'): `0x${string}` =>
   ((chain('cchain') as LiveChain).contracts[name] as { address: `0x${string}` }).address;
 
-function liveDeps({ container, profile, fork }: Root): PreflightDeps {
-  const [state, balances, accounts] = [
-    container.resolve(Tokens.State),
-    container.resolve(Tokens.Balances),
-    container.resolve(Tokens.Accounts),
-  ];
-  const registry = new Erc8004Identity({
+// The fork's ERC-8004 registry; reads only, so the signer is the zero address.
+export function forkIdentity({ fork }: Root): Erc8004Identity {
+  return new Erc8004Identity({
     chain: fork.chainClient(),
     identity: cchainContract('erc8004Identity'),
     reputation: cchainContract('erc8004Reputation'),
     signer: '0x0000000000000000000000000000000000000000',
   });
+}
+
+function liveDeps(root: Root): PreflightDeps {
+  const { container, profile, fork } = root;
+  const [state, balances, accounts] = [
+    container.resolve(Tokens.State),
+    container.resolve(Tokens.Balances),
+    container.resolve(Tokens.Accounts),
+  ];
+  const registry = forkIdentity(root);
   const same = (a: string, b: string): boolean => a.toLowerCase() === b.toLowerCase();
   return {
     refusal: fork.refusal,
