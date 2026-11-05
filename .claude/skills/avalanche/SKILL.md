@@ -51,7 +51,7 @@ official sources.
 
 - ICM contracts deep dive: https://build.avax.network/docs/cross-chain/icm-contracts/deep-dive.md
   (take contract addresses from the docs, never from memory).
-- Console setup: ICM https://build.avax.network/console/icm/setup · ICTT https://build.avax.network/console/ictt/setup
+- Console setup: ICM https://build.avax.network/console/icm/setup, ICTT https://build.avax.network/console/ictt/setup
 - CCIP→ICM pattern (https://github.com/smartcontractkit/ccip-icm, Foundry, unaudited): Sepolia `MessageSender`
   →(CCIP)→ Fuji `MessageBroker` →(ICM)→ L1 `MessageReceiver`. CCIP does not reach custom L1s directly; the Fuji
   broker bridges that gap (verify).
@@ -59,19 +59,21 @@ official sources.
 ### x402 on Avalanche
 
 - Academy: https://build.avax.network/academy/blockchain/x402-payment-infrastructure
-- Facilitators: thirdweb, Ultravioleta DAO, PayAI, 0xGasless, x402-rs (self-hosted).
-- Fuji (chain ID 43113) USDC: `0x5425890298aed601595a70AB815c96711a31Bc65`
-- Reference: https://github.com/federiconardelli7/x402-starter-kit (x402 on Fuji via the thirdweb facilitator;
-  ERC-4337 server wallet, ERC-7702 unsupported).
+- Facilitator: self-hosted official `@x402/core` + `@x402/evm` (2.29.0); it supports Permit2 and custom chains.
+  Hosted options (PayAI, Ultravioleta DAO, thirdweb) lack confirmed Permit2 support for arbitrary tokens on 43114.
+- Permit2 `0x000000000022D473030F116dDEE9F6B43aC78BA3` and x402 proxy `0x402085c248EeA27D92E8b30b2C58ed07f9E20001`
+  are hardcoded in `@x402/evm`; on a new L1 deploy them via the Arachnid deployer (see `docs/decisions.md` Q15).
+- Fuji (chain ID 43113) USDC: `0x5425890298aed601595a70AB815c96711a31Bc65` (ERC-3009).
+- Reference: https://github.com/federiconardelli7/x402-starter-kit (x402 on Fuji, thirdweb facilitator).
 
-### ERC-8004 on Fuji (unofficial, verify)
+### ERC-8004 (official, github.com/erc-8004/erc-8004-contracts)
 
-| Registry | Address |
-|---|---|
-| Identity | `0x8004A818BFB912233c491871b3d84c89A494BD9e` (verify) |
-| Reputation | `0x8004B663056A597Dffe9eCcC1965A193B7388713` (verify) |
+| Registry | Avalanche C-Chain (43114) | Fuji (43113) |
+|---|---|---|
+| Identity | `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432` | `0x8004A818BFB912233c491871b3d84c89A494BD9e` |
+| Reputation | `0x8004BAa17C55a88189AE136b182e5fdA19dE9b63` | `0x8004B663056A597Dffe9eCcC1965A193B7388713` |
 
-Verify against https://github.com/erc-8004/erc-8004-contracts before use.
+Register with `register(string agentURI)`; the Validation registry is not finalized.
 
 ## Output Contract
 
