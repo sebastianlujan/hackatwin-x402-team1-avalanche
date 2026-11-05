@@ -141,6 +141,32 @@ Edit: `docs/diagrams/demo-2-3.excalidraw`
 
 CCIP lane values (routers, selectors, LINK): [Decisions › CCIP](decisions.md#ccip-sepolia--fuji-active).
 
+### Local development run
+
+A local run is for development only, never the stage demo. Two plain anvils stand in for the hub and the L1, a
+CCIP simulator for the lane, and a relay loop for ICM. Every line is labeled `SIMULATED (local-crosschain)`, and
+there are no Sepolia or CCIP Explorer links.
+
+1. Once: `pnpm local:icm` fetches and builds the pinned `icm-services` into `.cache/`.
+2. Terminal 1: `pnpm demo2:local:up` starts both anvils, deploys the contracts and relays ICM every second.
+   Ctrl-C stops the relay and kills both anvils.
+3. Terminal 2: `pnpm demo2:setup` creates the lane, approves the hub and signs the budget. Running it again sends
+   nothing.
+4. Terminal 2: `pnpm demo2 --scripted` sends one payment and follows it to `Settled`. It needs no API key; without
+   `--scripted` the agent uses Claude and needs `ANTHROPIC_API_KEY`.
+
+The run prints the banner first, then one line per event. The hops are fixed:
+
+| Hop | Chain | Status |
+|---|---|---|
+| 0 | hub | `None` |
+| 1 | hub | `Pending` |
+| 2 | hub | `Dispatched` |
+| 3 | L1 | `Received` |
+| 4 | L1 | `Settled` or `Rejected` |
+
+A local run is never written to `apps/web/recordings/`. If it stops at `Dispatched`, the relay is not running.
+
 ## Demo 3: Composed
 
 **What it shows.** Demos 1 and 2 compose with no new domain logic: the same agent code pays an x402 API on
