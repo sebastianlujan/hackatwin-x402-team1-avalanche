@@ -2,7 +2,8 @@ import { type Address, type Hex, money } from '@hackatwin/core';
 import { encodeAbiParameters, encodeErrorResult, keccak256, parseAbi } from 'viem';
 import { describe, expect, it } from 'vitest';
 import { parseWorld } from '../deployment.ts';
-import { BANNER, setupTreasury, type TreasuryChain, type TypedData } from './setup.ts';
+import { BANNER } from '../labels.ts';
+import { setupTreasury, type TreasuryChain, type TypedData } from './setup.ts';
 
 const a = (n: number) => `0x${n.toString(16).repeat(40)}` as Address;
 const USDC = a(1);
@@ -22,7 +23,17 @@ const world = parseWorld({
     hub: { key: 'local-hub', chainId: 31337, rpcUrl: 'http://127.0.0.1:18545', blockchainId: `0x${'1'.repeat(64)}` },
     l1: { key: 'local-l1', chainId: 31338, rpcUrl: 'http://127.0.0.1:18546', blockchainId: L1_ID },
   },
-  contracts: { usdc: USDC, hub: HUB, broker: BROKER, messenger: MESSENGER, receiver: a(5), router: a(6) },
+  contracts: {
+    usdc: USDC,
+    hub: HUB,
+    broker: BROKER,
+    messenger: MESSENGER,
+    receiver: a(5),
+    router: a(6),
+    home: a(10),
+    remote: a(11),
+    selector: '99',
+  },
   roles: { treasury: TREASURY, agent: a(8), merchant: MERCHANT },
 });
 

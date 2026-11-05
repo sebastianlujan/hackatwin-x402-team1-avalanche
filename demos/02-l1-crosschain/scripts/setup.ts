@@ -14,8 +14,7 @@ import {
   parseAbiParameters,
 } from 'viem';
 import { parseWorld, type World } from '../deployment.ts';
-
-export const BANNER = 'SIMULATED (local-crosschain)';
+import { BANNER } from '../labels.ts';
 
 const USDC_DECIMALS = 6;
 const AUTHORIZATION_TTL = 3600n;

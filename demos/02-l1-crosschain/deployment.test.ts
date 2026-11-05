@@ -12,7 +12,17 @@ const manifest = () => ({
   version: 1,
   instance: 'dev',
   chains: { hub: chain('local-hub', 31337, 18545, '1'), l1: chain('local-l1', 31338, 18546, '2') },
-  contracts: { usdc: a(1), hub: a(2), broker: a(3), messenger: a(4), receiver: a(5), router: a(6), selector: '99' },
+  contracts: {
+    usdc: a(1),
+    hub: a(2),
+    broker: a(3),
+    messenger: a(4),
+    receiver: a(5),
+    router: a(6),
+    selector: '99',
+    home: a(10),
+    remote: a(11),
+  },
   roles: { treasury: a(7), agent: a(8), merchant: a(9) },
 });
 
@@ -28,6 +38,11 @@ describe('World manifest', () => {
   it('names the missing field', () => {
     const { broker: _broker, ...contracts } = manifest().contracts;
     expect(() => parseWorld({ ...manifest(), contracts })).toThrow(/contracts\.broker/);
+  });
+
+  it('names the missing token home', () => {
+    const { home: _home, ...contracts } = manifest().contracts;
+    expect(() => parseWorld({ ...manifest(), contracts })).toThrow(/contracts\.home/);
   });
 
   it('refuses a malformed address', () => {
