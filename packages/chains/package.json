@@ -8,5 +8,10 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hackatwin/core": "workspace:*",
+    "viem": "catalog:",
+    "zod": "catalog:"
   }
 }

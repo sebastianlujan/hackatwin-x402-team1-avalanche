@@ -1,0 +1,66 @@
+{
+  "key": "fuji",
+  "name": "Avalanche Fuji",
+  "status": "live",
+  "chainId": 43113,
+  "access": "read-write",
+  "rpc": { "public": "https://api.avax-test.network/ext/bc/C/rpc" },
+  "ccip": { "chainSelector": "14767482510784806043" },
+  "contracts": {
+    "usdc": {
+      "address": "0x5425890298aed601595a70AB815c96711a31Bc65",
+      "source": "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+      "checks": [
+        { "call": "function symbol() view returns (string)", "expect": "USDC" },
+        { "call": "function decimals() view returns (uint8)", "expect": "6" }
+      ]
+    },
+    "permit2": {
+      "address": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      "source": "https://github.com/Uniswap/permit2",
+      "checks": [{ "call": "function DOMAIN_SEPARATOR() view returns (bytes32)" }]
+    },
+    "x402Proxy": {
+      "address": "0x402085c248EeA27D92E8b30b2C58ed07f9E20001",
+      "source": "https://github.com/coinbase/x402",
+      "checks": [{ "call": "function PERMIT2() view returns (address)", "expect": "@permit2" }]
+    },
+    "erc8004Identity": {
+      "address": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+      "source": "https://github.com/erc-8004/erc-8004-contracts",
+      "checks": [{ "call": "function getVersion() view returns (string)", "expect": "2.0.0" }]
+    },
+    "erc8004Reputation": {
+      "address": "0x8004B663056A597Dffe9eCcC1965A193B7388713",
+      "source": "https://github.com/erc-8004/erc-8004-contracts",
+      "checks": [{ "call": "function getVersion() view returns (string)", "expect": "2.0.0" }]
+    },
+    "ccipRouter": {
+      "address": "0xF694E193200268f9a4868e4Aa017A0118C9a8177",
+      "source": "https://docs.chain.link/ccip/directory/testnet",
+      "checks": [{ "call": "function typeAndVersion() view returns (string)", "expect": "Router 1.2.0" }]
+    },
+    "link": {
+      "address": "0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846",
+      "source": "https://docs.chain.link/ccip/directory/testnet",
+      "checks": [{ "call": "function symbol() view returns (string)", "expect": "LINK" }]
+    },
+    "teleporter": {
+      "address": "0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf",
+      "source": "https://github.com/ava-labs/icm-services",
+      "checks": [{ "call": "function blockchainID() view returns (bytes32)" }]
+    },
+    "teleporterRegistry": {
+      "address": "0xF86Cb19Ad8405AEFa7d09C778215D2Cb6eBfB228",
+      "source": "read: getAddressFromVersion(1) returns the Teleporter messenger, 2026-11-04",
+      "checks": [
+        { "call": "function latestVersion() view returns (uint256)", "expect": "1" },
+        {
+          "call": "function getAddressFromVersion(uint256 version) view returns (address)",
+          "args": ["1"],
+          "expect": "@teleporter"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "key": "base",
+  "name": "Base",
+  "status": "live",
+  "chainId": 8453,
+  "access": "read-only",
+  "rpc": { "public": "https://mainnet.base.org" },
+  "contracts": {
+    "arsUsdFeed": {
+      "address": "0xaf992a6ad37b4878cF9c31f082B178860e268cE3",
+      "source": "https://docs.chain.link/data-feeds/price-feeds/addresses",
+      "heartbeatSeconds": 86400,
+      "checks": [
+        { "call": "function description() view returns (string)", "expect": "ARS / USD" },
+        { "call": "function decimals() view returns (uint8)", "expect": "8" }
+      ]
+    },
+    "sequencerFeed": {
+      "address": "0xBCF85224fc0756B9Fa45aA7892530B47e10b6433",
+      "source": "https://docs.chain.link/data-feeds/l2-sequencer-feeds",
+      "checks": [
+        { "call": "function description() view returns (string)", "expect": "L2 Sequencer Uptime Status Feed" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "key": "sepolia",
+  "name": "Ethereum Sepolia",
+  "status": "live",
+  "chainId": 11155111,
+  "access": "read-write",
+  "rpc": { "public": "https://ethereum-sepolia-rpc.publicnode.com" },
+  "ccip": { "chainSelector": "16015286601757825753" },
+  "contracts": {
+    "ccipRouter": {
+      "address": "0x0BF3dE8c5D3e8A2B34D2BEeB17ABfCeBaf363A59",
+      "source": "https://docs.chain.link/ccip/directory/testnet",
+      "checks": [{ "call": "function typeAndVersion() view returns (string)", "expect": "Router 1.2.0" }]
+    },
+    "link": {
+      "address": "0x779877A7B0D9E8603169DdbD7836e478b4624789",
+      "source": "https://docs.chain.link/ccip/directory/testnet",
+      "checks": [{ "call": "function symbol() view returns (string)", "expect": "LINK" }]
+    }
+  }
+}

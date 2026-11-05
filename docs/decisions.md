@@ -83,6 +83,7 @@ Verified as of 2026-11-04. Re-check on-chain values before a deploy or a talk re
 |---|---|---|
 | Official registry chains | Base, Polygon, Arbitrum, Ethereum. No Avalanche, no testnets. | https://docs.twin.finance/stablecoins/supported-chains, https://docs.twin.finance/stablecoins/contracts |
 | ARGt on Avalanche C-Chain (not in the registry) | `0x2E4e93eCA2E16E4989b894e188B7F7fC0175703B` (BeaconProxy; beacon `0x59863989d080b22476db95656d0c3cc18be92214`; deployer `0x3f5c58f0b2400cd82ea7ea6c3b5794a1228f3df9`) | https://snowtrace.io/address/0x2E4e93eCA2E16E4989b894e188B7F7fC0175703B |
+| ARGt on Arbitrum | `0x59863989d080B22476DB95656d0C3CC18be92214`; `symbol()` is `ARGt`; it is `coins(0)` of the Curve pool below | Read on-chain on Arbitrum, 2026-11-04; https://arbiscan.io/address/0x59863989d080B22476DB95656d0C3CC18be92214 |
 | ARGt interface | `TwinToken` = ERC20Upgradeable + AccessControlUpgradeable + ERC2771Context. No permit, no ERC-3009. | Verified source on the explorer above |
 | ERC-2771 forwarder (C-Chain, OpenGSN) | `0x2e3e3c36a5d01ccf4637cf9624c9d1033e337ea1` | https://snowtrace.io/address/0x2e3e3c36a5d01ccf4637cf9624c9d1033e337ea1 |
 | Minter on C-Chain | Twin's LayerZero adapter `0x4821FBf47B261F0D52Ba0F941CF67b8648f82691` holds `MINTER_BURNER_ROLE` | https://snowtrace.io/address/0x4821FBf47B261F0D52Ba0F941CF67b8648f82691 |
@@ -106,7 +107,9 @@ More context: [Twin Finance contracts](references/twin-finance-contracts.md).
 | Fact | Value | Source |
 |---|---|---|
 | Curve ARGt/USD₮0 pool (Arbitrum) | `0x356d349da9add7efb56a35fab939a2c6d852f853`, `price_oracle()` ≈ 1658 ARGt per USD₮0; thin pool (≈ $29.6k) | https://arbiscan.io/address/0x356d349da9add7efb56a35fab939a2c6d852f853 |
-| Chainlink ARS/USD (Base) | `0xaf992a6ad37b4878cF9c31f082B178860e268cE3`, `latestRoundData`, 24 h heartbeat, 0.5% deviation | https://docs.chain.link/data-feeds/price-feeds/addresses |
+| USD₮0 on Arbitrum | `0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9`; 6 decimals; it is `coins(1)` of the Curve pool | Read on-chain on Arbitrum, 2026-11-04; https://arbiscan.io/address/0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9 |
+| Chainlink ARS/USD (Base) | `0xaf992a6ad37b4878cF9c31f082B178860e268cE3`, `latestRoundData`, 8 decimals, 24 h heartbeat, 0.5% deviation | https://docs.chain.link/data-feeds/price-feeds/addresses (re-checked and read on-chain 2026-11-04) |
+| Chainlink L2 sequencer uptime feed (Base) | `0xBCF85224fc0756B9Fa45aA7892530B47e10b6433`; `answer` 0 means up; `startedAt` is the time of the last status change | https://docs.chain.link/data-feeds/l2-sequencer-feeds (re-checked and read on-chain 2026-11-04) |
 | Chainlink Data Streams USD/ARS (optional future adapter) | Feed ID `0x000848d3adb3429cb99a6392b6679fc45852536a17f3353356825c4eb282c765`, verifiable on Avalanche, needs credentials | https://docs.chain.link/data-streams |
 | Other providers | Pyth: no ARS feed. DIA: ARS/USDT on Arbitrum only. | Provider catalogs |
 | Reference rates (2026-11-04) | ARGt tracks the dólar cripto/CCL rate (≈ 1658), about 5.6% above the official rate (≈ 1570) | Curve pool and Chainlink feed above |
@@ -122,6 +125,7 @@ More context: [Twin Finance contracts](references/twin-finance-contracts.md).
 | ICTT receiver | `IERC20SendAndCallReceiver.receiveTokens(bytes32 sourceBlockchainID, address originTokenTransferrerAddress, address originSenderAddress, address token, uint256 amount, bytes payload)`. The transferrer approves the receiver, which pulls with `transferFrom`. | https://github.com/ava-labs/icm-services |
 | `SendAndCallInput` fields | `destinationBlockchainID`, `destinationTokenTransferrerAddress`, `recipientContract`, `recipientPayload`, `requiredGasLimit`, `recipientGasLimit` (< `requiredGasLimit`), `multiHopFallback`, `fallbackRecipient`, `primaryFeeTokenAddress`, `primaryFee`, `secondaryFee` | https://github.com/ava-labs/icm-services |
 | Teleporter messenger | `0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf` | https://github.com/ava-labs/icm-services |
+| TeleporterRegistry (Fuji C-Chain) | `0xF86Cb19Ad8405AEFa7d09C778215D2Cb6eBfB228`; `latestVersion()` is 1 and `getAddressFromVersion(1)` returns the Teleporter messenger above | Read on-chain on Fuji, 2026-11-04; https://github.com/ava-labs/icm-services |
 | Deterministic deployer (L1 genesis) | `0x4e59b44847b379578588920cA78FbF26c0B4956C`, 69-byte runtime `0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3` | https://github.com/Arachnid/deterministic-deployment-proxy |
 | Permit2 CREATE2 salt | `0x0000000000000000000000000000000000000000d3af2663da51c10215000000` (deploy via `forge script`) | https://github.com/Uniswap/permit2 |
 | x402 proxy deploy script | `contracts/evm/script/Deploy.s.sol` | https://github.com/coinbase/x402 |
