@@ -33,7 +33,7 @@ Edit: `docs/diagrams/demo-1.excalidraw`
 - The agent gets ARGt by calling the real `mint(address,uint256)` while the fork impersonates Twin's LayerZero
   adapter, which holds `MINTER_BURNER_ROLE`.
 - The seller API answers `402` with an `exact` scheme quote: the ARGt amount from `GuardedOracle` (Curve, guarded by
-  Chainlink), `assetTransferMethod: "permit2"`, and a `validUntil` about 30 s out (Q12/Q16).
+  Chainlink), `assetTransferMethod: "permit2"`, and `maxTimeoutSeconds: 30`, the 30 s the quote stays frozen (Q12/Q16).
 - The agent checks its off-chain budget (`AgentPolicy`, Q5), signs a Permit2 transfer, and retries. The self-hosted
   facilitator verifies and settles through the x402 Permit2 proxy, and the API returns `200` (Q11).
 - The agent posts feedback to the ERC-8004 Reputation Registry on the fork (function to be verified).
