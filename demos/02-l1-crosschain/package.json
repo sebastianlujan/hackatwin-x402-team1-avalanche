@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@hackatwin/agent-kit": "workspace:*",
     "@hackatwin/chains": "workspace:*",
     "@hackatwin/config": "workspace:*",
     "@hackatwin/core": "workspace:*",
