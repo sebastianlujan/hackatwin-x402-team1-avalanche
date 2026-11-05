@@ -16,12 +16,6 @@ import { createBuyerTools } from './buyer-agent/tools.ts';
 import { PORTS } from './ports.ts';
 import { Tokens } from './tokens.ts';
 
-export { serveLoopback } from './adapters/serve.ts';
-export { runBuyer } from './buyer-agent/run.ts';
-export { buyerPlan } from './buyer-agent/scripted-plan.ts';
-export type { Buyer } from './tokens.ts';
-export { Tokens } from './tokens.ts';
-
 // Service URLs default to the loopback ports of the scripts; a test passes ephemeral ones.
 export interface X402ModuleConfig {
   readonly facilitatorUrl?: () => string;

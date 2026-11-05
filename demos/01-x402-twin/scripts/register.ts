@@ -1,8 +1,9 @@
 import { composeRoot } from '../root.ts';
+import { STATE_DIR } from '../state-dir.ts';
 import { Tokens } from '../tokens.ts';
 
 async function main(): Promise<void> {
-  const { container } = await composeRoot();
+  const { container } = await composeRoot({ stateDir: STATE_DIR });
   const { ids, registered } = await container.resolve(Tokens.Registration).register();
   console.log(`agent agentId ${ids.agent}`);
   console.log(`seller agentId ${ids.seller}`);

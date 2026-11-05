@@ -1,9 +1,10 @@
 import { formatMoney, money } from '@hackatwin/core';
 import { composeRoot } from '../root.ts';
+import { STATE_DIR } from '../state-dir.ts';
 import { Tokens } from '../tokens.ts';
 
 async function main(): Promise<void> {
-  const { container } = await composeRoot({ readChains: true });
+  const { container } = await composeRoot({ readChains: true, stateDir: STATE_DIR });
   const report = await container.resolve(Tokens.Funding).fund();
   const argt = (units: bigint) => formatMoney(money(units, 18, 'ARGt'));
   console.log(`gas topped up for ${report.gasToppedUp.length} address(es)`);
