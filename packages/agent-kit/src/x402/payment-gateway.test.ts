@@ -110,6 +110,7 @@ describe('X402PaymentGateway', () => {
     expect(response).toMatchObject({ status: 200, body: '{"pair":"ARS/USD"}', payment: { status: 'Settled' } });
     expect(signed).toHaveLength(1);
     expect(policy.authorized).toEqual([usdAtRate(money(100n, 18, 'ARGt'), RATE)]);
+    expect(policy.recorded).toEqual(policy.authorized);
   });
 
   it('shows the seller rate source in payment.required without trusting it for the ceiling', async () => {
@@ -181,9 +182,10 @@ describe('X402PaymentGateway', () => {
   });
 
   it('does not treat a 200 without a successful settlement as paid', async () => {
-    const { events, gateway } = setup({ settlement: { success: false, transaction: '' } });
+    const { events, gateway, policy } = setup({ settlement: { success: false, transaction: '' } });
     expect(await gateway.pay(request)).toMatchObject({ payment: { status: 'Rejected' } });
     expect(events.some((event) => event.type === 'resource.received')).toBe(false);
+    expect(policy.recorded).toEqual([]);
   });
 
   it('passes a non-402 answer through without paying', async () => {

@@ -119,7 +119,10 @@ export class X402PaymentGateway implements PaymentGateway {
       to: settled ? 'Settled' : 'Rejected',
       txHash,
     });
-    if (settled) emit({ version: 1, type: 'resource.received', at: now(), resource: request.url, status: 200 });
+    if (settled) {
+      await this.options.policy.record(usd);
+      emit({ version: 1, type: 'resource.received', at: now(), resource: request.url, status: 200 });
+    }
     return {
       status: paid.status,
       body: await paid.text(),
