@@ -58,6 +58,14 @@ describe('SDK signer on a public RPC', () => {
     expect(rpc.methods).toEqual(['eth_chainId']);
   });
 
+  it('never serves a cached head, so a read after a write sees the new block', async () => {
+    const { rpc, guarded } = await open(PUBLIC, 'Geth/v1.13');
+    const client = guarded.chainClient();
+    await client.blockNumber();
+    await client.blockNumber();
+    expect(rpc.methods.filter((method) => method === 'eth_blockNumber')).toHaveLength(2);
+  });
+
   it('keeps reads working', async () => {
     const { guarded } = await open(PUBLIC, 'Geth/v1.13');
     expect(await guarded.public.getCode({ address: who })).toBe('0x6001');

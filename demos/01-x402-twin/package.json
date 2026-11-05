@@ -13,6 +13,7 @@
     "@hackatwin/chains": "workspace:*",
     "@hackatwin/config": "workspace:*",
     "@hackatwin/core": "workspace:*",
+    "@hackatwin/pricing": "workspace:*",
     "viem": "catalog:"
   }
 }

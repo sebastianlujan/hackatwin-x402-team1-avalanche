@@ -128,7 +128,7 @@ export async function createGuardedClients({
       const signer = account === undefined ? undefined : wallet(account);
       return {
         chainId: entry.chainId,
-        blockNumber: () => publicClient.getBlockNumber(),
+        blockNumber: () => publicClient.getBlockNumber({ cacheTime: 0 }),
         async codeSize(target: Address, blockNumber?: bigint): Promise<number> {
           const code = await publicClient.getCode({
             address: target,
@@ -137,7 +137,7 @@ export async function createGuardedClients({
           return code === undefined ? 0 : (code.length - 2) / 2;
         },
         async read<T>(call: ContractCall, options: ReadOptions = {}): Promise<ReadResult<T>> {
-          const blockNumber = options.blockNumber ?? (await publicClient.getBlockNumber());
+          const blockNumber = options.blockNumber ?? (await publicClient.getBlockNumber({ cacheTime: 0 }));
           const value = await publicClient.readContract({
             address: call.address,
             abi: call.abi as Abi,
