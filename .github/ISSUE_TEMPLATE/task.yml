@@ -1,0 +1,11 @@
+name: Task
+description: Something to build or change
+labels: [enhancement]
+body:
+  - type: textarea
+    id: what
+    attributes: { label: What, placeholder: One or two lines. }
+    validations: { required: true }
+  - type: textarea
+    id: done
+    attributes: { label: Done when, placeholder: "- [ ] ..." }

@@ -1,0 +1,11 @@
+name: Bug
+description: Something is broken
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes: { label: What happened, placeholder: Steps and actual result. }
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: Expected }
