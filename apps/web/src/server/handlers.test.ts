@@ -5,8 +5,12 @@ import { finite, hanging, tick } from '../../test/runs.ts';
 import { createEventsHandler, createRunHandler, createStartHandler } from './handlers.ts';
 import { createRunStore } from './run-store.ts';
 
-const post = (body: unknown): Request =>
-  new Request('http://web/api/runs', { method: 'POST', body: typeof body === 'string' ? body : JSON.stringify(body) });
+const post = (body: unknown, headers: Record<string, string> = {}): Request =>
+  new Request('http://web/api/runs', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', ...headers },
+    body: typeof body === 'string' ? body : JSON.stringify(body),
+  });
 const ctx = (id: string) => ({ params: Promise.resolve({ id }) });
 
 function setup(open = vi.fn(async () => hanging()), hasKey = true) {
@@ -25,6 +29,29 @@ describe('start handler', () => {
     expect(second.status).toBe(409);
     expect(await second.json()).toEqual({ id });
     expect(open).toHaveBeenCalledTimes(1);
+  });
+
+  it('allows the same origin and a request with no Origin header', async () => {
+    const { start, open } = setup(vi.fn(async () => finite([])));
+    expect((await start(post({ llm: 'scripted' }, { origin: 'http://web' }))).status).toBe(202);
+    await tick();
+    expect((await start(post({ llm: 'scripted' }))).status).not.toBe(403);
+    expect(open).toHaveBeenCalled();
+  });
+
+  it('answers 403 for a foreign origin and runs nothing', async () => {
+    const { start, open } = setup();
+    const res = await start(post({ llm: 'scripted' }, { origin: 'http://evil.example' }));
+    expect(res.status).toBe(403);
+    expect(JSON.stringify(await res.json())).not.toContain('evil');
+    expect(open).not.toHaveBeenCalled();
+  });
+
+  it('answers 415 when the content type is not JSON', async () => {
+    const { start, open } = setup();
+    const res = await start(post({ llm: 'scripted' }, { 'content-type': 'text/plain' }));
+    expect(res.status).toBe(415);
+    expect(open).not.toHaveBeenCalled();
   });
 
   it('answers 400 for a bad body or llm', async () => {
