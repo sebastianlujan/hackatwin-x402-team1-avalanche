@@ -40,21 +40,6 @@ export const formatMoney = (m: Money): string => {
   return `${digits.slice(0, split)}${fraction} ${m.currency}`;
 };
 
-const assertSame = (a: Money, b: Money): void => {
-  if (a.currency !== b.currency) throw new MoneyError(`Currency mismatch: ${a.currency} and ${b.currency}`);
-  if (a.decimals !== b.decimals) throw new MoneyError(`Decimals mismatch: ${a.decimals} and ${b.decimals}`);
-};
-
-export const addMoney = (a: Money, b: Money): Money => {
-  assertSame(a, b);
-  return money(a.units + b.units, a.decimals, a.currency);
-};
-
-export const compareMoney = (a: Money, b: Money): -1 | 0 | 1 => {
-  assertSame(a, b);
-  return a.units < b.units ? -1 : a.units > b.units ? 1 : 0;
-};
-
 // rate is the price of one target unit in the amount's currency; the result rounds up
 export const convertMoney = (amount: Money, rate: Money, target: { decimals: number; currency: Currency }): Money => {
   if (amount.currency !== rate.currency)

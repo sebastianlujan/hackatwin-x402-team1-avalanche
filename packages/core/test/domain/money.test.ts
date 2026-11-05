@@ -1,37 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import {
-  addMoney,
-  compareMoney,
-  convertMoney,
-  formatMoney,
-  MoneyError,
-  money,
-  parseMoney,
-} from '../../src/domain/money.ts';
+import { convertMoney, formatMoney, money, parseMoney } from '../../src/domain/money.ts';
 
 const usd = (units: bigint) => money(units, 6, 'USD');
 
-describe('arithmetic', () => {
-  it('adds exactly with no rounding', () => {
-    const big = usd(2n ** 60n + 1n);
-    expect(addMoney(big, usd(1n)).units).toBe(2n ** 60n + 2n);
-  });
-
-  it('throws on mismatched decimals', () => {
-    expect(() => addMoney(usd(1n), money(1n, 18, 'USD'))).toThrow(MoneyError);
-    expect(() => addMoney(usd(1n), money(1n, 18, 'USD'))).toThrow(/Decimals mismatch/);
-  });
-
-  it('throws on mismatched currency', () => {
-    expect(() => addMoney(usd(1n), money(1n, 6, 'USDC'))).toThrow(/Currency mismatch/);
-  });
-
-  it('compares in all three directions', () => {
-    expect(compareMoney(usd(1n), usd(2n))).toBe(-1);
-    expect(compareMoney(usd(2n), usd(2n))).toBe(0);
-    expect(compareMoney(usd(3n), usd(2n))).toBe(1);
-  });
-
+describe('money', () => {
   it('rejects negative units and bad decimals', () => {
     expect(() => money(-1n, 6, 'USD')).toThrow(/negative/);
     expect(() => money(1n, -1, 'USD')).toThrow(/Invalid decimals/);
