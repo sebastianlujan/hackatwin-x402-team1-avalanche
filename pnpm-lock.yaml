@@ -360,7 +360,11 @@ importers:
 
   demos/03-agentic-crosschain-commerce: {}
 
-  e2e/protocol: {}
+  e2e/protocol:
+    dependencies:
+      '@hackatwin/demo-01-x402-twin':
+        specifier: workspace:*
+        version: link:../../demos/01-x402-twin
 
   e2e/smoke: {}
 

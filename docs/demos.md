@@ -41,35 +41,51 @@ Edit: `docs/diagrams/demo-1.excalidraw`
 **Steps**
 
 1. One-time setup
-   - Create fresh encrypted keystores, never funded on mainnet (Q20). The fork keeps chain ID 43114, so a fork
-     signature is also valid on mainnet:
+   - Install Foundry (CI pins it, see `.github/workflows/ci.yml`) and the workspace dependencies. No wallet import is
+     needed: the fork script creates throwaway encrypted keystores in the gitignored `.demo1/` directory, and the
+     fork keeps chain ID 43114, so a fork signature is also valid on mainnet (Q20).
+   - The fork block `N` is the static `CCHAIN_FORK_BLOCK` of the Demo 1 profile. `pnpm demo1:fork-block` prints it.
+2. Run (each script is idempotent, rerunning is safe)
+   - Start the fork, which creates the keystores, writes `.demo1/demo1.env` and syncs the clock:
      ```bash
-     cast wallet import demo-agent --interactive
-     cast wallet import demo-facilitator --interactive
+     pnpm demo1:fork
      ```
-   - Pick a recent fork block `N` and record it in the Demo 1 config profile.
-2. Run
-   - Start the fork:
+   - Fund the fork: gas for the four roles, ARGt minted to the agent, and the agent's bounded `approve(Permit2)`:
      ```bash
-     anvil --fork-url https://api.avax.network/ext/bc/C/rpc --fork-block-number <N> --chain-id 43114
+     pnpm demo1:fund
      ```
-   - Fund the fork: gas for the agent and the facilitator, ARGt minted to the agent, and the agent's one-time
-     `approve(Permit2)` (script added during implementation).
-   - Register the agent identity on the fork with `register(string agentURI)` (script added during implementation).
-   - Start the facilitator and the seller API (scripts added during implementation).
+   - Register the agent and the seller on the ERC-8004 identity registry of the fork:
+     ```bash
+     pnpm demo1:register
+     ```
+   - Start the facilitator and the seller API, each in its own terminal:
+     ```bash
+     pnpm demo1:facilitator
+     pnpm demo1:seller
+     ```
 3. On stage
    - `pnpm quote` prints the live rate from the shared `GuardedOracle` (read-only public RPCs, no config), for example
      `1 USD = 1658.4 ARGt (Curve, block 521123469) | Chainlink 1657.9 | Δ 0.03% ✓`. If Curve is more than 2% away from
      Chainlink it prints the guarded line instead,
      `1 USD = 1657.9 ARGt (Chainlink, guarded) | Curve 1700.0 (block 521123469) | Δ 2.53% ⚠`, and exits non-zero on an
      oracle error.
-   - Run the agent and narrate `402 → policy check → Permit2 signature → 200`.
-   - Show the ARGt balances and the settlement transaction in the UI. The fork is local, so there is no public
-     explorer link.
-4. Fallback
+   - Run the agent on Claude (`ANTHROPIC_API_KEY` must be set; without it the command exits naming the variable
+     before any chain call) and narrate `402 → policy check → Permit2 signature → 200 → feedback`:
+     ```bash
+     pnpm demo1
+     ```
+   - The command prints the ARGt balances of the agent and the seller before and after, and the amount moved. The fork
+     is local, so there is no public explorer link; the settlement transaction hash is in the output.
+4. Rehearsal and fallback
+   - `pnpm demo1 --scripted` runs the same path with zero secrets: the fork, the real ARGt, Permit2, the facilitator,
+     ERC-8004 and the policy are all live, and only the LLM is replaced by a labeled scripted plan
+     ([ADR 0008](adr/0008-scripted-llm-mode.md)). `run.started` shows `llm scripted`. Use it for development, CI and
+     rehearsal. Stage use waits on the open decision O13.
+   - If a precondition is missing, the command stops before writing anything and names the script to run.
    - No recorded fallback by decision (Q2); the demo only needs a local fork.
    - Start the fork before the talk and keep it running. If the public RPC fails at startup, try the backup RPC
      (unverified). If Curve drifts more than 2% from Chainlink, `GuardedOracle` uses Chainlink and the UI flags it.
+   - Tests: `pnpm test:fork` runs the live fork suite (needs `anvil` and an upstream RPC serving block `N`).
 
 ## Demo 2: TwinPay L1
 
