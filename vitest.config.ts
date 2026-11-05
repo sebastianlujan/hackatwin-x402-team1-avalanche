@@ -11,7 +11,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'default',
-          include: ['{apps,packages,demos}/**/*.test.{ts,tsx}', 'e2e/protocol/src/local/**/*.test.ts'],
+          include: ['{apps,packages,demos}/**/*.test.{ts,tsx}', 'e2e/protocol/test/**/*.test.ts'],
           exclude: ['**/node_modules/**', '**/*.fork.test.ts', '**/*.local.test.ts'],
         },
       },
@@ -30,7 +30,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'local',
-          include: ['e2e/protocol/src/local/**/*.local.test.ts'],
+          include: ['e2e/protocol/test/**/*.local.test.ts'],
           exclude: ['**/node_modules/**'],
           testTimeout: 120_000,
           hookTimeout: 120_000,
