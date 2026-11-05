@@ -105,6 +105,24 @@ describe('LocalCcipSender', () => {
     expect(client.calls.length).toBe(2);
   });
 
+  it('Track: delegates to the hop tracker it was given, and refuses without one', async () => {
+    const hop = { index: 0, transport: 'local', chainId: 31337, status: 'None', txHash: MESSAGE_ID } as const;
+    const seen: string[] = [];
+    const tracker = {
+      async *track(id: string) {
+        seen.push(id);
+        yield hop;
+      },
+    };
+    const client = new FakeChainClient();
+    const tracked = new LocalCcipSender({ client, router, lanes, tracker });
+    const hops: unknown[] = [];
+    for await (const item of tracked.track(MESSAGE_ID)) hops.push(item);
+    expect(hops).toEqual([hop]);
+    expect(seen).toEqual([MESSAGE_ID]);
+    expect(() => sender(client).track(MESSAGE_ID)).toThrow('no hop tracker');
+  });
+
   it('encodes extra args V3 as tag, gas limit, finality and zero padding', () => {
     expect(extraArgsV3(GAS)).toBe(message.extraArgs);
   });
