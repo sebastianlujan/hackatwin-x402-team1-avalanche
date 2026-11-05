@@ -12,8 +12,8 @@ import { parseWorld, type World } from './deployment.ts';
 import { registerCrossChainModule } from './module.ts';
 import { Tokens } from './tokens.ts';
 
-// The broker refuses a relay under 500000 gas, and the hub and dispatch calls run inside it.
-const CCIP_GAS_LIMIT = 1_000_000;
+// The broker refuses under 500000 gas and the ICTT dispatch runs inside the relay; 1000000 ran out in dispatch.
+const CCIP_GAS_LIMIT = 3_000_000;
 
 export const WORLD_FILE = join(import.meta.dirname, '../../.cache/local-crosschain/dev/world.json');
 

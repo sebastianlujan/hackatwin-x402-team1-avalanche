@@ -66,7 +66,7 @@ describe('composeRoot', () => {
     expect(hub.chainClient).toHaveBeenCalledWith({ address: a(8), type: 'json-rpc' });
   });
 
-  it('sends with the gas the broker needs to relay', async () => {
+  it('sends with enough gas for the broker to relay and dispatch', async () => {
     const executed = logs.executed();
     const writes: { args: [unknown, { extraArgs: string }] }[] = [];
     const client = {
@@ -78,6 +78,6 @@ describe('composeRoot', () => {
     const { container } = await composeRoot({ llm: 'scripted', env, world, connect: connect(hub as never) });
     const transfer = { destinationChainId: 31338, recipient: a(3), amount: money(1n, 6, 'USDC') };
     await expect(container.resolve(Ports.CrossChainMessenger).send(transfer)).resolves.toBe(MESSAGE_ID);
-    expect(Number.parseInt(writes[0]?.args[1].extraArgs.slice(10, 18) ?? '', 16)).toBeGreaterThanOrEqual(500_000);
+    expect(Number.parseInt(writes[0]?.args[1].extraArgs.slice(10, 18) ?? '', 16)).toBeGreaterThanOrEqual(2_000_000);
   });
 });
