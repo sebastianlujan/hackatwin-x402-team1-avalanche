@@ -21,6 +21,16 @@ export const CCHAIN_FORK_BLOCK = 99_388_000n;
 
 export const forkStaticsSchema = z.object({ forkBlock: z.bigint().positive() });
 
+// Chain IDs of Fuji, the C-Chain and Sepolia: a local profile must never claim one.
+const LIVE_CHAIN_IDS = [43113, 43114, 11155111];
+const localChainId = z
+  .number()
+  .int()
+  .positive()
+  .refine((id) => !LIVE_CHAIN_IDS.includes(id), 'must not be a live chain ID');
+
+export const localStaticsSchema = z.object({ hubChainId: localChainId, l1ChainId: localChainId });
+
 const roles = ['AGENT_KEYSTORE', 'AGENT_KEYSTORE_PASSWORD_FILE'] as const;
 const withSeller = [
   ...roles,
@@ -63,6 +73,10 @@ export const definitions = {
     'BASE_RPC_URL',
     ...withSeller,
   ]),
+  'local-crosschain': define(
+    { ccip: 'simulated', ...localStaticsSchema.parse({ hubChainId: 31337, l1ChainId: 31338 }) },
+    ['LOCAL_HUB_RPC_URL', 'LOCAL_L1_RPC_URL'],
+  ),
 };
 
 export type ProfileName = keyof typeof definitions;

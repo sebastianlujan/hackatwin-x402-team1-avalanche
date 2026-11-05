@@ -12,6 +12,10 @@ describe('.env.example', () => {
     expect(entries.map((line) => line.slice(0, -1)).sort()).toEqual([...ENV_VARIABLES].sort());
   });
 
+  it('lists both local profile keys with empty values', () => {
+    expect(entries).toEqual(expect.arrayContaining(['LOCAL_HUB_RPC_URL=', 'LOCAL_L1_RPC_URL=']));
+  });
+
   it('puts a default comment above each registry RPC variable', () => {
     const rpc = ['CCHAIN', 'FUJI', 'SEPOLIA', 'TWINPAY_L1', 'ARBITRUM', 'BASE'].map((key) => `${key}_RPC_URL=`);
     for (const entry of rpc) expect(lines[lines.indexOf(entry) - 1]).toMatch(/^# default: \S+|^# default: none/);

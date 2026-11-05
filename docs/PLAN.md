@@ -514,8 +514,8 @@ after these merges.
 
 - Branch: `feature/core-config`
 - Depends on: T3.3
-- What: zod schemas for the four profiles (`cchain-fork`, `fuji-crosschain`, `twinpay-l1`, `fuji-cchain`) and the only
-  function that reads `process.env`.
+- What: zod schemas for the five profiles (`cchain-fork`, `fuji-crosschain`, `twinpay-l1`, `fuji-cchain`,
+  `local-crosschain`) and the only function that reads `process.env`.
 - Done when:
   - [ ] Profiles reference keystore names, never raw keys
   - [ ] An invalid profile fails at startup with a readable error

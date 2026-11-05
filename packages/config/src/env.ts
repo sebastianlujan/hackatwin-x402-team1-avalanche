@@ -27,6 +27,8 @@ export const envSchemas = {
   KEYSTORE_DIR: absolutePath.optional(),
   ANTHROPIC_API_KEY: z.string(required).min(1),
   CCHAIN_FORK_RPC_URL: forkRpcUrl,
+  LOCAL_HUB_RPC_URL: forkRpcUrl,
+  LOCAL_L1_RPC_URL: forkRpcUrl,
   CCHAIN_RPC_URL: rpcUrl,
   ARBITRUM_RPC_URL: rpcUrl,
   BASE_RPC_URL: rpcUrl,
