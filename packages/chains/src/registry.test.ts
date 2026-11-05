@@ -83,3 +83,24 @@ describe('parseChain', () => {
     expect(() => parseChain(planned)).toThrow(ChainError);
   });
 });
+
+describe('parseChain icm facts', () => {
+  const token = '0x59863989d080B22476DB95656d0C3CC18be92214';
+  const blockchainId = `0x${'ab'.repeat(32)}`;
+
+  it('accepts optional icm fields and leaves them out when absent', () => {
+    const icm = { blockchainId, usdcTokenHome: token, usdcTokenRemote: token };
+    expect(parseChain({ ...valid, icm })).toMatchObject({ icm });
+    expect(parseChain({ ...valid, icm: {} })).toMatchObject({ icm: {} });
+    expect(parseChain(valid)).not.toHaveProperty('icm');
+  });
+
+  it('rejects a short blockchain ID, a bad checksum and an unknown icm field', () => {
+    expect(() => parseChain({ ...valid, icm: { blockchainId: '0xab' } }, 'x.json')).toThrow(/icm\.blockchainId/);
+    const lower = token.toLowerCase();
+    expect(() => parseChain({ ...valid, icm: { usdcTokenHome: lower } }, 'x.json')).toThrow(
+      /icm\.usdcTokenHome: must be an EIP-55 address/,
+    );
+    expect(() => parseChain({ ...valid, icm: { relayer: token } })).toThrow(ChainError);
+  });
+});
