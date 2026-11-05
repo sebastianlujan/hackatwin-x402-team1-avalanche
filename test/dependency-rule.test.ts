@@ -167,6 +167,20 @@ describe('dependency rule', () => {
     expect(rules(make(nightly))).toEqual([]);
   });
 
+  it('R9 fails when a viem client is built outside packages/chains sources', () => {
+    const wallet = { 'demos/01-x402-twin/scripts/x.ts': "import { createWalletClient } from 'viem';" };
+    const [violation] = checkDependencyRule(make(wallet));
+    expect(rules(make(wallet))).toEqual(['R9']);
+    expect(formatViolation(violation as never)).toContain('R9 demos/01-x402-twin/scripts/x.ts: createWalletClient');
+    for (const name of ['createPublicClient', 'createTestClient']) {
+      expect(rules(make({ 'packages/pricing/src/x.ts': `const c = ${name}({});` }))).toContain('R9');
+    }
+    const chains = { 'packages/chains/src/x.ts': 'const c = createPublicClient({});' };
+    expect(rules(make(chains, { 'packages/chains/package.json': { name: '@hackatwin/chains' } }))).toEqual([]);
+    expect(rules(make({ 'packages/pricing/src/x.test.ts': 'const c = createPublicClient({});' }))).toEqual([]);
+    expect(rules(make({ 'e2e/protocol/src/x.test.ts': 'const c = createWalletClient({});' }))).toEqual([]);
+  });
+
   it('ignores files outside any workspace', () => {
     expect(rules(make({ 'apps/stray/x.ts': 'const k = process.env.KEY;' }))).toEqual([]);
   });
