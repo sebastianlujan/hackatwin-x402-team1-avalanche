@@ -106,8 +106,8 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 12: T8.2 tracker (specs: hop-tracking)
 
-- [ ] 12.1 RED fixtures: Happy path, Rejected, ICTT failure, Broker rejection, Duplicate log, Local, Fuji, Resume, Unknown ID, Fixture replay
-- [ ] 12.2 GREEN `adapters/tracker.ts` (decode, then map), `LogReader`, hop table indices
+- [x] 12.1 RED fixtures: Happy path, Rejected, ICTT failure, Broker rejection, Duplicate log, Local, Fuji, Resume, Unknown ID, Fixture replay
+- [x] 12.2 GREEN `adapters/tracker.ts` (decode, then map), `LogReader`, hop table indices
 
 ## PR 13: T8.3 setup (specs: demo-2-payment-flow)
 
