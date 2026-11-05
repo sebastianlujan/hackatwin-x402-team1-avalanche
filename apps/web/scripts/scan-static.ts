@@ -6,6 +6,9 @@ import { fileURLToPath } from 'node:url';
 export const SENTINELS = ['hackatwin-sentinel-anthropic', 'hackatwin-sentinel-keystore'] as const;
 export const FORBIDDEN = [...SENTINELS, 'ANTHROPIC_API_KEY', 'KEYSTORE', 'anvil_'] as const;
 
+// The one place the variable name may appear: the Claude-disabled reason shown to the presenter.
+export const ALLOWED_COPY = 'the server has no ANTHROPIC_API_KEY';
+
 export interface Finding {
   readonly file: string;
   readonly token: string;
@@ -18,7 +21,7 @@ export function scanDirectory(dir: string): Finding[] {
       const full = join(path, entry.name);
       if (entry.isDirectory()) walk(full);
       else {
-        const text = readFileSync(full, 'utf8');
+        const text = readFileSync(full, 'utf8').replaceAll(ALLOWED_COPY, '');
         for (const token of FORBIDDEN) if (text.includes(token)) findings.push({ file: full, token });
       }
     }

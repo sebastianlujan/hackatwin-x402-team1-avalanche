@@ -76,6 +76,11 @@ Edit: `docs/diagrams/demo-1.excalidraw`
      ```
    - The command prints the ARGt balances of the agent and the seller before and after, and the amount moved. The fork
      is local, so there is no public explorer link; the settlement transaction hash is in the output.
+   - Or run the same demo from the browser at `http://localhost:3000/demo-1`. After the fork, fund and register steps,
+     `pnpm web:demo1` starts the facilitator, the seller API and the web app together; `pnpm web` starts the web app
+     alone when the services already run. Press Run scripted (or Run with Claude when the server has
+     `ANTHROPIC_API_KEY`); reloading the page reattaches to the run without a second payment. The web app never starts
+     anvil or any service, and a missing precondition shows the command to run, for example `pnpm demo1:fund`.
 4. Rehearsal and fallback
    - `pnpm demo1 --scripted` runs the same path with zero secrets: the fork, the real ARGt, Permit2, the facilitator,
      ERC-8004 and the policy are all live, and only the LLM is replaced by a labeled scripted plan
