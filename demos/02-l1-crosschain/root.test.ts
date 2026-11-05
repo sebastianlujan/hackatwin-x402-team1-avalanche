@@ -1,6 +1,6 @@
 import type { LocalChain } from '@hackatwin/chains';
 import { ConfigError } from '@hackatwin/config';
-import { Ports } from '@hackatwin/core';
+import { money, Ports } from '@hackatwin/core';
 import { describe, expect, it, vi } from 'vitest';
 import { logs, MESSAGE_ID } from './adapters/tracker.fixtures.ts';
 import { composeRoot } from './root.ts';
@@ -64,5 +64,20 @@ describe('composeRoot', () => {
     expect(hops).toEqual([expect.objectContaining({ index: 0, status: 'None', transport: 'local', chainId: 31337 })]);
     expect(hops[0]).not.toHaveProperty('explorerUrl');
     expect(hub.chainClient).toHaveBeenCalledWith({ address: a(8), type: 'json-rpc' });
+  });
+
+  it('sends with the gas the broker needs to relay', async () => {
+    const executed = logs.executed();
+    const writes: { args: [unknown, { extraArgs: string }] }[] = [];
+    const client = {
+      read: async ({ functionName }: { functionName: string }) => ({ value: functionName === 'getFee' ? 0n : true }),
+      write: async (call: never) => writes.push(call) && '0x01',
+      waitForReceipt: async () => ({ status: 'success', logs: [{ ...executed, address: a(6) }] }),
+    };
+    const hub = { ...fakeClients(), chainClient: () => client };
+    const { container } = await composeRoot({ llm: 'scripted', env, world, connect: connect(hub as never) });
+    const transfer = { destinationChainId: 31338, recipient: a(3), amount: money(1n, 6, 'USDC') };
+    await expect(container.resolve(Ports.CrossChainMessenger).send(transfer)).resolves.toBe(MESSAGE_ID);
+    expect(Number.parseInt(writes[0]?.args[1].extraArgs.slice(10, 18) ?? '', 16)).toBeGreaterThanOrEqual(500_000);
   });
 });
