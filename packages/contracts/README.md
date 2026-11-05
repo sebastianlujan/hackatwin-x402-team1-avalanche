@@ -26,7 +26,7 @@ Run from `packages/contracts`:
 | `pnpm test:bulloak:scaffold` | Scaffold tests from `.tree` files |
 | `pnpm test:bulloak:check` | Fail when a tree and its test drift |
 | `pnpm lint:sol` and `pnpm lint:spec` | solhint and lintspec |
-| `FOUNDRY_PROFILE=deep forge test` | Deep fuzz and invariant run (nightly in `contracts-nightly.yml`) |
+| `FOUNDRY_PROFILE=deep forge test` | Deep fuzz and invariant run |
 | `forge snapshot --check --tolerance 1 --match-path 'test/gas/*'` | Gas drift check; refresh with `forge snapshot --match-path 'test/gas/*'` |
 
 ## Gas
