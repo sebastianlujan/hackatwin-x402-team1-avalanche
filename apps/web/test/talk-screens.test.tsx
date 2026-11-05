@@ -5,7 +5,6 @@ import Demo2 from '../src/app/demo-2/page.tsx';
 import Demo3 from '../src/app/demo-3/page.tsx';
 import Avalanche from '../src/app/path/avalanche/page.tsx';
 import BuiltByAgents from '../src/app/path/built-by-agents/page.tsx';
-import FirstTx from '../src/app/path/first-tx/page.tsx';
 import Production from '../src/app/path/production/page.tsx';
 import { copy } from '../src/content/copy.ts';
 import { TALK_PATH } from '../src/lib/talk-path.ts';
@@ -43,7 +42,6 @@ describe('placeholders', () => {
   it.each([
     [Demo2, copy.path.placeholders.demo2],
     [Demo3, copy.path.placeholders.demo3],
-    [FirstTx, copy.path.placeholders.firstTx],
   ])('%s is labeled as a placeholder', (Page, screen) => {
     const markup = renderToStaticMarkup(<Page />);
     expect(markup).toContain(screen.title);

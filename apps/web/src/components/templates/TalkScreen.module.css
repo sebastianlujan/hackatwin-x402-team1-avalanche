@@ -2,9 +2,13 @@
   display: grid;
   gap: var(--hk-space-4);
   justify-items: start;
-  max-width: 48rem;
+  max-width: 78rem;
   margin: 0 auto;
   padding: var(--hk-space-8) var(--hk-space-4);
+}
+
+.screen > * {
+  max-width: 48rem;
 }
 
 .lead {

@@ -1,7 +1,7 @@
 .nav {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: var(--hk-space-4);
   max-width: 78rem;
   margin: 0 auto;
@@ -11,7 +11,11 @@
 }
 
 .nav a {
-  padding: var(--hk-space-1) var(--hk-space-2);
+  padding-block: var(--hk-space-1);
+}
+
+.nav a[rel="next"] {
+  justify-self: end;
 }
 
 .position {
