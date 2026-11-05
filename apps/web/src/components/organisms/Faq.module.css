@@ -1,0 +1,32 @@
+.faq {
+  display: grid;
+  max-width: 60ch;
+}
+
+.title {
+  margin-bottom: var(--hk-space-3);
+  color: var(--hk-fg-muted);
+  font-size: var(--hk-text-sm);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.item {
+  padding: var(--hk-space-3) 0;
+  border-top: 1px solid var(--hk-line);
+}
+
+.item summary {
+  cursor: pointer;
+}
+
+.item summary:focus-visible {
+  outline: 2px solid var(--hk-accent);
+  outline-offset: 2px;
+}
+
+.item p {
+  margin: var(--hk-space-2) 0 0;
+  color: var(--hk-fg-muted);
+}

@@ -1,0 +1,25 @@
+.page {
+  display: grid;
+  gap: var(--hk-space-8);
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: var(--hk-space-8) var(--hk-space-4);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--hk-space-8);
+  align-items: start;
+}
+
+.foot {
+  color: var(--hk-fg-muted);
+  font-size: var(--hk-text-sm);
+}
+
+@media (max-width: 767px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

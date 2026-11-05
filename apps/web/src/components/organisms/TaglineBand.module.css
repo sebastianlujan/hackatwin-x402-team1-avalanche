@@ -1,0 +1,10 @@
+.band {
+  padding: var(--hk-space-6) 0;
+  border-block: 1px solid var(--hk-accent);
+}
+
+.band p {
+  margin: 0;
+  font-size: var(--hk-text-lg);
+  letter-spacing: -0.01em;
+}
