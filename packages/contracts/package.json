@@ -14,7 +14,8 @@
     "test:bulloak:check": "bulloak check 'test/**/*.tree'",
     "lint:fmt": "forge fmt --check",
     "lint:sol": "solhint 'src/**/*.sol' 'test/**/*.sol' 'script/**/*.sol'",
-    "lint:spec": "lintspec"
+    "lint:spec": "lintspec",
+    "abi:export": "node scripts/export-abi.ts"
   },
   "devDependencies": {
     "@chainlink/contracts": "catalog:",

@@ -246,6 +246,11 @@ jobs:
       - run: pnpm lint:sol
       - run: pnpm contracts:policy
         working-directory: .
+      - name: ABI drift check
+        working-directory: .
+        run: |
+          pnpm contracts:abi
+          git diff --exit-code -- packages/contracts/abi
 
   docs-build:
     name: docs build

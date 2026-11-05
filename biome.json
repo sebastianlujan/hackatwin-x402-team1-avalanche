@@ -8,7 +8,8 @@
       "!openspec",
       "!**/build",
       "!**/dist",
-      "!**/.docusaurus"
+      "!**/.docusaurus",
+      "!packages/contracts/abi/generated"
     ]
   },
   "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 120 },
