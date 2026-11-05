@@ -58,8 +58,11 @@ Edit: `docs/diagrams/demo-1.excalidraw`
    - Register the agent identity on the fork with `register(string agentURI)` (script added during implementation).
    - Start the facilitator and the seller API (scripts added during implementation).
 3. On stage
-   - `pnpm quote` (script added during implementation) prints the live rate, for example
-     `1 USD = 1658.3 ARGt (Curve, block N) | Chainlink 1657.9 | Δ 0.02% ✓`.
+   - `pnpm quote` prints the live rate from the shared `GuardedOracle` (read-only public RPCs, no config), for example
+     `1 USD = 1658.4 ARGt (Curve, block 521123469) | Chainlink 1657.9 | Δ 0.03% ✓`. If Curve is more than 2% away from
+     Chainlink it prints the guarded line instead,
+     `1 USD = 1657.9 ARGt (Chainlink, guarded) | Curve 1700.0 (block 521123469) | Δ 2.53% ⚠`, and exits non-zero on an
+     oracle error.
    - Run the agent and narrate `402 → policy check → Permit2 signature → 200`.
    - Show the ARGt balances and the settlement transaction in the UI. The fork is local, so there is no public
      explorer link.

@@ -13,6 +13,7 @@
     "@hackatwin/core": "workspace:*"
   },
   "devDependencies": {
-    "@hackatwin/chains": "workspace:*"
+    "@hackatwin/chains": "workspace:*",
+    "@hackatwin/config": "workspace:*"
   }
 }

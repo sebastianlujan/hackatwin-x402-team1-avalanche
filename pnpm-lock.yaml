@@ -350,6 +350,9 @@ importers:
       '@hackatwin/chains':
         specifier: workspace:*
         version: link:../chains
+      '@hackatwin/config':
+        specifier: workspace:*
+        version: link:../config
 
   packages/ui: {}
 
