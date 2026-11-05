@@ -133,6 +133,15 @@ describe('FakeChainClient', () => {
   });
 });
 
+describe('ContractCall value', () => {
+  it('records the native value of a write and accepts a call without one', async () => {
+    const chain = new FakeChainClient();
+    await chain.write({ address: addr, abi: [], functionName: 'pay', value: 5n });
+    await chain.write({ address: addr, abi: [], functionName: 'free' });
+    expect(chain.writes.map((call) => call.value)).toEqual([5n, undefined]);
+  });
+});
+
 describe('FakePriceOracle', () => {
   it('converts with the fixed rate and the injected clock', async () => {
     let now = 1_000;

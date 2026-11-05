@@ -7,13 +7,14 @@ export interface Hop {
   readonly chainId: number;
   readonly status: PaymentStatus;
   readonly txHash: Hex;
-  readonly explorerUrl: string;
+  readonly explorerUrl?: string;
 }
 
 interface Base<T extends string> {
   readonly version: 1;
   readonly type: T;
   readonly at: number;
+  readonly simulated?: 'local-crosschain';
 }
 
 export type AgentEvent =
@@ -85,6 +86,9 @@ export const decodeAgentEvent = (text: string): AgentEvent => {
   }
   if (typeof raw !== 'object' || raw === null) throw new AgentEventError('AgentEvent must be an object');
   const event = raw as Json;
+  if (event.simulated !== undefined && event.simulated !== 'local-crosschain') {
+    throw new AgentEventError('AgentEvent simulated must be local-crosschain when present');
+  }
   if (event.version !== 1) throw new AgentEventError(`Unsupported AgentEvent version: ${String(event.version)}`);
   if (typeof event.type !== 'string' || !TYPES.has(event.type)) {
     throw new AgentEventError(`Unknown AgentEvent type: ${String(event.type)}`);

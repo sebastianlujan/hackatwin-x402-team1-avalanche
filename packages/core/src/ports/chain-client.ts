@@ -5,6 +5,8 @@ export interface ContractCall {
   readonly abi: readonly unknown[];
   readonly functionName: string;
   readonly args?: readonly unknown[];
+  // Native value sent with a write.
+  readonly value?: bigint;
 }
 
 export interface Log {
