@@ -150,3 +150,6 @@ vite.config.ts.timestamp-*
 
 # SDD skill registry (local)
 .atl/
+
+# Docusaurus build output
+apps/docs/build/
