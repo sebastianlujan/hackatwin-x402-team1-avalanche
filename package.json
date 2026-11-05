@@ -13,7 +13,6 @@
     "build": "pnpm -r --if-present build",
     "chains:verify": "node packages/chains/scripts/verify.ts",
     "contracts:policy": "node packages/contracts/scripts/check-policy.ts",
-    "contracts:abi": "pnpm --filter @hackatwin/contracts abi:export",
     "quote": "node packages/pricing/scripts/quote.ts",
     "test:fork": "vitest run --project fork",
     "test:local": "vitest run --project local",
