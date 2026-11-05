@@ -136,6 +136,21 @@ describe('dependency rule', () => {
     expect(rules(make(loader))).toEqual([]);
   });
 
+  it('R7 fails when a package imports the keystore, not when a root does', () => {
+    const subpath = {
+      'packages/pricing/src/x.ts': "import { loadKeystoreAccount } from '@hackatwin/chains/keystore';",
+    };
+    expect(rules(make(subpath))).toEqual(['R7']);
+    const relative = { 'packages/chains/src/x.ts': "import { loadKeystoreAccount } from './keystore/index.ts';" };
+    expect(rules(make(relative, { 'packages/chains/package.json': { name: '@hackatwin/chains' } }))).toEqual(['R7']);
+    const inside = { 'packages/chains/src/keystore/a.ts': "import { b } from './b.ts';" };
+    expect(rules(make(inside, { 'packages/chains/package.json': { name: '@hackatwin/chains' } }))).toEqual([]);
+    const root = {
+      'demos/01-x402-twin/scripts/run.ts': "import { loadKeystoreAccount } from '@hackatwin/chains/keystore';",
+    };
+    expect(rules(make(root))).toEqual([]);
+  });
+
   it('ignores files outside any workspace', () => {
     expect(rules(make({ 'apps/stray/x.ts': 'const k = process.env.KEY;' }))).toEqual([]);
   });
