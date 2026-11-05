@@ -1,0 +1,20 @@
+UnitRegistry
+├── when resolving a chain ID to a key
+│   ├── given the chain ID is in a registry file
+│   │   └── it returns the key
+│   └── given the chain ID is in no registry file
+│       └── it reverts with UnknownChainId
+├── when reading an address entry
+│   ├── given the entry exists
+│   │   └── it returns the address from the JSON
+│   └── given the entry or the file is absent
+│       └── it reverts with EntryNotFound naming both
+├── when parsing the CCIP selector
+│   ├── given a decimal string within uint64
+│   │   └── it returns the value
+│   ├── given a non numeric or empty or oversized string
+│   │   └── it reverts with InvalidSelector
+│   └── given the registry has no selector
+│       └── it reverts with EntryNotFound
+└── when the project grants file access
+    └── it allows no write to the registry directory
