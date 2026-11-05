@@ -6,7 +6,7 @@ import { Client } from '@chainlink/contracts-ccip/contracts/libraries/Client.sol
 import { Ownable, Ownable2Step } from '@openzeppelin/contracts/access/Ownable2Step.sol';
 
 import { IPaymentBroker } from 'src/interfaces/IPaymentBroker.sol';
-import { IPaymentHub } from 'src/interfaces/IPaymentHub.sol';
+import { IPaymentHub, Id } from 'src/interfaces/IPaymentHub.sol';
 
 /// @title PaymentBroker
 /// @notice The Fuji CCIP receiver that only acts inside the router-restricted receive hook
@@ -19,6 +19,9 @@ contract PaymentBroker is IPaymentBroker, CCIPReceiver, Ownable2Step {
 
   /// @notice The payer each allowed source pair is bound to
   mapping(uint64 _sourceChainSelector => mapping(address _sender => address _payer)) internal _payers;
+
+  /// @notice The final status of each processed message
+  mapping(bytes32 _messageId => Status _status) internal _statuses;
 
   /// @param _router The CCIP router, the only caller of the receive hook
   /// @param _hub The payment hub
@@ -39,12 +42,35 @@ contract PaymentBroker is IPaymentBroker, CCIPReceiver, Ownable2Step {
     _payer = _payers[_sourceChainSelector][_sender];
   }
 
+  /// @inheritdoc IPaymentBroker
+  function statusOf(bytes32 _messageId) external view returns (Status _status) {
+    _status = _statuses[_messageId];
+  }
+
   /// @inheritdoc CCIPReceiver
   function _ccipReceive(Client.Any2EVMMessage memory _message) internal override {
     uint64 _selector = _message.sourceChainSelector;
     address _sender = abi.decode(_message.sender, (address));
-    if (_payers[_selector][_sender] == address(0)) revert PaymentBroker_SourceNotAllowed(_selector, _sender);
+    address _payer = _payers[_selector][_sender];
+    if (_payer == address(0)) revert PaymentBroker_SourceNotAllowed(_selector, _sender);
+    bytes32 _messageId = _message.messageId;
+    if (_statuses[_messageId] != Status.None) revert PaymentBroker_MessageAlreadyProcessed(_messageId);
     if (_message.destTokenAmounts.length != 0) revert PaymentBroker_UnexpectedTokens();
     if (_message.data.length != _PAYLOAD_SIZE) revert PaymentBroker_InvalidPayload();
+
+    (Id _laneId, uint256 _word, uint256 _amount, uint256 _deadline) =
+      abi.decode(_message.data, (Id, uint256, uint256, uint256));
+    if (_word >> 160 != 0) revert PaymentBroker_InvalidPayload();
+    address _onBehalf = address(uint160(_word));
+
+    if (_onBehalf != _payer) {
+      _statuses[_messageId] = Status.Rejected;
+      emit MessageRejected(_messageId, PaymentBroker_PayerMismatch.selector);
+      return;
+    }
+    _statuses[_messageId] = Status.Accepted;
+    bytes32 _paymentId = HUB.pay(_laneId, _onBehalf, _amount, _deadline);
+    HUB.dispatch(_laneId, _paymentId);
+    emit MessageAccepted(_messageId, _laneId, _paymentId);
   }
 }

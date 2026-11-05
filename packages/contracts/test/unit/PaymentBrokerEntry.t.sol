@@ -8,11 +8,9 @@ import { FinalityCodec } from '@chainlink/contracts-ccip/contracts/libraries/Fin
 import { Ownable } from '@openzeppelin/contracts/access/Ownable.sol';
 
 import { IPaymentBroker } from 'src/interfaces/IPaymentBroker.sol';
-import { Id } from 'src/interfaces/IPaymentHub.sol';
 import { BrokerFixture } from 'test/utils/BrokerFixture.sol';
 
 contract UnitPaymentBrokerEntry is BrokerFixture {
-  Id internal _lane = Id.wrap(keccak256('lane'));
   address internal _stranger = makeAddr('stranger');
 
   function setUp() external {
@@ -27,7 +25,7 @@ contract UnitPaymentBrokerEntry is BrokerFixture {
 
   function test_GivenACallerThatIsNotTheRouter() external whenAMessageReachesTheBroker {
     // it reverts with InvalidRouter
-    Client.Any2EVMMessage memory _msg = _message(keccak256('m'), _SELECTOR_A, _senderX, _data(_lane, _payerP, 1, 1));
+    Client.Any2EVMMessage memory _msg = _message(keccak256('m'), _SELECTOR_A, _senderX, _valid(_payerP));
     assertEq(_broker.getRouter(), _router);
     assertEq(address(_broker.HUB()), address(_hub));
     address[2] memory _callers = [_stranger, address(this)];
@@ -40,8 +38,10 @@ contract UnitPaymentBrokerEntry is BrokerFixture {
 
   function test_GivenAnAllowedPair() external whenAMessageReachesTheBroker {
     // it processes the message
-    _deliver(_message(keccak256('a'), _SELECTOR_A, _senderX, _data(_lane, _payerP, 1, 1)));
-    _deliver(_message(keccak256('b'), _SELECTOR_B, _senderY, _data(_lane, _payerQ, 1, 1)));
+    _deliver(_message(keccak256('a'), _SELECTOR_A, _senderX, _valid(_payerP)));
+    _deliver(_message(keccak256('b'), _SELECTOR_B, _senderY, _valid(_payerQ)));
+    assertEq(uint8(_broker.statusOf(keccak256('a'))), uint8(IPaymentBroker.Status.Accepted));
+    assertEq(uint8(_broker.statusOf(keccak256('b'))), uint8(IPaymentBroker.Status.Accepted));
   }
 
   function test_GivenPairsThatAreNotMixed() external whenAMessageReachesTheBroker {
@@ -56,10 +56,10 @@ contract UnitPaymentBrokerEntry is BrokerFixture {
     vm.expectRevert(
       abi.encodeWithSelector(IPaymentBroker.PaymentBroker_SourceNotAllowed.selector, _SELECTOR_B, _senderX)
     );
-    _deliver(_message(keccak256('d'), _SELECTOR_B, _senderX, _data(_lane, _payerP, 1, 1)));
+    _deliver(_message(keccak256('d'), _SELECTOR_B, _senderX, _valid(_payerP)));
 
     vm.expectRevert(abi.encodeWithSelector(IPaymentBroker.PaymentBroker_SourceNotAllowed.selector, 3, _senderX));
-    _deliver(_message(keccak256('e'), 3, _senderX, _data(_lane, _payerP, 1, 1)));
+    _deliver(_message(keccak256('e'), 3, _senderX, _valid(_payerP)));
   }
 
   function test_GivenARemovedPair() external whenAMessageReachesTheBroker {
@@ -68,14 +68,14 @@ contract UnitPaymentBrokerEntry is BrokerFixture {
     vm.expectRevert(
       abi.encodeWithSelector(IPaymentBroker.PaymentBroker_SourceNotAllowed.selector, _SELECTOR_A, _senderX)
     );
-    _deliver(_message(keccak256('f'), _SELECTOR_A, _senderX, _data(_lane, _payerP, 1, 1)));
+    _deliver(_message(keccak256('f'), _SELECTOR_A, _senderX, _valid(_payerP)));
 
-    _deliver(_message(keccak256('g'), _SELECTOR_B, _senderY, _data(_lane, _payerQ, 1, 1)));
+    _deliver(_message(keccak256('g'), _SELECTOR_B, _senderY, _valid(_payerQ)));
   }
 
   function test_GivenAMessageThatCarriesTokens() external whenAMessageReachesTheBroker {
     // it reverts with PaymentBroker_UnexpectedTokens
-    Client.Any2EVMMessage memory _msg = _message(keccak256('h'), _SELECTOR_A, _senderX, _data(_lane, _payerP, 1, 1));
+    Client.Any2EVMMessage memory _msg = _message(keccak256('h'), _SELECTOR_A, _senderX, _valid(_payerP));
     for (uint256 _n = 1; _n <= 2; ++_n) {
       _msg.destTokenAmounts = new Client.EVMTokenAmount[](_n);
       vm.expectRevert(IPaymentBroker.PaymentBroker_UnexpectedTokens.selector);
