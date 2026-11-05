@@ -49,7 +49,7 @@ contract UnitRegistryIcm is Test {
   function test_GivenTheEntryHasNone() external whenReadingTheICMBlockchainID {
     // it reverts with EntryNotFound naming icm blockchainId
     vm.expectRevert(abi.encodeWithSelector(Registry.Registry_EntryNotFound.selector, 'fuji', 'icm.blockchainId'));
-    _harness.blockchainIdOf(_FIXTURES, 'fuji');
+    _harness.blockchainIdOf('./test/fixtures/registry-partial', 'fuji');
   }
 
   modifier whenReadingAnICMTransferrer() {
