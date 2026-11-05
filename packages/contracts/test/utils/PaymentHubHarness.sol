@@ -24,8 +24,16 @@ contract PaymentHubHarness is PaymentHub {
     _enabled = _messengerEnabled[_messenger];
   }
 
-  function setAuthorizationWithSig(Authorization calldata, bytes calldata) external pure {
-    revert();
+  function exposed_budget(
+    address _authorizer,
+    address _authorized,
+    address _token
+  )
+    external
+    view
+    returns (uint256 _budget)
+  {
+    _budget = _budgets[_authorizer][_authorized][_token];
   }
 
   function pay(Id, address, uint256, uint256) external pure returns (bytes32) {
