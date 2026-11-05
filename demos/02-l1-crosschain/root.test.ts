@@ -66,6 +66,20 @@ describe('composeRoot', () => {
     expect(hub.chainClient).toHaveBeenCalledWith({ address: a(8), type: 'json-rpc' });
   });
 
+  it('resumes from the progress it is given: hops already emitted are not emitted again', async () => {
+    const progress = { last: () => 0, record: vi.fn() };
+    const { container } = await composeRoot({
+      llm: 'scripted',
+      env,
+      world,
+      connect: connect(fakeClients([1])),
+      progress,
+    });
+    const hops = [];
+    for await (const hop of container.resolve(Ports.CrossChainMessenger).track(MESSAGE_ID)) hops.push(hop);
+    expect(hops).toEqual([]);
+  });
+
   it('sends with enough gas for the broker to relay and dispatch', async () => {
     const executed = logs.executed();
     const writes: { args: [unknown, { extraArgs: string }] }[] = [];
