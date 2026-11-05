@@ -20,6 +20,8 @@ export interface LocalCcipSenderOptions {
   readonly router: Address;
   readonly lanes: Lanes;
   readonly gasLimit?: number;
+  // Follows a message after the send; without one, `track` refuses.
+  readonly tracker?: { track(messageId: string): AsyncIterable<Hop> };
 }
 
 export class LocalCcipSender implements CrossChainMessenger {
@@ -28,12 +30,14 @@ export class LocalCcipSender implements CrossChainMessenger {
   private readonly router: Address;
   private readonly lanes: Lanes;
   private readonly gasLimit: number;
+  private readonly tracker: LocalCcipSenderOptions['tracker'];
 
-  constructor({ client, router, lanes, gasLimit = DEFAULT_GAS_LIMIT }: LocalCcipSenderOptions) {
+  constructor({ client, router, lanes, gasLimit = DEFAULT_GAS_LIMIT, tracker }: LocalCcipSenderOptions) {
     this.client = client;
     this.router = router;
     this.lanes = lanes;
     this.gasLimit = gasLimit;
+    this.tracker = tracker;
   }
 
   // Data-only message: the amount travels inside the payload, never as a CCIP token.
@@ -72,8 +76,9 @@ export class LocalCcipSender implements CrossChainMessenger {
     return this.messageId(await this.client.waitForReceipt(hash));
   }
 
-  track(_messageId: string): AsyncIterable<Hop> {
-    throw new Error('tracking is not part of the sender');
+  track(messageId: string): AsyncIterable<Hop> {
+    if (this.tracker === undefined) throw new Error('no hop tracker configured');
+    return this.tracker.track(messageId);
   }
 
   private messageId({ status, logs }: Awaited<ReturnType<ChainClient['waitForReceipt']>>): Hex {
