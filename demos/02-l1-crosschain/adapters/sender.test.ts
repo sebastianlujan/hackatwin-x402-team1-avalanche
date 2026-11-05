@@ -21,7 +21,7 @@ const routerAbi = parseAbi([
 ]);
 const executed = (address: Address) => ({
   address,
-  topics: encodeEventTopics({ abi: routerAbi, eventName: 'MessageExecuted' }),
+  topics: encodeEventTopics({ abi: routerAbi, eventName: 'MessageExecuted' }) as Hex[],
   data: encodeAbiParameters(
     [{ type: 'bytes32' }, { type: 'uint64' }, { type: 'address' }, { type: 'bytes32' }],
     [MESSAGE_ID, 1n, other, `0x${'0'.repeat(64)}`],
