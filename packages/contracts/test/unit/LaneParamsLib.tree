@@ -1,0 +1,8 @@
+UnitLaneParamsLib
+└── when computing a lane id
+    ├── given any params
+    │   └── it equals the keccak of the encoded params
+    ├── given equal params
+    │   └── it returns equal ids
+    └── given params differing in one field
+        └── it returns a different id
