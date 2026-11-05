@@ -18,6 +18,9 @@ const worldSchema = z.object({
     messenger: address,
     receiver: address,
     router: address,
+    home: address,
+    remote: address,
+    selector: z.string().regex(/^\d+$/, 'must be a decimal number'),
   }),
   roles: z.object({ treasury: address, agent: address, merchant: address }),
 });

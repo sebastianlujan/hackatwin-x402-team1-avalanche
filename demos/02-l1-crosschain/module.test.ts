@@ -50,7 +50,7 @@ describe('registerCrossChainModule', () => {
     container.register(Tokens.Hub, () => ({ chainClient }) as never);
     registerCrossChainModule(container);
     const funding = container.resolve(Tokens.Funding);
-    expect(accounts).toEqual([]);
+    expect(client.writes).toEqual([]);
     const hash: Hex = await funding.fund(a(12), 4_000_000n);
     expect(accounts).toEqual([{ address: a(7), type: 'json-rpc' }]);
     expect(client.writes.map((w) => [w.address, w.functionName])).toEqual([
