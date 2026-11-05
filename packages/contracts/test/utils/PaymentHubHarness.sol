@@ -4,7 +4,7 @@ pragma solidity 0.8.30;
 import { PaymentHub } from 'src/PaymentHub.sol';
 import { IPaymentHub, Id } from 'src/interfaces/IPaymentHub.sol';
 
-/// @notice Exposes the internal write path and storage of the hub, and stubs the functions not built yet
+/// @notice Exposes the internal write path and storage of the hub for tests
 contract PaymentHubHarness is PaymentHub {
   constructor(address _owner) PaymentHub(_owner) { }
 
@@ -46,9 +46,5 @@ contract PaymentHubHarness is PaymentHub {
     returns (uint256 _budget)
   {
     _budget = _budgets[_authorizer][_authorized][_token];
-  }
-
-  function dispatch(Id, bytes32) external pure {
-    revert();
   }
 }

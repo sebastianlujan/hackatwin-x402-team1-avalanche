@@ -10,6 +10,7 @@ import { EIP712 } from '@openzeppelin/contracts/utils/cryptography/EIP712.sol';
 import { SignatureChecker } from '@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol';
 import { SafeCast } from '@openzeppelin/contracts/utils/math/SafeCast.sol';
 
+import { IMessenger } from 'src/interfaces/IMessenger.sol';
 import { IPaymentHub, Id } from 'src/interfaces/IPaymentHub.sol';
 import { LaneParamsLib } from 'src/libraries/LaneParamsLib.sol';
 import { PaymentCallbackLib } from 'src/libraries/PaymentCallbackLib.sol';
@@ -17,7 +18,7 @@ import { PaymentStateLib } from 'src/libraries/PaymentStateLib.sol';
 
 /// @title PaymentHub
 /// @notice Singleton hub of permissionless lanes and escrowed payments behind one state machine
-abstract contract PaymentHub is IPaymentHub, Ownable2Step, EIP712, Nonces, ReentrancyGuardTransient {
+contract PaymentHub is IPaymentHub, Ownable2Step, EIP712, Nonces, ReentrancyGuardTransient {
   using SafeERC20 for IERC20;
 
   /// @notice A payment record packed into one slot, plus the escrowed amount
@@ -132,6 +133,25 @@ abstract contract PaymentHub is IPaymentHub, Ownable2Step, EIP712, Nonces, Reent
     _payment.deadline = SafeCast.toUint64(_deadline);
     _payment.amount = _escrow;
     _transition(_id, _paymentId, Status.None, Status.Pending);
+  }
+
+  /// @inheritdoc IPaymentHub
+  function dispatch(Id _id, bytes32 _paymentId) external nonReentrant {
+    _transition(_id, _paymentId, Status.Pending, Status.Dispatched);
+
+    LaneParams memory _lane = _lanes[_id];
+    if (_lane.messenger == address(0)) revert PaymentHub_WrongLaneKind();
+    Payment storage _payment = _payments[_id][_paymentId];
+    if (block.timestamp > _payment.deadline) revert PaymentHub_DeadlinePassed();
+
+    uint256 _escrow = _payment.amount;
+    _payment.amount = 0;
+    IERC20 _token = IERC20(_lane.token);
+    _token.forceApprove(_lane.messenger, _escrow);
+    IMessenger(_lane.messenger).send(_id, _paymentId, _lane, _escrow);
+
+    uint256 _remaining = _token.allowance(address(this), _lane.messenger);
+    if (_remaining != 0) revert PaymentHub_AllowanceNotConsumed(_remaining);
   }
 
   /// @inheritdoc IPaymentHub

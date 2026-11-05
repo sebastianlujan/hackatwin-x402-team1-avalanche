@@ -102,6 +102,7 @@ contract UnitPaymentHubCallback is Test {
     uint256 _guarded = _merchant.reentrantGuarded();
     assertEq(_guarded & 1, 1, 'pay');
     assertEq((_guarded >> 1) & 1, 1, 'settle');
+    assertEq((_guarded >> 2) & 1, 1, 'dispatch');
     assertEq((_guarded >> 3) & 1, 1, 'refund');
     assertEq((_guarded >> 4) & 1, 1, 'withdraw');
   }
