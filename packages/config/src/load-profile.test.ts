@@ -98,6 +98,54 @@ describe('failures', () => {
   });
 });
 
+describe('raw-key guard', () => {
+  const key = `0x${'ab'.repeat(32)}`;
+
+  it.each(['PRIVATE_KEY', 'AGENT_PRIVATE_KEY', 'SELLER_KEYSTORE_PASSWORD', 'TREASURY_PRIVATE_KEY'])(
+    'rejects %s',
+    (variable) => {
+      const error = catchConfigError(() => loadProfile('fuji-cchain', { ...base, [variable]: key }));
+      expect(error.issues).toEqual([
+        { variable, message: 'raw secrets are not allowed, reference a keystore instead' },
+      ]);
+      expect(error.message).not.toContain(key);
+    },
+  );
+
+  it.each([key, 'ab'.repeat(32)])('rejects a 64-hex keystore value', (value) => {
+    const error = catchConfigError(() => loadProfile('fuji-cchain', { ...base, AGENT_KEYSTORE: value }));
+    expect(error.issues).toEqual([
+      { variable: 'AGENT_KEYSTORE', message: 'looks like a raw private key, use a keystore name' },
+    ]);
+    expect(error.message).not.toContain('abab');
+  });
+
+  it('accepts a normal keystore name and reports guard and schema issues together', () => {
+    expect(loadProfile('fuji-cchain', { ...base, AGENT_KEYSTORE: 'deployer-1' }).env.AGENT_KEYSTORE).toBe('deployer-1');
+    const error = catchConfigError(() => loadProfile('fuji-cchain', { ...base, PRIVATE_KEY: key, FUJI_RPC_URL: 'x' }));
+    expect(error.issues.map((i) => i.variable)).toEqual(['PRIVATE_KEY', 'FUJI_RPC_URL']);
+  });
+});
+
+describe('fork guard', () => {
+  it.each(['http://localhost:8545', 'http://127.0.0.1:8545', 'ws://[::1]:8545'])('accepts %s', (url) => {
+    expect(loadProfile('cchain-fork', { ...base, CCHAIN_FORK_RPC_URL: url }).env.CCHAIN_FORK_RPC_URL).toBe(url);
+  });
+
+  it('rejects a remote RPC and names the field', () => {
+    const url = 'https://api.avax.network/ext/bc/C/rpc';
+    const error = catchConfigError(() => loadProfile('cchain-fork', { ...base, CCHAIN_FORK_RPC_URL: url }));
+    expect(error.issues).toEqual([
+      { variable: 'CCHAIN_FORK_RPC_URL', message: 'must be a loopback URL (localhost, 127.0.0.1 or [::1])' },
+    ]);
+  });
+
+  it('does not guard CCHAIN_RPC_URL', () => {
+    const url = 'https://api.avax.network/ext/bc/C/rpc';
+    expect(loadProfile('cchain-fork', { ...base, CCHAIN_RPC_URL: url }).env.CCHAIN_RPC_URL).toBe(url);
+  });
+});
+
 describe('env coverage', () => {
   it('lists every schema variable in .env.example with an empty value', () => {
     const text = readFileSync(resolve(import.meta.dirname, '../../../.env.example'), 'utf8');

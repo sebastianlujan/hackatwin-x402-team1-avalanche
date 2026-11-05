@@ -10,7 +10,11 @@ const isRpcUrl = (value: string): boolean => {
   }
 };
 
+const LOOPBACK = new Set(['localhost', '127.0.0.1', '[::1]']);
+const isLoopback = (value: string): boolean => LOOPBACK.has(new URL(value).hostname);
+
 const rpcUrl = z.string(required).refine(isRpcUrl, 'must be an http(s) or ws(s) URL');
+const forkRpcUrl = rpcUrl.refine(isLoopback, 'must be a loopback URL (localhost, 127.0.0.1 or [::1])');
 const chainId = z
   .string(required)
   .regex(/^[1-9]\d*$/, 'must be a positive integer')
@@ -21,7 +25,7 @@ const passwordFile = z.string(required).regex(/^(\/|[A-Za-z]:[\\/])/, 'must be a
 
 export const envSchemas = {
   ANTHROPIC_API_KEY: z.string(required).min(1),
-  CCHAIN_FORK_RPC_URL: rpcUrl,
+  CCHAIN_FORK_RPC_URL: forkRpcUrl,
   CCHAIN_RPC_URL: rpcUrl,
   ARBITRUM_RPC_URL: rpcUrl,
   BASE_RPC_URL: rpcUrl,
