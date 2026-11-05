@@ -4,6 +4,7 @@ import { type AgentEvent, type ChainClient, token } from '@hackatwin/core';
 import type { Hono } from 'hono';
 import type { LocalAccount } from 'viem';
 import type { FundingReport } from './adapters/funding.ts';
+import type { RegistrationReport } from './adapters/registration.ts';
 import type { DemoState, Role } from './state.ts';
 
 // Tokens typed `unknown` get their real type in the PR that builds the service.
@@ -15,7 +16,7 @@ export const Tokens = {
   State: token<DemoState>('State'),
   Events: token<(event: AgentEvent) => void>('Events'),
   Funding: token<{ fund(): Promise<FundingReport> }>('Funding'),
-  Registration: token<unknown>('Registration'),
+  Registration: token<{ register(): Promise<RegistrationReport> }>('Registration'),
   FacilitatorApp: token<Hono>('FacilitatorApp'),
   SellerApp: token<Hono>('SellerApp'),
   Buyer: token<unknown>('Buyer'),
