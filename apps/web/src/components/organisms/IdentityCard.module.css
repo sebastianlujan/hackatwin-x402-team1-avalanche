@@ -1,0 +1,49 @@
+.card {
+  display: grid;
+  gap: var(--hk-space-6);
+  width: 100%;
+}
+
+.offline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hk-space-3);
+  margin: 0;
+  color: var(--hk-fg-muted);
+}
+
+.row {
+  display: grid;
+  gap: var(--hk-space-3);
+  padding-top: var(--hk-space-3);
+  border-top: 1px solid var(--hk-line);
+}
+
+.role {
+  color: var(--hk-accent);
+  font-size: var(--hk-text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--hk-space-2) var(--hk-space-6);
+  margin: 0;
+}
+
+.fields dt {
+  color: var(--hk-fg-muted);
+}
+
+.fields dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.mono {
+  font-size: var(--hk-text-sm);
+  overflow-wrap: anywhere;
+}

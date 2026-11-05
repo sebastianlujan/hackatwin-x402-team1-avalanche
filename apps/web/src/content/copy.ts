@@ -68,6 +68,21 @@ export const copy = {
       kinds: { 'payment.status': 'payment', 'identity.feedback': 'feedback' },
     },
   },
+  identity: {
+    title: 'Agents with identity',
+    lead: 'The agent and the seller are registered on the ERC-8004 identity registry of the local fork.',
+    offline: 'offline',
+    offlineNote: 'The fork did not answer: these are the last known values, not a live read.',
+    notSet: 'not set yet',
+    roles: { agent: 'Agent', seller: 'Seller' },
+    fields: { agentId: 'agentId', owner: 'owner', reputation: 'reputation' },
+    reputation: {
+      unavailable: 'unavailable',
+      none: 'no feedback yet',
+      feedback: 'feedback',
+      score: 'score',
+    },
+  },
   landing: {
     hero: {
       brand: '> HACKATWIN',
@@ -177,7 +192,6 @@ export const copy = {
       badge: 'Placeholder',
       demo2: { title: 'Demo 2', lead: 'The TwinPay L1 payment is not built yet.', items: [] },
       demo3: { title: 'Demo 3', lead: 'The config switch between chains is not built yet.', items: [] },
-      identity: { title: 'Agents with identity', lead: 'The identity card is not built yet.', items: [] },
       firstTx: { title: 'First transaction on Fuji', lead: 'The wallet screen is not built yet.', items: [] },
     },
   },
@@ -185,6 +199,7 @@ export const copy = {
 
 export type Demo1Copy = typeof copy.demo1;
 export type LandingCopy = typeof copy.landing;
+export type IdentityCopy = typeof copy.identity;
 export type PathCopy = typeof copy.path;
 export interface TalkScreenCopy {
   readonly title: string;
