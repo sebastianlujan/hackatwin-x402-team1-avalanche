@@ -1,0 +1,12 @@
+{
+  "name": "@hackatwin/demo-01-x402-twin",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./module": "./module.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}
