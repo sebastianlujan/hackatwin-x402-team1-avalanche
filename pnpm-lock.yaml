@@ -460,6 +460,9 @@ importers:
 
   demos/02-l1-crosschain:
     dependencies:
+      '@hackatwin/agent-kit':
+        specifier: workspace:*
+        version: link:../../packages/agent-kit
       '@hackatwin/chains':
         specifier: workspace:*
         version: link:../../packages/chains

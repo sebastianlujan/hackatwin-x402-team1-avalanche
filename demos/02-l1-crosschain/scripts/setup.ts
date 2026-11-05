@@ -3,25 +3,16 @@ import { join } from 'node:path';
 import { createGuardedClients, type GuardedClients, localChain } from '@hackatwin/chains';
 import { loadProfile } from '@hackatwin/config';
 import { type Address, type ContractCall, formatMoney, type Hex, type Money, money } from '@hackatwin/core';
-import {
-  type Account,
-  BaseError,
-  decodeErrorResult,
-  encodeAbiParameters,
-  encodeFunctionData,
-  keccak256,
-  parseAbi,
-  parseAbiParameters,
-} from 'viem';
+import { type Account, BaseError, decodeErrorResult, encodeFunctionData, parseAbi } from 'viem';
 import { parseWorld, type World } from '../deployment.ts';
 import { BANNER } from '../labels.ts';
+import { laneIdOf, laneParams } from '../lane.ts';
 
 const USDC_DECIMALS = 6;
 const AUTHORIZATION_TTL = 3600n;
 const PROBE_AMOUNT = 2n ** 256n - 1n;
 const PROBE_DEADLINE = 2n ** 40n;
 
-const LANE_PARAMS = parseAbiParameters('(address token, address merchant, address messenger, bytes32 destination)');
 const HUB_ABI = parseAbi([
   'error PaymentHub_LaneNotFound(bytes32 id)',
   'error PaymentHub_Unauthorized(address caller)',
@@ -99,10 +90,10 @@ export async function setupTreasury({ chain, world, profile, print }: SetupInput
   const total = profile.budget?.total;
   if (total === undefined) throw new Error('the profile has no budget.total');
   print(BANNER);
-  const { usdc, hub, broker, messenger } = world.contracts;
-  const { treasury, merchant } = world.roles;
-  const params = { token: usdc, merchant, messenger, destination: world.chains.l1.blockchainId };
-  const laneId = keccak256(encodeAbiParameters(LANE_PARAMS, [params]));
+  const { usdc, hub, broker } = world.contracts;
+  const { treasury } = world.roles;
+  const params = laneParams(world);
+  const laneId = laneIdOf(world);
 
   let remaining = await remainingBudget(chain, world, laneId);
   if (remaining === 'no-lane') {
