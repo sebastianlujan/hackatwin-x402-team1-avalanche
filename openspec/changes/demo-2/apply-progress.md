@@ -134,6 +134,10 @@ Product change: `composeRoot` takes an optional `progress` (HopProgress) so a re
 Risks closed: (b) ICTT funding proven on the live pair. (a) The tracker decodes live logs from the real contracts on every scenario (all five hops, `Rejected`, broker `MessageRejected`), so the ABI strings match real events; the encoded unit fixtures remain as unit data, no recorded-log file was committed.
 Notes: (1) The Clean tree check compares with the status before the run (empty in CI, where the workflow also checks it); committing during a local run makes it fail, which shows it bites. (2) One local full run hung 300 s in `deploy.local.test.ts` `up()` on a stuck `forge script DeployFuji` (killed by PID; the same file passed alone and in the next full run); not reproduced, watch for it. (3) `local` job 1m31s on #270.
 
+## Verify remediation C1
+
+Verify finding C1 (simulated-run-labeling "Selector lookup banned" untested) and W7 ("Same selector" indirect) closed by one guard test. Issue #271, PR #272 (`feature/labels-selector-guard`, stacked on #270, target develop), commit 5e640df, 32 added lines in `demos/02-l1-crosschain/labels.test.ts`, CI all green. The test reads `labels.ts`, `root.ts` and `payment-agent/*.ts` (non-test) and asserts no `16015286601757825753`, no `sepolia` (labels.ts excepted: its live-reference deny-list regex names it) and no selector-to-name lookup; a second test labels a profile with the Sepolia-equal selector and asserts no Sepolia. Each was proven RED by a temporary local break (selector literal in root.ts, `chainNameBySelector` in labels.ts, Sepolia comment in format.ts, `simulatedOf` returning Sepolia), then reverted. Verdict becomes PASS WITH WARNINGS once #272 merges.
+
 ## Deviations and notes
 
 - `WarpMessengerStub` defines its own `WarpMessage` struct and does not import an upstream `IWarpMessenger` (none exists under `src/interfaces/external/icm/`). Field layout `(bytes32 sourceChainID, address originSenderAddress, bytes payload)` and the `WarpMessageSent(bytes32 indexed messageID, bytes message)` event follow design D7; conformance with the upstream struct is verified by the PR 1 spike (PR 1 task 1.5).
