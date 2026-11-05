@@ -130,15 +130,15 @@ describe('dependency rule', () => {
   it('R6 fails when process.env or process is read outside the loader', () => {
     expect(rules(make({ 'packages/pricing/src/x.ts': 'const k = process.env.KEY;' }))).toEqual(['R6']);
     expect(rules(make({ 'packages/pricing/src/x.ts': "const k = process['env'];" }))).toEqual(['R6']);
-    expect(rules(make({ 'packages/pricing/src/x.ts': "import { env } from 'node:process';" }))).toEqual(['R6']);
-    expect(rules(make({ 'packages/pricing/src/x.ts': "import process from 'process';" }))).toEqual(['R6']);
+    expect(rules(make({ 'packages/config/src/x.ts': "import { env } from 'node:process';" }))).toEqual(['R6']);
+    expect(rules(make({ 'packages/config/src/x.ts': "import process from 'process';" }))).toEqual(['R6']);
     const loader = { 'packages/config/src/load-profile.ts': 'export const e = process.env;' };
     expect(rules(make(loader))).toEqual([]);
   });
 
   it('R7 fails when a package imports the keystore, not when a root does', () => {
     const subpath = {
-      'packages/pricing/src/x.ts': "import { loadKeystoreAccount } from '@hackatwin/chains/keystore';",
+      'packages/config/src/x.ts': "import { loadKeystoreAccount } from '@hackatwin/chains/keystore';",
     };
     expect(rules(make(subpath))).toEqual(['R7']);
     const relative = { 'packages/chains/src/x.ts': "import { loadKeystoreAccount } from './keystore/index.ts';" };
@@ -149,6 +149,22 @@ describe('dependency rule', () => {
       'demos/01-x402-twin/scripts/run.ts': "import { loadKeystoreAccount } from '@hackatwin/chains/keystore';",
     };
     expect(rules(make(root))).toEqual([]);
+  });
+
+  it('R8 fails when pricing sources import anything but core', () => {
+    const chains = { 'packages/pricing/src/x.ts': "import { chain } from '@hackatwin/chains';" };
+    expect(rules(make(chains))).toEqual(['R8']);
+    const viem = { 'packages/pricing/src/x.ts': "import { http } from 'viem';" };
+    expect(rules(make(viem))).toEqual(['R8']);
+    const core = { 'packages/pricing/src/x.ts': "import type { Money } from '@hackatwin/core';" };
+    expect(rules(make(core))).toEqual([]);
+    const test = {
+      'packages/pricing/src/x.test.ts':
+        "import { it } from 'vitest';\nimport { FakeChainClient } from '@hackatwin/core/testing';",
+    };
+    expect(rules(make(test))).toEqual([]);
+    const nightly = { 'packages/pricing/nightly/x.nightly.test.ts': "import { chain } from '@hackatwin/chains';" };
+    expect(rules(make(nightly))).toEqual([]);
   });
 
   it('ignores files outside any workspace', () => {

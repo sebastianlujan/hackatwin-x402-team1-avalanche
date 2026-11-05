@@ -16,7 +16,7 @@ export interface Snapshot {
 }
 
 export interface Violation {
-  readonly rule: 'R1' | 'R2' | 'R3' | 'R4' | 'R5' | 'R6' | 'R7';
+  readonly rule: 'R1' | 'R2' | 'R3' | 'R4' | 'R5' | 'R6' | 'R7' | 'R8';
   readonly file: string;
   readonly specifier: string;
   readonly reason: string;
@@ -28,6 +28,7 @@ const SOURCE = /\.(?:ts|tsx|mts|cts)$/;
 const DEMO_PREFIX = '@hackatwin/demo-';
 const LOADER = 'packages/config/src/load-profile.ts';
 const KEYSTORE_DIR = 'packages/chains/src/keystore';
+const PRICING_SRC = 'packages/pricing/src/';
 
 export function readSnapshot(root: string): Snapshot {
   const manifests: Record<string, Manifest> = {};
@@ -130,6 +131,13 @@ export function checkDependencyRule(snapshot: Snapshot): Violation[] {
       }
       if (/^@hackatwin\/chains\/keystore(?:\/|$)/.test(specifier) && owner.startsWith('packages/')) {
         add('R7', file, specifier, 'only composition roots import the keystore');
+      }
+      if (
+        file.startsWith(PRICING_SRC) &&
+        !/^@hackatwin\/core(?:\/|$)/.test(specifier) &&
+        !(isTestFile(file) && specifier === 'vitest')
+      ) {
+        add('R8', file, specifier, 'pricing sources import only core');
       }
       if ((specifier === 'process' || specifier === 'node:process') && file !== LOADER) {
         add('R6', file, specifier, 'only the config loader reads the environment');

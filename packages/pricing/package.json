@@ -8,5 +8,11 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hackatwin/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@hackatwin/chains": "workspace:*"
   }
 }
