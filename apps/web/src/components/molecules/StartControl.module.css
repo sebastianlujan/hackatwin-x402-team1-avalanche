@@ -1,0 +1,17 @@
+.control {
+  display: grid;
+  gap: var(--hk-space-2);
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hk-space-3);
+  align-items: center;
+}
+
+.reason {
+  margin: 0;
+  color: var(--hk-fg-muted);
+  font-size: var(--hk-text-sm);
+}
