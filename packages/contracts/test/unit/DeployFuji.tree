@@ -1,0 +1,29 @@
+UnitDeployFuji
+├── when loading the Fuji inputs
+│   ├── given fixtures with every fact and parameter
+│   │   └── it resolves facts from the registry and choices from params
+│   ├── given a registry without an entry
+│   │   └── it reverts with EntryNotFound naming the key and the entry
+│   ├── given a params file without a parameter
+│   │   └── it reverts with ParamNotFound naming the key and the entry
+│   ├── given the chain ID is the Avalanche mainnet
+│   │   └── it reverts with UnsupportedChain 43114
+│   └── given the committed Fuji params
+│       └── it holds gas limits the messenger accepts and no wallet
+├── when deploying
+│   ├── given loaded inputs
+│   │   └── it deploys a hub a messenger and a broker wired to the registry facts
+│   ├── given a receiver deployer and nonce
+│   │   └── it gives the messenger the predicted receiver address
+│   ├── given no broker pair in params
+│   │   └── it makes no allowlist call
+│   └── given a broker pair in params
+│       └── it allows the sender with the selector read from the registry
+├── when recording the deployment
+│   ├── given a dry run
+│   │   └── it writes no file
+│   └── given the deployed addresses
+│       └── it serializes the chain ID the deployer and every address
+└── when dry running on a Fuji fork
+    └── given the fork flag is set
+        └── it deploys against the real router and USDC

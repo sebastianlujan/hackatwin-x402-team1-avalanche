@@ -1,0 +1,4 @@
+{
+  "requiredGasLimit": 500000,
+  "recipientGasLimit": 300000
+}
