@@ -5,8 +5,12 @@ import { assertDistinctChainIds, LOCAL_HUB, LOCAL_L1 } from './anvils.ts';
 import { type Deployed, deployScripts, mintTreasury } from './deploy.ts';
 import type { ForgeRunner } from './forge.ts';
 import { forgeDir } from './forge.ts';
+import { relayOnce } from './relay.ts';
+import { runRelayLoop } from './relay-loop.ts';
 import { CANONICAL_TELEPORTER, repoRoot } from './teleporter.ts';
 import { deployContracts, deployInfra, type Infra, type WorldContracts } from './world.ts';
+
+const RELAY_INTERVAL_MS = 1000;
 
 export const BANNER = 'SIMULATED (local-crosschain)';
 
@@ -16,6 +20,7 @@ export interface UpResult {
   roles: WorldContracts['roles'];
   contracts: WorldContracts;
   deployed: Deployed;
+  ids: Infra['ids'];
 }
 
 const answers = (rpcUrl: string): Promise<boolean> =>
@@ -66,7 +71,7 @@ export async function up(instance: string, options: { run?: ForgeRunner } = {}):
       join(dir, 'local.env'),
       `LOCAL_HUB_RPC_URL=${LOCAL_HUB.rpcUrl}\nLOCAL_L1_RPC_URL=${LOCAL_L1.rpcUrl}\n`,
     );
-    return { dir, pids, roles: contracts.roles, contracts, deployed };
+    return { dir, pids, roles: contracts.roles, contracts, deployed, ids: infra.ids };
   } catch (error) {
     for (const pid of pids) process.kill(pid, 'SIGTERM');
     throw error;
@@ -78,6 +83,15 @@ if (import.meta.main) {
   console.log(BANNER);
   console.log(`world: ${join(result.dir, 'world.json')}`);
   console.log(`env:   ${join(result.dir, 'local.env')}`);
-  console.log(`stop:  kill ${result.pids.join(' ')}`);
+  console.log('relay: running every second; Ctrl-C stops it and both anvils');
+  const abort = new AbortController();
+  for (const signal of ['SIGINT', 'SIGTERM'] as const) process.once(signal, () => abort.abort());
+  await runRelayLoop({
+    once: (cursor) => relayOnce({ hub: LOCAL_HUB, l1: LOCAL_L1 }, result.ids, cursor),
+    intervalMs: RELAY_INTERVAL_MS,
+    signal: abort.signal,
+    log: console.log,
+  });
+  for (const pid of result.pids) process.kill(pid, 'SIGTERM');
   process.exit(0);
 }

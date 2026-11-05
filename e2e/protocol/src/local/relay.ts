@@ -60,7 +60,7 @@ export async function sendMessage(
   return sent.args.messageID;
 }
 
-interface Side {
+export interface Side {
   c: GuardedClients;
   id: Hex;
 }
@@ -99,12 +99,29 @@ async function deliver(source: Side, destination: Side, txHash: Hex, logIndex: n
   if (receipt.status !== 'success') throw new Error(`receiveCrossChainMessage reverted in ${hash}`);
 }
 
-async function relayDirection(source: Side, destination: Side, report: RelayReport): Promise<void> {
+// The next block to scan on each chain, so a long-running loop does not rescan from the first block.
+export interface RelayCursor {
+  hub: { next: bigint };
+  l1: { next: bigint };
+}
+
+export const newCursor = (): RelayCursor => ({ hub: { next: 0n }, l1: { next: 0n } });
+
+export async function relayDirection(
+  source: Side,
+  destination: Side,
+  report: RelayReport,
+  cursor?: { next: bigint },
+): Promise<void> {
+  const head = await source.c.public.getBlockNumber();
+  if (cursor !== undefined && cursor.next > head) return;
+  const failedBefore = report.failed.length;
   const logs = await source.c.public.getLogs({
     address: CANONICAL_TELEPORTER,
     event: sendEvent,
     args: { destinationBlockchainID: destination.id },
-    fromBlock: 'earliest',
+    fromBlock: cursor?.next ?? 'earliest',
+    toBlock: head,
   });
   for (const log of logs) {
     const messageId = log.args.messageID;
@@ -121,17 +138,20 @@ async function relayDirection(source: Side, destination: Side, report: RelayRepo
       report.failed.push({ messageId, reason });
     }
   }
+  // A failed message stays inside the scanned range for the next pass.
+  if (cursor !== undefined && report.failed.length === failedBefore) cursor.next = head + 1n;
 }
 
 // One pass over both directions; a message already received on its destination is skipped.
 export async function relayOnce(
   chains: { hub: LocalChain; l1: LocalChain },
   ids: { hub: Hex; l1: Hex },
+  cursor?: RelayCursor,
 ): Promise<RelayReport> {
   const hub = { c: await createGuardedClients({ chain: chains.hub, rpcUrl: chains.hub.rpcUrl }), id: ids.hub };
   const l1 = { c: await createGuardedClients({ chain: chains.l1, rpcUrl: chains.l1.rpcUrl }), id: ids.l1 };
   const report: RelayReport = { delivered: [], skipped: [], failed: [] };
-  await relayDirection(hub, l1, report);
-  await relayDirection(l1, hub, report);
+  await relayDirection(hub, l1, report, cursor?.hub);
+  await relayDirection(l1, hub, report, cursor?.l1);
   return report;
 }
