@@ -315,6 +315,9 @@ importers:
 
   packages/chains:
     dependencies:
+      '@hackatwin/config':
+        specifier: workspace:*
+        version: link:../config
       '@hackatwin/core':
         specifier: workspace:*
         version: link:../core

@@ -24,12 +24,13 @@ interface Rpc {
 }
 
 // A scripted JSON-RPC node that records every request.
-function node(chainId: number, clientVersion = 'Geth/v1.13', head = 100n) {
+function node(chainId: number, clientVersion = 'Geth/v1.13', head = 100n, code = '0x6001') {
   const requests: Rpc[] = [];
   const transport = custom({
     async request({ method, params }: Rpc) {
       requests.push({ method, params });
       if (method === 'eth_chainId') return toHex(chainId);
+      if (method === 'eth_getCode') return code;
       if (method === 'eth_blockNumber') return toHex(head);
       if (method === 'web3_clientVersion') return clientVersion;
       if (method === 'eth_call') return encodeAbiParameters([{ type: 'uint256' }], [42n]);
@@ -74,6 +75,16 @@ describe('createChainClient reads', () => {
     await expect(createChainClient({ chain: 'nope', rpcUrl: 'http://x', transport: rpc.transport })).rejects.toThrow(
       /nope/,
     );
+  });
+});
+
+describe('createChainClient codeSize', () => {
+  it('counts the bytes of the code and treats empty code as 0', async () => {
+    const [full, empty] = [node(8453), node(8453, 'Geth', 100n, '0x')];
+    const open = (rpc: ReturnType<typeof node>) =>
+      createChainClient({ chain: 'base', rpcUrl: 'https://rpc.test', transport: rpc.transport });
+    expect(await (await open(full)).codeSize(token, 5n)).toBe(2);
+    expect(await (await open(empty)).codeSize(token)).toBe(0);
   });
 });
 

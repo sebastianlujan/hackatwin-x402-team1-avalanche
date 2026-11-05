@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@hackatwin/config": "workspace:*",
     "@hackatwin/core": "workspace:*",
     "viem": "catalog:",
     "zod": "catalog:"
