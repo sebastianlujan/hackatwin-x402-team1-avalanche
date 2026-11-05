@@ -28,6 +28,10 @@ const rawKeyIssues = (env: Env): ConfigIssue[] => {
   return issues;
 };
 
+// True when the environment names a keystore for the role, so a script must not generate one.
+export const keystoreNamedInEnv = (role: string, env: Env = process.env): boolean =>
+  Boolean(env[`${role.toUpperCase()}_KEYSTORE`]);
+
 const isProfileName = (name: string): name is ProfileName => (PROFILE_NAMES as readonly string[]).includes(name);
 
 export interface LoadProfileOptions {

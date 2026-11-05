@@ -1,8 +1,10 @@
 import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { privateKeyToAddress } from 'viem/accounts';
 import { describe, expect, it } from 'vitest';
 import { decryptKeystore } from './decrypt.ts';
+import { encryptKeystore } from './encrypt.ts';
 import { KeystoreError } from './keystore-error.ts';
 import { loadKeystoreAccount } from './load-keystore-account.ts';
 
@@ -97,5 +99,27 @@ describe('loadKeystoreAccount', () => {
     expect(() => loadKeystoreAccount('../deployer', passwordFile, dir)).toThrow(/not a path/);
     expect(() => loadKeystoreAccount('absent', passwordFile, dir)).toThrow('keystore "absent": cannot read');
     expect(() => loadKeystoreAccount('deployer', join(dir, 'nope'), dir)).toThrow(/cannot read/);
+  });
+});
+
+describe('encryptKeystore', () => {
+  it('round trips through decryptKeystore and names the address in lowercase hex', () => {
+    const json = encryptKeystore(KEY, PASSWORD);
+    expect(decryptKeystore('k', json, PASSWORD)).toBe(KEY);
+    expect(json.address).toBe(privateKeyToAddress(KEY).slice(2).toLowerCase());
+    expect(json).toMatchObject({ version: 3, crypto: { cipher: 'aes-128-ctr', kdf: 'scrypt' } });
+  });
+
+  it('never holds the key and is salted per call', () => {
+    const [first, second] = [
+      JSON.stringify(encryptKeystore(KEY, PASSWORD)),
+      JSON.stringify(encryptKeystore(KEY, PASSWORD)),
+    ];
+    expect(first).not.toContain(KEY.slice(2));
+    expect(first).not.toBe(second);
+  });
+
+  it('rejects the wrong password', () => {
+    expect(() => decryptKeystore('k', encryptKeystore(KEY, PASSWORD), 'other')).toThrow(/wrong password/);
   });
 });

@@ -299,7 +299,20 @@ importers:
 
   apps/web: {}
 
-  demos/01-x402-twin: {}
+  demos/01-x402-twin:
+    dependencies:
+      '@hackatwin/chains':
+        specifier: workspace:*
+        version: link:../../packages/chains
+      '@hackatwin/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@hackatwin/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      viem:
+        specifier: 'catalog:'
+        version: 2.57.16(typescript@7.0.2)(zod@4.6.7)
 
   demos/02-l1-crosschain: {}
 

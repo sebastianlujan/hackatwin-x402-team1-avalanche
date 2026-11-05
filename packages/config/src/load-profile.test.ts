@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ConfigError } from './config-error.ts';
-import { loadProfile, loadRpcUrls, rpcVariable } from './load-profile.ts';
+import { keystoreNamedInEnv, loadProfile, loadRpcUrls, rpcVariable } from './load-profile.ts';
 import { CCHAIN_FORK_BLOCK, forkStaticsSchema, PROFILE_NAMES, ProfileToken } from './profiles.ts';
 
 const rpc = 'https://rpc.example.org';
@@ -178,6 +178,15 @@ describe('fork guard', () => {
   it('does not guard CCHAIN_RPC_URL', () => {
     const url = 'https://api.avax.network/ext/bc/C/rpc';
     expect(loadProfile('cchain-fork', { ...base, CCHAIN_RPC_URL: url }).env.CCHAIN_RPC_URL).toBe(url);
+  });
+});
+
+describe('keystoreNamedInEnv', () => {
+  it('is true only when the role keystore variable is set and non-empty', () => {
+    expect(keystoreNamedInEnv('agent', { AGENT_KEYSTORE: 'mine' })).toBe(true);
+    expect(keystoreNamedInEnv('agent', { AGENT_KEYSTORE: '' })).toBe(false);
+    expect(keystoreNamedInEnv('seller', { AGENT_KEYSTORE: 'mine' })).toBe(false);
+    expect(keystoreNamedInEnv('agent')).toBe(false);
   });
 });
 
