@@ -48,24 +48,6 @@ gh api -X PUT repos/$R/rulesets/26496788 --input .github/rulesets/develop.json
 Apply only after `ci-gate` has run green on `develop`, or every PR waits on a missing check. Repeat with `main.json`
 and id `26496789`.
 
-## Docs site (GitHub Pages)
-
-`docs-deploy` publishes the Docusaurus site on every push to `main` (and on manual dispatch); PRs only get a
-`docs-site` artifact. One-time setup, needs repo admin:
-
-```sh
-R=sebastianlujan/hackatwin-x402-team1-avalanche
-# enable Pages with the workflow source
-gh api -X POST repos/$R/pages -f build_type=workflow
-# let only main deploy to the github-pages environment
-gh api -X PUT repos/$R/environments/github-pages --input - <<< '{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}'
-gh api -X POST repos/$R/environments/github-pages/deployment-branch-policies -f name=main -f type=branch
-gh api repos/$R/environments/github-pages/deployment-branch-policies --jq '.branch_policies[].name'
-```
-
-The last command must list only `main`; delete any other policy with `gh api -X DELETE` on its id. The site is
-served at https://sebastianlujan.github.io/hackatwin-x402-team1-avalanche/.
-
 ## No AI attribution
 
 No AI attribution in commits, PRs, issues, or code: no `Co-Authored-By` trailers, no "Generated with ..." footers,

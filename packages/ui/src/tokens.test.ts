@@ -54,18 +54,10 @@ describe('design tokens', () => {
   });
 
   it('is the only stylesheet with a color literal', () => {
-    const sheets = [
-      ...stylesheets('packages/ui/src'),
-      ...stylesheets('apps/web/src'),
-      ...stylesheets('apps/docs/src'),
-    ].filter((file) => file !== 'packages/ui/src/tokens.css');
+    const sheets = [...stylesheets('packages/ui/src'), ...stylesheets('apps/web/src')].filter(
+      (file) => file !== 'packages/ui/src/tokens.css',
+    );
     expect(sheets.length).toBeGreaterThan(0);
     for (const file of sheets) expect(read(file), file).not.toMatch(/#[0-9a-f]{3,8}\b|\b(?:rgb|hsl|oklch)a?\(/i);
-  });
-
-  it('keeps the plain accent off text in the docs light styles', () => {
-    const light = read('apps/docs/src/css/custom.css').split(/\[data-theme=['"]dark['"]\]/)[0] ?? '';
-    expect(light).toContain('var(--hk-accent-ink)');
-    expect(light).not.toMatch(/var\(--hk-accent\)/);
   });
 });

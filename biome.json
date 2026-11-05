@@ -7,7 +7,6 @@
       "!.claude",
       "!**/build",
       "!**/dist",
-      "!**/.docusaurus",
       "!packages/contracts/abi/generated"
     ]
   },

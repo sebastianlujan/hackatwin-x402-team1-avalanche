@@ -104,9 +104,6 @@ dist
 # vitepress cache directory
 **/.vitepress/cache
 
-# Docusaurus cache and generated files
-.docusaurus
-
 # Serverless directories
 .serverless/
 
@@ -150,9 +147,6 @@ vite.config.ts.timestamp-*
 
 # SDD skill registry (local)
 .atl/
-
-# Docusaurus build output
-apps/docs/build/
 
 # Demo 1 fork state and throwaway keystores
 .demo1/
