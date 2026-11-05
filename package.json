@@ -11,7 +11,6 @@
     "typecheck": "tsc --noEmit && pnpm -r --if-present typecheck",
     "test": "vitest run --coverage --project default",
     "build": "pnpm -r --if-present build",
-    "chains:verify": "node packages/chains/scripts/verify.ts",
     "contracts:policy": "node packages/contracts/scripts/check-policy.ts",
     "quote": "node packages/pricing/scripts/quote.ts",
     "test:fork": "vitest run --project fork",

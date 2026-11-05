@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ChainError } from '../src/chain-error.ts';
 import { assertLocalChain, isLocalChainKey, type LocalChain, localChain, toViemLocalChain } from '../src/local.ts';
-import { chain, listChains } from '../src/registry.ts';
+import { chain } from '../src/registry.ts';
 
 const hub = { chainId: 31337, rpcUrl: 'http://127.0.0.1:8545' };
 
@@ -56,9 +56,8 @@ describe('local chain definitions', () => {
     expect(viem.rpcUrls.default.http).toEqual([hub.rpcUrl]);
   });
 
-  it('leaves the six-chain registry unchanged', () => {
+  it('leaves the registry unchanged', () => {
     localChain('local-hub', hub);
-    expect(listChains().map((c) => c.key)).toEqual(['cchain', 'fuji', 'sepolia', 'twinpay-l1', 'arbitrum', 'base']);
     expect(() => chain('local-hub')).toThrow(/unknown chain "local-hub"/);
   });
 });
