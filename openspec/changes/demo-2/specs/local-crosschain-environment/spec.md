@@ -22,7 +22,7 @@ The setup MUST start two anvils without forking, with `--hardfork cancun` and tw
 
 ### Requirement: Pinned ICM fetch, never committed
 
-A script MUST fetch `ava-labs/icm-services` at commit `34deb30f7ddb4e6fecfd1132b413d09570610851` into `.cache/icm-services/<commit>/` at the repo root, build it with its own foundry config, and reuse a cached clone for the same commit. `.cache/` MUST be gitignored. No tracked file MAY carry the header `SPDX-License-Identifier: LicenseRef-Ecosystem`, and no foundry project of ours MAY import the clone. A check MUST fail if a tracked file carries that header. The check matches only the SPDX header form, not the bare token (project docs mention it).
+A script MUST fetch `ava-labs/icm-services` at commit `34deb30f7ddb4e6fecfd1132b413d09570610851` into `.cache/icm-services/<commit>/` at the repo root, build it with its own foundry config, and reuse a cached clone for the same commit. `.cache/` MUST be gitignored. No tracked file MAY carry an SPDX header (`SPDX-License-Identifier:`) whose value is `LicenseRef-Ecosystem`, and no foundry project of ours MAY import the clone. A check MUST fail if a tracked file carries that header. The check matches only the SPDX header form, not the bare token (project docs mention it).
 
 #### Scenario: Cache hit
 - GIVEN `.cache/icm-services/<commit>/` is built
@@ -30,7 +30,7 @@ A script MUST fetch `ava-labs/icm-services` at commit `34deb30f7ddb4e6fecfd1132b
 - THEN no network fetch happens
 
 #### Scenario: License guard
-- GIVEN a tracked file containing `SPDX-License-Identifier: LicenseRef-Ecosystem`
+- GIVEN a tracked file whose SPDX header (`SPDX-License-Identifier:`) value is `LicenseRef-Ecosystem`
 - WHEN the license check runs
 - THEN it fails naming the file
 
