@@ -2,842 +2,1063 @@
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>Avalanche Workshops</title>
 <style>
 :root{--red:#ff4055;--ink:#f6f4f2;--dim:#aaa9b2;--line:#ffffff18;--background:#09090c;--foreground:#f6f4f2;--radius:16px;--font-sans:Arial,Helvetica,sans-serif}*{box-sizing:border-box}html{color-scheme:dark}html,body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink)}body{background:#09090c}button,a,input{ -webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer;color:inherit;border:0;background:transparent}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--red);outline-offset:5px}button:disabled{opacity:.22;cursor:default}.player{width:100%;margin:auto}header{height:64px;display:flex;align-items:center;gap:24px;padding:0 3.5%;border-bottom:1px solid var(--line)}.wordmark{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:-.02em;font-weight:700}.logo{width:23px;height:23px;fill:var(--red)}nav{display:flex;align-self:stretch;gap:24px}nav button{font-size:12px;color:var(--dim);border-bottom:2px solid transparent;padding:2px 0 0}nav button[aria-current=true]{color:var(--ink);border-color:var(--red)}.tools{margin-left:auto;display:flex;gap:5px}.icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:20px;transition:background .2s}.icon:hover{background:#ffffff0c}.icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6}.present{background:var(--ink);color:#141419}.present:hover{background:#ffdce1}.stage{position:relative;aspect-ratio:16/9;width:100%;overflow:hidden;container-type:inline-size;background:radial-gradient(ellipse at 96% 15%,#5b152229,transparent 45%),#0e0e12}.slide{position:absolute;inset:0;padding:4.5% 6%;display:flex;flex-direction:column}.eyebrow{display:flex;align-items:center;gap:12px;font-size:1cqw;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}.eyebrow:before{content:'';height:5px;width:5px;border-radius:50%;background:var(--red)}.eyebrow .slide-number{margin-left:auto;font-variant-numeric:tabular-nums;color:#74747f}.slide h1{font-size:3.65cqw;font-weight:600;letter-spacing:-.045em;line-height:1.12;margin:3% 0 3.5%;max-width:95%;text-wrap:balance}.slide em{color:var(--red);font-style:normal}.content{flex:1;min-height:0;display:flex;align-items:center}.takeaway{font-size:1.15cqw;line-height:1.5;color:var(--dim);border-top:1px solid var(--line);padding-top:1.8%;margin:2.5% 0 0}.hero h1{font-size:6.7cqw;line-height:1.03;max-width:85%;margin:auto 0 3%;z-index:1}.hero .content{flex:0;z-index:1}.hero .lead{font-size:1.65cqw;line-height:1.5;color:var(--dim);max-width:68%;margin:0 0 3%}.hero:after{content:'';position:absolute;width:35%;aspect-ratio:1;right:-12%;top:20%;border:1px solid #ff40554d;border-radius:50%;box-shadow:0 0 0 45px #ff405505,0 0 0 90px #ff405505,0 0 0 135px #ff405505;pointer-events:none}.hero .hero-index{position:absolute;right:6%;bottom:7%;font-size:9cqw;font-weight:700;letter-spacing:-.08em;color:#ffffff06}.pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:5%;width:100%}.pair-item{border-top:2px solid #ffffff30;padding-top:6%}.pair-item:last-child{border-color:var(--red)}.pair-item .label{color:var(--red);font-size:1cqw;letter-spacing:.14em;margin-bottom:7%;display:block}.pair-item h2{font-size:2.8cqw;letter-spacing:-.04em;font-weight:500;margin:0 0 5%}.pair-item p{font-size:1.55cqw;line-height:1.5;color:#b5b4bf;max-width:94%;margin:3% 0}.cards{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:2%}.card{padding:9% 9% 11%;background:#ffffff04;border:1px solid var(--line);border-radius:14px;min-height:19cqw}.card .label{font-size:1cqw;text-transform:uppercase;letter-spacing:.13em;color:var(--red)}.card h2{font-size:2.7cqw;letter-spacing:-.05em;margin:16% 0 9%;font-weight:500}.card p{font-size:1.35cqw;line-height:1.5;color:var(--dim);margin:0}.steps{display:flex;width:100%;align-items:stretch;gap:2%}.step{flex:1;position:relative;padding:5% 1.5% 4% 0;border-top:1px solid #ff405560}.step:not(:last-child):after{content:'→';position:absolute;right:5%;top:-.8cqw;color:var(--red);font-size:1.4cqw;background:#101014;padding:0 5px}.step .n{display:block;font-size:1.1cqw;color:var(--red);margin-bottom:2cqw;font-variant-numeric:tabular-nums}.step h2{font-size:2.1cqw;letter-spacing:-.03em;margin:0 0 1cqw;font-weight:500}.step p{font-size:1.25cqw;color:var(--dim);line-height:1.5;margin:0;max-width:90%}.code-wrap{width:100%;border:1px solid var(--line);background:#09090d;border-radius:12px;overflow:hidden}.code-bar{padding:1.3% 2.5%;border-bottom:1px solid var(--line);font: .85cqw monospace;color:#777783;display:flex;gap:6px}.code-bar i{width:5px;height:5px;border-radius:50%;background:#4b343c}.code-bar span{margin-left:auto}pre{margin:0;padding:3%;white-space:pre-wrap;overflow-wrap:anywhere;font:1.38cqw/1.65 'SFMono-Regular',Consolas,monospace;color:#e7dadd}.demo-list{width:100%;display:grid;gap:1.1cqw}.demo-row{display:grid;grid-template-columns:5% 24% 1fr;gap:3%;align-items:center;padding:1.5% 2%;border-bottom:1px solid var(--line)}.demo-row .n{color:var(--red);font:1.05cqw monospace}.demo-row h2{font-size:2.2cqw;font-weight:500;margin:0;letter-spacing:-.03em}.demo-row p{font-size:1.35cqw;line-height:1.4;color:var(--dim);margin:0}.network-map{display:grid;grid-template-columns:1.4fr .35fr 1fr;width:100%;align-items:center;gap:2%}.primary-box{padding:6%;border:1px solid var(--line);border-radius:12px}.map-label{font-size:1cqw;letter-spacing:.15em;color:var(--dim);margin:0 0 6%}.chains{display:flex;gap:4%}.chain{flex:1;padding:9% 3%;text-align:center;background:#ffffff05;border-radius:8px}.chain:first-child{background:#ff405513}.chain b{display:block;font-size:1.7cqw;font-weight:500}.chain span{display:block;font-size:.95cqw;line-height:1.4;color:var(--dim);margin-top:12%}.icm{font:1cqw monospace;text-align:center;color:var(--red)}.icm:after{content:'↔';display:block;font-size:3cqw}.l1s{display:grid;gap:1.5cqw}.l1{padding:8%;border:1px solid #ff405545;border-radius:10px;font-size:1.6cqw}.l1 span{display:block;font-size:1cqw;color:var(--dim);margin-top:5%}.sequence-grid{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:2%;position:relative}.actor{text-align:center;font-size:1.1cqw;letter-spacing:.1em;padding-bottom:1.4cqw;color:var(--red);border-bottom:1px solid var(--line)}.message{grid-column:1/3;position:relative;text-align:center;border-bottom:1px solid #ffffff30;padding:1.3cqw 0 .6cqw;font-size:1.15cqw;color:#cac8d0}.message:after{content:'›';position:absolute;right:0;bottom:-1cqw;font-size:2cqw;color:var(--red)}.message.back:after{right:auto;left:0;content:'‹'}.message.right{grid-column:2/4}.links{display:grid;width:100%;gap:1.4cqw}.resource{display:flex;justify-content:space-between;align-items:center;color:var(--ink);text-decoration:none;padding:2% 0;border-bottom:1px solid var(--line);font-size:2.25cqw;letter-spacing:-.03em}.resource span{color:var(--red)}table{width:100%;border-collapse:collapse;font-size:1.15cqw}th{text-align:left;font-size:.85cqw;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);font-weight:400;padding:1.4% 2%}td{padding:2% 2%;border-top:1px solid var(--line);color:var(--dim)}td:first-child{color:var(--ink);font-size:1.45cqw;width:22%}td:nth-child(2){color:#eee}.animate{animation:enter .55s both;animation-delay:calc(var(--i,0)*65ms)}.initial .animate{animation:none}@keyframes enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}footer{height:56px;display:flex;align-items:center;gap:12px;padding:0 3.5%;position:relative;border-top:1px solid var(--line)}.progress{position:absolute;left:0;top:-1px;height:2px;background:var(--red);transition:width .35s}.footer-title{color:#92919d;font-size:11px;flex:1;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}#counter{font:11px monospace;color:var(--dim);min-width:48px;text-align:center}.footer-nav{display:flex;align-items:center;gap:10px}dialog{background:#141419;color:var(--ink);border:1px solid #ffffff24;border-radius:18px;width:min(880px,92%);max-height:85dvh;padding:28px}dialog::backdrop{background:#000b;backdrop-filter:blur(8px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.dialog-head h2{font-size:18px;margin:0;font-weight:500}.annex-toggle{display:flex;align-items:center;font-size:12px;gap:8px;color:var(--dim);margin-bottom:24px}input{accent-color:var(--red)}.chapters{display:grid;grid-template-columns:1fr 1fr;gap:28px}.chapters h3{font-size:13px;color:var(--red);font-weight:500}.chapters ol{list-style:none;padding:0;margin:0;display:grid;gap:3px}.chapters li button{width:100%;text-align:left;padding:9px;border-radius:7px;font-size:12px;line-height:1.35;display:flex;gap:12px}.chapters li button:hover,.chapters li button[aria-current=true]{background:#ffffff09}.chapters li span{color:#7d7b89;font:11px monospace;min-width:18px}.annex-label{font-size:10px;letter-spacing:.1em;color:#7d7b89;margin:20px 0 8px}.notes{position:fixed;right:0;top:0;bottom:0;background:#15151bf5;border-left:1px solid var(--line);width:min(500px,95%);padding:28px;z-index:10;overflow:auto;box-shadow:-10px 0 60px #0008}.notes[hidden]{display:none}.notes h2{font-size:22px;letter-spacing:-.03em;line-height:1.3}.notes pre{font:13px/1.7 Arial,Helvetica,sans-serif;color:#bcbac5;padding:0}.notes a{color:#fba3ae;overflow-wrap:anywhere}.notes summary{cursor:pointer;color:#aaa;font-size:12px;margin:20px 0}.notes .note-close{float:right}.immersive header,.immersive footer{display:none}.immersive .player{height:100dvh;display:grid;place-items:center;background:#09090c}.immersive .stage{width:min(100vw,177.7778dvh)}#exit{display:none;position:fixed;right:12px;top:12px;z-index:5;background:#202026;opacity:.25}.immersive #exit{display:grid}#exit:hover,#exit:focus{opacity:1}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.stats{display:grid;grid-template-columns:repeat(var(--n,3),1fr);gap:4%;width:100%}.stat{border-top:2px solid #ffffff30;padding-top:4%}.stat:first-child{border-color:var(--red)}.stat b{display:block;font-size:7.4cqw;font-weight:700;letter-spacing:-.06em;line-height:1;font-variant-numeric:tabular-nums}.stat:first-child b{color:var(--red)}.stat .label{display:block;color:var(--red);font-size:1.05cqw;letter-spacing:.14em;text-transform:uppercase;margin:1.6cqw 0 1cqw}.stat p{font-size:1.45cqw;line-height:1.45;color:var(--dim);margin:0;max-width:94%}
+.stats.one{grid-template-columns:auto 1fr;align-items:center;gap:6%;border-top:0}.stats.one .stat{display:contents}.stats.one b{font-size:21cqw;color:var(--red);letter-spacing:-.07em}.stats.one .label{font-size:1.4cqw;margin:0 0 1.4cqw}.stats.one p{font-size:2.3cqw;line-height:1.35;color:var(--ink);letter-spacing:-.02em;max-width:100%}
+.define{display:grid;grid-template-columns:.75fr 1.25fr;gap:6%;width:100%;align-items:center}.define .term{font-size:10cqw;font-weight:700;letter-spacing:-.07em;color:var(--red);line-height:1;border-right:1px solid var(--line);padding:2cqw 0}.define .def{font-size:2.35cqw;line-height:1.35;letter-spacing:-.025em;margin:0 0 2.4cqw}.define ul{list-style:none;padding:0;margin:0;display:grid;gap:1.1cqw}.define li{font-size:1.5cqw;line-height:1.4;color:var(--dim);padding-left:1.8cqw;position:relative}.define li:before{content:'';position:absolute;left:0;top:.65cqw;width:.55cqw;height:.55cqw;border-radius:50%;background:var(--red)}
+.chainviz{width:100%;display:grid;gap:3cqw}.chainviz .def{font-size:2.35cqw;line-height:1.35;letter-spacing:-.025em;margin:0;max-width:80%}.blocks{display:flex;align-items:center;width:100%}.block{flex:1;border:1px solid #ffffff2a;border-radius:12px;padding:1.6cqw 1.8cqw;background:#ffffff05}.block:last-child{border:1px dashed #ff405580;background:#ff40550a}.block .label{display:block;font-size:1cqw;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:1cqw}.block code{display:block;font:1.3cqw/1.7 'SFMono-Regular',Consolas,monospace;color:#e7dadd}.block:last-child code{color:var(--dim)}.block .hash{display:block;margin-top:1cqw;padding-top:.8cqw;border-top:1px solid var(--line);font:.95cqw monospace;color:#8d8c97}.link{flex:0 0 9%;text-align:center;font-size:.85cqw;line-height:1.3;color:var(--dim)}.link:before{content:'→';display:block;font-size:2.6cqw;color:var(--red);line-height:1}
+.l1s .map-label{margin:0 0 .4cqw}.hero .content{margin-top:1.2cqw}.takeaway{font-size:1.35cqw}.step p{font-size:1.45cqw}.card p{font-size:1.5cqw}.demo-row p{font-size:1.5cqw}td:first-child{width:28%}table{font-size:1.3cqw}.message .k{color:var(--red);font-family:monospace;margin-right:.6cqw}
+@media(max-width:600px){.stats{grid-template-columns:1fr;gap:2.5cqw}.stat{display:grid;grid-template-columns:34% 1fr;align-items:center;gap:3%;padding-top:2cqw}.stat b{font-size:9cqw}.stat .label{font-size:2cqw;margin:0 0 1cqw}.stat p{font-size:2.7cqw}.stats.one{grid-template-columns:1fr}.stats.one b{font-size:30cqw}.stats.one p{font-size:4cqw}.define{grid-template-columns:1fr;gap:4%}.define .term{font-size:16cqw;border:0;padding:0}.define .def{font-size:4.4cqw}.define li{font-size:3cqw;padding-left:4cqw}.define li:before{width:1.4cqw;height:1.4cqw;top:1.4cqw}.chainviz{gap:5cqw}.chainviz .def{font-size:4.4cqw;max-width:100%}.block{padding:2cqw}.block code{font-size:2.3cqw}.block .label{font-size:1.9cqw}.block .hash{display:none}.link{flex:0 0 7%;font-size:0}.link:before{font-size:4cqw}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 @media(max-width:600px){header{height:54px;gap:16px;padding:0 14px}.wordmark .brand-text{display:none}nav{gap:14px}nav button{font-size:11px}.tools{gap:0}.tools .icon{width:30px}.stage{aspect-ratio:4/5}.slide{padding:7%}.eyebrow{font-size:2.2cqw}.slide h1{font-size:6.4cqw;margin:7% 0}.hero h1{font-size:10cqw;margin:auto 0 7%;max-width:100%}.hero .lead{font-size:3.6cqw;max-width:90%}.takeaway{font-size:2.8cqw;margin-top:6%;padding-top:4%}.pair-grid{gap:7%}.pair-item .label{font-size:2.2cqw}.pair-item h2{font-size:5cqw}.pair-item p{font-size:3cqw}.cards{gap:3%;grid-template-columns:1fr}.card{min-height:0;padding:4%;display:grid;grid-template-columns:23% 36% 1fr;align-items:center;gap:2%}.card .label{font-size:2cqw}.card h2{font-size:4.3cqw;margin:0}.card p{font-size:2.6cqw}.steps{display:grid;grid-template-columns:1fr 1fr;gap:6%}.step{padding:5% 0}.step .n{font-size:2.5cqw}.step h2{font-size:4.7cqw}.step p{font-size:3cqw}.step:not(:last-child):after{top:-2cqw;font-size:3cqw}pre{font-size:2.6cqw;padding:5%;line-height:1.65}.code-bar{font-size:2cqw;padding:3%}.demo-row{grid-template-columns:8% 1fr;gap:4%;padding:4% 0}.demo-row .n{font-size:2.5cqw}.demo-row h2{font-size:5cqw}.demo-row p{grid-column:2;font-size:3cqw;margin-top:2%}.network-map{grid-template-columns:1fr}.map-label{font-size:2.3cqw}.chain b{font-size:4cqw}.chain span{font-size:2.4cqw}.icm{font-size:2.5cqw;margin:3%}.icm:after{font-size:5cqw;content:'↕'}.l1s{grid-template-columns:1fr 1fr;gap:4%}.l1{font-size:3.5cqw}.l1 span{font-size:2.4cqw}.actor{font-size:2.5cqw;padding-bottom:4cqw}.message{font-size:2.8cqw;padding:4cqw 0 2cqw}.message:after{font-size:5cqw;bottom:-2.5cqw}th{font-size:1.9cqw;padding:3% 1%}td{font-size:2.5cqw;padding:4% 1%}td:first-child{font-size:3cqw}.resource{font-size:5cqw;padding:6% 0}.chapters{grid-template-columns:1fr}footer{padding:0 14px}.footer-title{font-size:10px}.hero .hero-index{font-size:24cqw}.immersive .stage{aspect-ratio:4/5;width:min(100vw,80dvh)}}
 @media print{header,footer,.notes,dialog,#exit{display:none!important}.stage{aspect-ratio:auto;overflow:visible}.slide{position:relative;break-after:page;height:56.25cqw}.animate{animation:none}}
 </style></head><body>
-<div class="player"><header><div class="wordmark"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M12 4c1-2 3-2 4 0l8 14c1 2 0 3-2 3H6c-2 0-3-1-2-3zm13 18c1-2 2-2 3 0l4 7H21z"/></svg><span class="brand-text">avalanche</span></div><nav aria-label="Workshops"><button id="chapter0" data-chapter="0">01 / Blockchain</button><button id="chapter1" data-chapter="1">02 / Pagos</button></nav><div class="tools"><button class="icon" id="menuButton" title="Índice (M)" aria-label="Abrir índice" aria-haspopup="dialog"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><button class="icon" id="notesButton" title="Notas (N)" aria-label="Notas del expositor" aria-controls="notes" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M5 3h14v18H5zM8 8h8M8 12h8M8 16h5"/></svg></button><button class="icon present" id="fullscreenButton" title="Presentar (F)" aria-label="Modo presentación"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button></div></header><main class="stage" id="stage" aria-label="Presentación"></main><footer><div class="progress" id="progress"></div><span class="footer-title" id="slideTitle"></span><div class="footer-nav"><button class="icon" id="prev" aria-label="Anterior">←</button><span id="counter" aria-live="polite"></span><button class="icon" id="next" aria-label="Siguiente">→</button></div></footer></div>
+<div class="player"><header><div class="wordmark"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M12 4c1-2 3-2 4 0l8 14c1 2 0 3-2 3H6c-2 0-3-1-2-3zm13 18c1-2 2-2 3 0l4 7H21z"/></svg><span class="brand-text">avalanche</span></div><nav aria-label="Workshops"><button id="chapter0" data-chapter="0">01 / Blockchain + Twin</button><button id="chapter1" data-chapter="1">02 / Pagos x402</button></nav><div class="tools"><button class="icon" id="menuButton" title="Índice (M)" aria-label="Abrir índice" aria-haspopup="dialog"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><button class="icon" id="notesButton" title="Notas (N)" aria-label="Notas del expositor" aria-controls="notes" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M5 3h14v18H5zM8 8h8M8 12h8M8 16h5"/></svg></button><button class="icon present" id="fullscreenButton" title="Presentar (F)" aria-label="Modo presentación"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button></div></header><main class="stage" id="stage" aria-label="Presentación"></main><footer><div class="progress" id="progress"></div><span class="footer-title" id="slideTitle"></span><div class="footer-nav"><button class="icon" id="prev" aria-label="Anterior">←</button><span id="counter" aria-live="polite"></span><button class="icon" id="next" aria-label="Siguiente">→</button></div></footer></div>
 <aside class="notes" id="notes" hidden aria-label="Notas del expositor"><button class="icon note-close" id="closeNotes" aria-label="Cerrar notas">×</button><h2 id="noteTitle"></h2><pre id="noteText"></pre><details><summary>Contenido original</summary><pre id="originalText"></pre></details></aside><button class="icon" id="exit" aria-label="Salir de presentación">×</button>
 <dialog id="indexDialog" aria-labelledby="indexTitle"><div class="dialog-head"><h2 id="indexTitle">Workshops</h2><button class="icon" id="closeMenu" aria-label="Cerrar índice">×</button></div><label class="annex-toggle"><input type="checkbox" id="showAnnex"> Incluir anexos en el recorrido</label><div class="chapters" id="chapterLists"></div></dialog>
 <script id="deckData" type="application/json">[
-  {
-    "title": "Blockchain y Avalanche",
-    "slides": [
-      {
-        "title": "Blockchain  + Avalanche",
-        "text": "Blockchain\n+ Avalanche\nWORKSHOP 01  /  30 MINUTOS\nDe entender una transacción a construir con agentes\n01 / 20\n0.5 MIN",
-        "notes": "SLIDE 01 · APERTURA\nTIEMPO: 0.5 min | tramo 00:00–00:30 de 30:00\n\nAbrí con el resultado esperado: entender el recorrido de una transacción, distinguir C-Chain de una L1 propia y usar skills + MCP sin ceder control de las firmas. La audiencia objetivo es técnica inicial/intermedia. No prometas desplegar una red completa en media hora. El original Team1 se usó como base visual; esta es una presentación independiente.\n\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "hero",
-        "heading": "Blockchain<br><em>+ Avalanche<\/em>",
-        "body": "De una transacción a construir con agentes.",
-        "takeaway": "",
-        "number": 0
-      },
-      {
-        "title": "Empezá por la confianza",
-        "text": "Empezá por el problema de confianza\nUn registro compartido aporta\nVarios actores verifican el mismo estado.\nReglas y transferencias comprobables.\nCosto de coordinación y operación.\nUna base de datos suele bastar\nUn operador controla el sistema.\nLos participantes confían en ese operador.\nPrioridad: simplicidad y privacidad.\nPrimero la necesidad de confianza. Después la tecnología.\n02 / 20\n1.5 MIN",
-        "notes": "SLIDE 02 · FUNDAMENTOS\nTIEMPO: 1.5 min | tramo 00:30–02:00 de 30:00\n\nPlanteá un ejemplo propio: tres empresas concilian movimientos de un activo. Preguntá quién mantiene el registro y quién puede auditarlo. No vendas blockchain como reemplazo universal de PostgreSQL. Este es un criterio de diseño, no una regla absoluta: si no hay necesidad de verificación compartida, una arquitectura tradicional puede ser más simple. Transición: ¿qué verifica realmente una blockchain?\n\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "pair",
-        "heading": "Empezá por la confianza",
-        "body": [
-          [
-            "Base de datos",
-            "Un operador mantiene el registro.",
-            "Simplicidad y privacidad."
-          ],
-          [
-            "Registro compartido",
-            "Varios actores verifican el estado.",
-            "Reglas y transferencias auditables."
-          ]
-        ],
-        "takeaway": "Elegí la tecnología según quién necesita verificar.",
-        "number": 1
-      },
-      {
-        "title": "Un historial verificable",
-        "text": "Blockchain: historial verificable\nEstado: quién tiene qué y qué reglas aplican.\nTransacciones: solicitudes para cambiar el estado.\nConsenso: los validadores acuerdan el historial.\nHashes y firmas permiten detectar alteraciones.\nVerificar el registro no vuelve verdadero cualquier dato de entrada.\n03 / 20\nEthereum · Transactions  /  Ethereum · Smart contracts\n2 MIN",
-        "notes": "SLIDE 03 · FUNDAMENTOS\nTIEMPO: 2 min | tramo 02:00–04:00 de 30:00\n\nUsá la ilustración como modelo de bloques conectados, no como un diagrama exacto del consenso Avalanche. Una firma permite verificar autorización; la red valida reglas y ordena cambios. La resistencia a reescrituras depende del protocolo y de sus supuestos de seguridad. Evitá el absoluto “nunca puede cambiar”. Un dato falso ingresado por una fuente externa sigue siendo falso: la verificación del mundo real requiere otros controles.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nEthereum · Transactions — https://ethereum.org/en/developers/docs/transactions/\nEthereum · Smart contracts — https://ethereum.org/en/developers/docs/smart-contracts/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "steps",
-        "heading": "Un historial verificable",
-        "body": [
-          [
-            "Estado",
-            "Quién tiene qué"
-          ],
-          [
-            "Transacción",
-            "Qué cambia"
-          ],
-          [
-            "Consenso",
-            "Qué acuerda la red"
-          ]
-        ],
-        "takeaway": "Hashes y firmas detectan alteraciones. Los datos de entrada requieren verificación.",
-        "number": 2
-      },
-      {
-        "title": "El recorrido de una transacción",
-        "text": "Una transacción, de principio a fin\nEjemplo: transferir un token en una red EVM.\nFirmar\nLa wallet\nautoriza\n›\nEnviar\nUn RPC\nrecibe la tx\n›\nValidar\nLa red verifica\ny ejecuta\n›\nConfirmar\nRecibo, estado\ny eventos\nFirma ≠ inclusión ≠ confirmación. Revisá el recibo.\n04 / 20\nEthereum · Transactions\n2 MIN",
-        "notes": "SLIDE 04 · FUNDAMENTOS\nTIEMPO: 2 min | tramo 04:00–06:00 de 30:00\n\nRecorré cuatro etapas con un pago imaginario. La firma no implica que el pago haya sucedido. El RPC tampoco es la blockchain: es una interfaz a un nodo. Una transacción puede fallar; el recibo y los eventos son evidencia técnica del resultado. Una escritura usa gas. Las lecturas RPC pueden no requerir firma ni una transacción on-chain, aunque el proveedor RPC pueda cobrar por su servicio.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nEthereum · Transactions — https://ethereum.org/en/developers/docs/transactions/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "steps",
-        "heading": "El recorrido de una transacción",
-        "body": [
-          [
-            "Firmar",
-            "La wallet autoriza"
-          ],
-          [
-            "Enviar",
-            "El RPC recibe"
-          ],
-          [
-            "Validar",
-            "La red ejecuta"
-          ],
-          [
-            "Confirmar",
-            "Recibo y eventos"
-          ]
-        ],
-        "takeaway": "Firma ≠ confirmación. Revisá el recibo.",
-        "number": 3
-      },
-      {
-        "title": "Autoridad y reglas",
-        "text": "Wallet y contrato: roles distintos\nContrato: reglas\nCódigo y estado en una dirección.\nSe ejecuta cuando alguien lo invoca.\nPuede depender de oráculos y administradores.\nWallet: autoridad\nGestiona claves o un mecanismo de firma.\nLa dirección identifica una cuenta.\nUna firma puede autorizar acciones sensibles.\nLa IA propone. La autoridad de firma se concede por separado.\n05 / 20\nEthereum · Smart contracts\n2 MIN",
-        "notes": "SLIDE 05 · FUNDAMENTOS\nTIEMPO: 2 min | tramo 06:00–08:00 de 30:00\n\nAclaración práctica: los activos se registran en la cadena; la interfaz de wallet no es una caja que almacena monedas. Tampoco todos los contratos son inmutables en su comportamiento: existen proxies, pausas y permisos administrativos. “Automático” significa que el código aplica reglas al ser ejecutado, no que se despierte solo. Para datos externos necesita mecanismos como oráculos. Conectá esta idea con los permisos del agente más adelante.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nEthereum · Smart contracts — https://ethereum.org/en/developers/docs/smart-contracts/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "pair",
-        "heading": "Autoridad y reglas",
-        "body": [
-          [
-            "Wallet",
-            "Gestiona la firma.",
-            "Autoriza acciones."
-          ],
-          [
-            "Contrato",
-            "Código y estado en una dirección.",
-            "Aplica reglas cuando se invoca."
-          ]
-        ],
-        "takeaway": "La IA propone. La firma requiere autoridad propia.",
-        "number": 4
-      },
-      {
-        "title": "Dos activos, dos funciones",
-        "text": "AVAX y ERC-20: funciones distintas\nAVAX / moneda nativa\nEn C-Chain, el gas se paga en AVAX.\nNo necesitás emitir una moneda para crear una app.\nSepará el activo que paga la red del activo que mueve tu aplicación.\nERC-20 / token de una aplicación\nDefine balances, transferencias y autorizaciones.\nEl respaldo de una stablecoin se verifica aparte.\n06 / 20\nAvalanche · Primary Network  /  ERC-20  /  Twin · reservas\n1.5 MIN",
-        "notes": "SLIDE 06 · FUNDAMENTOS\nTIEMPO: 1.5 min | tramo 08:00–09:30 de 30:00\n\nUsá AVAX para el rol de gas y una stablecoin para el rol de unidad de pago. ERC-20 es una interfaz, no una garantía económica ni una certificación de reservas. El número de decimales importa al convertir montos humanos a unidades enteras. El gas token puede ser distinto en una L1 personalizada; esa posibilidad aparece en el siguiente bloque.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\nERC-20 — https://eips.ethereum.org/EIPS/eip-20\nTwin · reservas — https://www.twin.finance/transparency\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "pair",
-        "heading": "Dos activos, dos funciones",
-        "body": [
-          [
-            "AVAX",
-            "Paga el gas en C-Chain.",
-            "Moneda nativa de la red."
-          ],
-          [
-            "ERC-20",
-            "Balances, transferencias y permisos.",
-            "Token de una aplicación."
-          ]
-        ],
-        "takeaway": "El estándar del token no garantiza su respaldo.",
-        "number": 5
-      },
-      {
-        "title": "Una red  de redes.",
-        "text": "Avalanche:\nuna red de redes\nAVALANCHE\nC-Chain para empezar. L1 propias cuando necesitás otras reglas.\n07 / 20\nAvalanche · Primary Network  /  Avalanche · L1s\n1 MIN",
-        "notes": "SLIDE 07 · AVALANCHE\nTIEMPO: 1 min | tramo 09:30–10:30 de 30:00\n\nPresentá Avalanche como una arquitectura multichain. La C-Chain ofrece un entorno EVM compartido; las L1 permiten definir condiciones específicas. No uses cifras de TPS, tarifas o finalidad como garantías universales: dependen de red, configuración y condiciones. Transición al mapa de la arquitectura.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\nAvalanche · L1s — https://build.avax.network/docs/avalanche-l1s\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "hero",
-        "heading": "Una red<br><em>de redes.<\/em>",
-        "body": "C-Chain para empezar. L1 propias para reglas específicas.",
-        "takeaway": "",
-        "number": 6
-      },
-      {
-        "title": "El mapa de Avalanche",
-        "text": "Primary Network y Avalanche L1s\nPRIMARY NETWORK\nC-Chain\nContratos EVM\nP-Chain\nValidadores y L1\nX-Chain\nActivos nativos\nAVALANCHE L1 A\nReglas + validadores propios\nAVALANCHE L1 B\nReglas + validadores propios\nICM\nLas L1 no son rollups de C-Chain ni heredan sus garantías.\n08 / 20\nAvalanche · Primary Network  /  Avalanche · L1s\n2 MIN",
-        "notes": "SLIDE 08 · AVALANCHE\nTIEMPO: 2 min | tramo 10:30–12:30 de 30:00\n\nC-Chain ejecuta contratos EVM; P-Chain coordina operaciones de validadores y L1; X-Chain gestiona activos nativos Avalanche. Las L1 adicionales tienen su propia validación y configuración. Desde Etna, un validador L1 no necesita validar toda la Primary Network: sincroniza P-Chain para la coordinación correspondiente. No confundir una L1 Avalanche con un rollup de Ethereum ni asumir seguridad compartida idéntica entre todas las redes.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\nAvalanche · L1s — https://build.avax.network/docs/avalanche-l1s\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "network",
-        "heading": "El mapa de Avalanche",
-        "body": null,
-        "takeaway": "Cada L1 define su validación. No es un rollup de C-Chain.",
-        "number": 7
-      },
-      {
-        "title": "¿C-Chain o una L1 propia?",
-        "text": "C-Chain o L1: elegí por necesidad\nL1 propia\nNecesitás gas, permisos o ejecución a medida.\nRequerís aislamiento de capacidad.\nPodés operar y gobernar una red.\nC-Chain\nQuerés lanzar una app EVM.\nNo necesitás cambiar reglas de red.\nPreferís aprovechar infraestructura existente.\nUna L1 agrega decisiones operativas y de seguridad.\n09 / 20\nAvalanche · L1s\n2 MIN",
-        "notes": "SLIDE 09 · AVALANCHE\nTIEMPO: 2 min | tramo 12:30–14:30 de 30:00\n\nHacé una mini decisión de arquitectura. Una API de pago inicial normalmente no necesita su propia cadena. Un entorno con requisitos específicos de validación, acceso o ejecución puede justificar una L1. El costo no es solo desplegar: también es mantener validadores, RPC, explorador, observabilidad, actualizaciones e interoperabilidad. Es una recomendación de alcance para el workshop, no una limitación del producto.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · L1s — https://build.avax.network/docs/avalanche-l1s\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "pair",
-        "heading": "¿C-Chain o una L1 propia?",
-        "body": [
-          [
-            "C-Chain",
-            "Tu app usa un entorno EVM compartido.",
-            "Infraestructura existente."
-          ],
-          [
-            "L1 propia",
-            "Necesitás gas, acceso o ejecución a medida.",
-            "Operás y gobernás una red."
-          ]
-        ],
-        "takeaway": "Una L1 suma decisiones operativas y de seguridad.",
-        "number": 8
-      },
-      {
-        "title": "Diseñar una L1: cuatro decisiones",
-        "text": "Cuatro decisiones para una L1\nPersonalizar una L1 exige definir sus políticas.\nValidación\nQuién valida\ny bajo qué reglas\n›\nGas\nToken, tarifas\ny destinatarios\n›\nAcceso\nQuién transacciona\ny despliega\n›\nEjecución\nVM, parámetros\ny precompiles\nDocumentá requisitos antes de elegir la configuración.\n10 / 20\nAvalanche · Customize an L1\n1.5 MIN",
-        "notes": "SLIDE 10 · AVALANCHE\nTIEMPO: 1.5 min | tramo 14:30–16:00 de 30:00\n\nNo conviertas esta slide en un tutorial de genesis. Explicá cuatro decisiones concretas con una app de pagos como ejemplo. Las allowlists y precompiles son herramientas técnicas; no garantizan por sí solos cumplimiento regulatorio. Una red permissioned no es automáticamente confidencial: hay que diseñar quién puede observar datos y operar nodos. La implementación exacta debe salir de documentación vigente, no de comandos inventados por el modelo.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Customize an L1 — https://build.avax.network/docs/avalanche-l1s/evm-configuration/customize-avalanche-l1\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "steps",
-        "heading": "Diseñar una L1: cuatro decisiones",
-        "body": [
-          [
-            "Validación",
-            "Quién valida"
-          ],
-          [
-            "Gas",
-            "Token y tarifas"
-          ],
-          [
-            "Acceso",
-            "Quién participa"
-          ],
-          [
-            "Ejecución",
-            "VM y parámetros"
-          ]
-        ],
-        "takeaway": "Primero los requisitos. Después la configuración.",
-        "number": 9
-      },
-      {
-        "title": "Mensajes entre redes",
-        "text": "Interoperar también exige verificar\nICM transmite mensajes; ICTT construye transferencias de tokens.\nOrigen\nSe produce\nun mensaje\n›\nFirmas\nValidadores\nlo autentican\n›\nEntrega\nSe agrega\ny transporta\n›\nDestino\nSe verifica\ny procesa\nRevisar red de origen, validadores, relayer y lógica receptora.\n11 / 20\nAvalanche · ICM  /  Avalanche · L1s\n1 MIN",
-        "notes": "SLIDE 11 · AVALANCHE\nTIEMPO: 1 min | tramo 16:00–17:00 de 30:00\n\nUsá el recorrido para evitar la idea de que todas las L1 comparten un único estado. ICM es mensajería entre redes; una transferencia de tokens requiere lógica adicional. La autenticidad del mensaje no elimina bugs del contrato receptor ni riesgos del activo. No hace falta entrar en BLS o quórums durante esta introducción.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · ICM — https://build.avax.network/docs/cross-chain/avalanche-warp-messaging/overview\nAvalanche · L1s — https://build.avax.network/docs/avalanche-l1s\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "steps",
-        "heading": "Mensajes entre redes",
-        "body": [
-          [
-            "Origen",
-            "Genera el mensaje"
-          ],
-          [
-            "Firmas",
-            "Autentican"
-          ],
-          [
-            "Entrega",
-            "Transporta"
-          ],
-          [
-            "Destino",
-            "Verifica y procesa"
-          ]
-        ],
-        "takeaway": "ICM transmite mensajes. ICTT agrega transferencias de tokens.",
-        "number": 10
-      },
-      {
-        "title": "Tres capacidades distintas",
-        "text": "Skill ≠ MCP ≠ wallet\nSKILL\nConocimiento\nMCP\nHerramientas\nWALLET\nAutoridad\nGuías y procedimientos.\nEjemplos y criterios.\nNo otorga firmas.\nInterfaz para consultar\ndocumentación y datos.\nCapacidades explícitas.\nFirma o delegación.\nLímites verificables.\nAprobación cuando aplica.\nSaber cómo hacerlo no concede permiso para hacerlo.\n12 / 20\nETHSkills  /  AVAXSKILLS · comunidad  /  Avalanche · MCP Server\n1.5 MIN",
-        "notes": "SLIDE 12 · AGENTES\nTIEMPO: 1.5 min | tramo 17:00–18:30 de 30:00\n\nDefiní los términos por función, no por producto. Una skill es contenido e instrucciones que el agente carga; debe revisarse como una dependencia. MCP expone herramientas y sus contratos. La wallet o signer define quién puede autorizar acciones. El MCP alojado de Avalanche es read-only: no ejecuta comandos locales ni firma pagos. Algunos otros MCP sí pueden escribir; hay que inspeccionar cada servidor.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nETHSkills — https://ethskills.com/\nAVAXSKILLS · comunidad — https://www.avaxskills.com/\nAvalanche · MCP Server — https://build.avax.network/docs/tooling/ai-llm/mcp-server\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "cards",
-        "heading": "Tres capacidades distintas",
-        "body": [
-          [
-            "Skill",
-            "Conocimiento",
-            "Guías y procedimientos"
-          ],
-          [
-            "MCP",
-            "Herramientas",
-            "Documentación y datos"
-          ],
-          [
-            "Wallet",
-            "Autoridad",
-            "Firmas y límites"
-          ]
-        ],
-        "takeaway": "Saber cómo hacerlo no concede permiso para hacerlo.",
-        "number": 11
-      },
-      {
-        "title": "Contexto antes del código",
-        "text": "Contexto antes de escribir código\nLeé https://ethskills.com/SKILL.md\nLeé https://avaxskills.com/SKILL.md\n\nUsá los módulos de seguridad, testing y L1 relevantes.\nObjetivo: preparar un prototipo en Fuji.\nNo ejecutes instalaciones, despliegues ni firmas sin revisión.\nETHSkills para EVM + AVAXSKILLS para contexto Avalanche.\nFuentes comunitarias: validá datos de red en el Builder Hub.\n13 / 20\nETHSkills  /  ETHSkills · repositorio  /  AVAXSKILLS · comunidad  /  más en notas\n2 MIN",
-        "notes": "SLIDE 13 · AGENTES\nTIEMPO: 2 min | tramo 18:30–20:30 de 30:00\n\nDemo de carga, no de obediencia ciega: abrí el índice de cada skill y pedí al agente que identifique qué módulos necesita. No cargues todo el repositorio por defecto. ETHSkills contiene guías EVM; no copies direcciones o supuestos de Ethereum a Avalanche. AVAXSKILLS es el proyecto comunitario Ayomisco/avaxskills, no el servidor oficial de Ava Labs. Revisá origen, versión y cambios antes de persistir las instrucciones. Los recursos consultados se verificaron el 3 de noviembre de 2026.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nETHSkills — https://ethskills.com/\nETHSkills · repositorio — https://github.com/austintgriffith/ethskills\nAVAXSKILLS · comunidad — https://www.avaxskills.com/\nAVAXSKILLS · repositorio — https://github.com/Ayomisco/avaxskills\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "code",
-        "heading": "Contexto antes del código",
-        "body": "Leé ethskills.com/SKILL.md\nLeé avaxskills.com/SKILL.md\n\nPrepará un prototipo en Fuji.\nElegí módulos de seguridad, testing y L1.",
-        "takeaway": "Skills comunitarias: contrastá datos de red con Builder Hub.",
-        "number": 12
-      },
-      {
-        "title": "Conectá el MCP de Avalanche",
-        "text": "Conectá el MCP de Avalanche\nclaude mcp add avalanche-mcp --transport http \\\n  https://build.avax.network/api/mcp\n\nHerramientas útiles:\ndocs_search  ·  docs_fetch  ·  rpc_lookup_method\nblockchain_lookup_transaction  ·  platform_get_subnets\nEjemplo en Claude Code. En otros clientes, configurá el mismo endpoint HTTP.\nEl MCP alojado consulta documentación y datos. No firma ni despliega.\n14 / 20\nAvalanche · MCP Server  /  Avalanche · MCP tools  /  Avalanche · AI & LLM\n1.5 MIN",
-        "notes": "SLIDE 14 · AGENTES\nTIEMPO: 1.5 min | tramo 20:30–22:00 de 30:00\n\nMostrá la URL oficial y las herramientas disponibles en el cliente; comprobá el listado antes de la charla porque puede cambiar. El catálogo consultado incluye documentación, referencias RPC/CLI y consultas de blockchain/P-Chain. No asumas que este MCP tiene un lector ABI genérico o una wallet. La ejecución local de CLI y la firma necesitan herramientas separadas. Evitá pegar credenciales en el chat o permitir acceso amplio al filesystem.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · MCP Server — https://build.avax.network/docs/tooling/ai-llm/mcp-server\nAvalanche · MCP tools — https://build.avax.network/api/mcp\nAvalanche · AI & LLM — https://build.avax.network/docs/tooling/ai-llm\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "code",
-        "heading": "Conectá el MCP de Avalanche",
-        "body": "claude mcp add avalanche-mcp --transport http \\\n  https://build.avax.network/api/mcp",
-        "takeaway": "El servidor alojado consulta documentación y datos. No firma ni despliega.",
-        "number": 13
-      },
-      {
-        "title": "Del pedido al plan verificable",
-        "text": "Demo · del pedido al plan verificable\nQué vamos a comprobar\nFuentes reales y trazables.\nRed: chain ID y RPC correctos.\nSalida: requisitos, pasos y riesgos.\nPedido al agente\n“Compará C-Chain con una L1 para una API de pagos.”\n“Citá documentación y marcá supuestos.”\n“Prepará un plan de pruebas en Fuji. No ejecutes nada.”\nLuego verificamos eth_chainId por RPC: lectura sin firma.\n15 / 20\nAvalanche · MCP Server  /  Avalanche · Primary Network\n4 MIN",
-        "notes": "SLIDE 15 · DEMO EN VIVO\nTIEMPO: 4 min | tramo 22:00–26:00 de 30:00\n\nGuion de 4 minutos: 0:00–1:30 cargar el pedido y observar búsqueda documental; 1:30–2:30 revisar referencias y decisiones; 2:30–3:30 ejecutar la consulta read-only eth_chainId del anexo; 3:30–4:00 comparar el resultado esperado de Fuji, 43113 / 0xa869. Preparar el cliente antes de subir al escenario. No desplegar una L1 durante esta demo: implica aprovisionamiento y permisos adicionales. Si el agente o RPC falla, usar el recorrido del anexo y decir explícitamente que es material de respaldo. No se ejecutó esta demo end-to-end durante la preparación del deck.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · MCP Server — https://build.avax.network/docs/tooling/ai-llm/mcp-server\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "demo",
-        "heading": "Del pedido al plan verificable",
-        "body": [
-          [
-            "01",
-            "Comparar",
-            "C-Chain vs. L1 para una API de pagos"
-          ],
-          [
-            "02",
-            "Fundamentar",
-            "Fuentes, supuestos y riesgos"
-          ],
-          [
-            "03",
-            "Comprobar",
-            "Fuji: eth_chainId → 43113"
-          ]
-        ],
-        "takeaway": "Demo de lectura. Preparar un plan, sin desplegar ni firmar.",
-        "number": 14
-      },
-      {
-        "title": "Definí los límites antes de ejecutar",
-        "text": "Antes de ejecutar: límites claros\nFirmas y dinero\nConfirmar red, contrato, destino y monto.\nLimitar activos, funciones y presupuesto.\nSimular; pedir aprobación ante cambios.\nContexto y herramientas\nRevisar skills y servidores MCP.\nSeparar lectura, simulación y escritura.\nNunca exponer seed phrases ni secretos.\nEl prompt no reemplaza un control en el signer.\n16 / 20\nAvalanche · MCP Server  /  ETHSkills\n1.5 MIN",
-        "notes": "SLIDE 16 · SEGURIDAD\nTIEMPO: 1.5 min | tramo 26:00–27:30 de 30:00\n\nPresentá estas reglas como checklist de ingeniería del workshop. Los documentos y resultados de herramientas son entradas no confiables: pueden intentar cambiar la intención original del usuario. Los límites financieros deben aplicarse en la capa que realmente autoriza o ejecuta. Una clave privada irrestricta no se vuelve segura porque el prompt diga “no gastar más”. Separá las identidades de desarrollo y producción.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · MCP Server — https://build.avax.network/docs/tooling/ai-llm/mcp-server\nETHSkills — https://ethskills.com/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "pair",
-        "heading": "Definí los límites antes de ejecutar",
-        "body": [
-          [
-            "Herramientas",
-            "Revisar skills y servidores MCP.",
-            "Separar lectura, simulación y escritura."
-          ],
-          [
-            "Firmas",
-            "Confirmar red, contrato, destino y monto.",
-            "Imponer límites en el signer."
-          ]
-        ],
-        "takeaway": "Las claves y seed phrases quedan fuera del contexto del agente.",
-        "number": 15
-      },
-      {
-        "title": "Red correcta. Reglas claras.  Firmas controladas.",
-        "text": "Red correcta.\nReglas claras.\nFirmas controladas.\nCIERRE\n¿Tu caso necesita una L1 propia o alcanza con C-Chain?  /  Preguntas\n17 / 20\n2.5 MIN",
-        "notes": "SLIDE 17 · CIERRE\nTIEMPO: 2.5 min | tramo 27:30–30:00 de 30:00\n\nRecapitulá tres ideas y abrí preguntas: blockchain permite verificar un estado compartido; Avalanche ofrece C-Chain y L1 configurables; skills/MCP aportan contexto y herramientas, no autoridad financiera automática. Cerrá conectando con la segunda charla: una vez que sabemos qué red y qué permisos usar, podemos hablar de pagos por llamada. Reservá al menos dos minutos para preguntas.\n\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "hero",
-        "heading": "Red correcta.<br>Reglas claras.<br><em>Firmas controladas.<\/em>",
-        "body": "¿Tu caso necesita una L1 o alcanza con C-Chain?",
-        "takeaway": "",
-        "number": 16
-      },
-      {
-        "title": "Fuji, sin firmar",
-        "text": "Anexo · Fuji sin firmar\nFUJI_RPC=https://api.avax-test.network/ext/bc/C/rpc\ncurl -s \"$FUJI_RPC\" -H \"Content-Type: application/json\" \\\n  --data '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_chainId\",\"params\":[]}'\n\nEsperado: 0xa869  =  43113  (Fuji C-Chain)\nPreparar terminal con curl. No requiere wallet ni fondos.\nMainnet C-Chain es 43114. No mezclar entornos.\n18 / 20\nAvalanche · Primary Network\nANEXO",
-        "notes": "SLIDE 18 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nEl resultado mostrado es el valor esperado según la configuración oficial, no una captura de ejecución. Ante un error HTTP, timeout o una red distinta, detener la demo y revisar el endpoint. No sustituir el RPC por uno de origen desconocido. Para desplegar contratos en una sesión posterior, se necesitarán wallet de pruebas, AVAX de faucet y un proceso de revisión separado.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": true,
-        "layout": "code",
-        "heading": "Fuji, sin firmar",
-        "body": "curl -s https://api.avax-test.network/ext/bc/C/rpc \\\n  -H \"Content-Type: application/json\" \\\n  --data '{\"jsonrpc\":\"2.0\",\"id\":1,\n    \"method\":\"eth_chainId\",\"params\":[]}'",
-        "takeaway": "Esperado: 0xa869 = 43113. Mainnet C-Chain: 43114.",
-        "number": 17
-      },
-      {
-        "title": "Antes de la charla",
-        "text": "Anexo · checklist y respaldo\nSi falla la demo\nMostrar el prompt y el plan esperado.\nAbrir documentación descargada.\nExplicar firma → RPC → recibo.\nNo presentar una simulación como ejecución.\nAntes de la charla\nCliente de agente y MCP configurados.\nSkills revisadas y fuentes abiertas.\nTerminal y RPC Fuji comprobados.\nCaptura propia del ensayo, sin secretos.\nLa demo sirve para entender el flujo; ensayá la infraestructura antes.\n19 / 20\nANEXO",
-        "notes": "SLIDE 19 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nEnsayar toda la demo con la misma red y equipo que se usarán en el evento. Evitar actualizaciones automáticas de paquetes antes de presentar. Si cambia una herramienta, inspeccionar su esquema y adaptar el ejemplo. Este anexo sirve como runbook del orador y no está incluido en el cronómetro de 30 minutos.\n\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": true,
-        "layout": "pair",
-        "heading": "Antes de la charla",
-        "body": [
-          [
-            "Preparar",
-            "Cliente, MCP y skills revisados.",
-            "RPC Fuji probado; ensayo sin secretos."
-          ],
-          [
-            "Tener respaldo",
-            "Prompt y documentación descargada.",
-            "Identificar toda simulación como tal."
-          ]
-        ],
-        "takeaway": "La infraestructura de la demo debe ensayarse antes.",
-        "number": 18
-      },
-      {
-        "title": "Recursos para construir",
-        "text": "Anexo · recursos para construir\nBuilder Hub\nDocumentación oficial de Avalanche\nSkills para agentes\nETHSkills + AVAXSKILLS en las notas\nAvalanche L1s · MCP · ETHSkills · AVAXSKILLS\n20 / 20\nAvalanche · Primary Network  /  Avalanche · L1s  /  Avalanche · Customize an L1  /  más en notas\nANEXO",
-        "notes": "SLIDE 20 · FUENTES / REVISADAS 03 NOV 2026\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nLos QR llevan a recursos externos, no a formularios ni wallets. Fuentes consultadas al 3 de noviembre de 2026. Los enlaces completos figuran debajo. AVAXSKILLS: https://avaxskills.com/SKILL.md. ETHSkills: https://ethskills.com/SKILL.md. Los datos temporales deben volver a comprobarse antes del evento.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\nAvalanche · L1s — https://build.avax.network/docs/avalanche-l1s\nAvalanche · Customize an L1 — https://build.avax.network/docs/avalanche-l1s/evm-configuration/customize-avalanche-l1\nAvalanche · ICM — https://build.avax.network/docs/cross-chain/avalanche-warp-messaging/overview\nAvalanche · AI & LLM — https://build.avax.network/docs/tooling/ai-llm\nAvalanche · MCP Server — https://build.avax.network/docs/tooling/ai-llm/mcp-server\nETHSkills — https://ethskills.com/\nAVAXSKILLS · comunidad — https://www.avaxskills.com/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": true,
-        "layout": "links",
-        "heading": "Recursos para construir",
-        "body": [
-          [
-            "Builder Hub",
-            "https://build.avax.network/"
-          ],
-          [
-            "ETHSkills",
-            "https://ethskills.com/"
-          ],
-          [
-            "AVAXSKILLS",
-            "https://avaxskills.com/"
-          ]
-        ],
-        "takeaway": "Documentación oficial y guías comunitarias.",
-        "number": 19
-      }
-    ]
-  },
-  {
-    "title": "Pagos x402 y Twin",
-    "slides": [
-      {
-        "title": "Pagos x402  + Twin",
-        "text": "Pagos x402\n+ Twin\nWORKSHOP 02  /  30 MINUTOS\nDel HTTP 402 a pagos verificables para personas y agentes\n01 / 20\n0.5 MIN",
-        "notes": "SLIDE 01 · APERTURA\nTIEMPO: 0.5 min | tramo 00:00–00:30 de 30:00\n\nResultado esperado: explicar y observar el flujo de un pago x402, ubicar otros enfoques de pagos y consultar un contrato público de Twin sin firmar. La demo de pagos usa el starter kit indicado por el usuario sobre Avalanche Fuji. Twin se muestra como caso separado de activos e infraestructura: no se afirma integración existente con Avalanche o con el kit.\n\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "hero",
-        "heading": "Pagos x402<br><em>+ Twin<\/em>",
-        "body": "Del HTTP 402 a pagos para personas y agentes.",
-        "takeaway": "",
-        "number": 20
-      },
-      {
-        "title": "¿Cómo paga un agente por una API?",
-        "text": "¿Cómo paga un agente por una API?\nEl flujo programable\nRecibir condiciones de pago.\nAutorizar dentro de un límite.\nRecibir el recurso y la evidencia del cobro.\nEl flujo humano\nCrear una cuenta y cargar saldo.\nElegir un plan o pasar por checkout.\nConciliar facturas y acceso.\nLa decisión clave: qué le permitimos pagar.\n02 / 20\nx402 · HTTP 402\n1.5 MIN",
-        "notes": "SLIDE 02 · PAGOS PROGRAMABLES\nTIEMPO: 1.5 min | tramo 00:30–02:00 de 30:00\n\nUsá un ejemplo hipotético: un agente necesita una consulta de datos y el proveedor cobra por acceso. x402 permite negociar condiciones de pago dentro del intercambio HTTP, pero no elimina reglas del negocio, identificación cuando sea exigible ni controles de fraude. El ejemplo es didáctico, no una promesa de que toda API pueda usarse sin registro.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "pair",
-        "heading": "¿Cómo paga un agente por una API?",
-        "body": [
-          [
-            "Flujo humano",
-            "Cuenta, saldo y checkout.",
-            "Facturación y acceso."
-          ],
-          [
-            "Flujo programable",
-            "Condiciones y autorización con límites.",
-            "Recurso y evidencia del cobro."
-          ]
-        ],
-        "takeaway": "La decisión clave: qué le permitimos pagar.",
-        "number": 21
-      },
-      {
-        "title": "Un pago tiene cuatro capas",
-        "text": "Un pago tiene cuatro capas\nRed, activo, protocolo y permisos cumplen funciones distintas.\nRed\nDónde se\nliquida\n›\nActivo\nQué unidad\nse transfiere\n›\nProtocolo\nCómo se pide\ny prueba el pago\n›\nPermisos\nQuién puede\nautorizarlo\nAvalanche ≠ USDC ≠ x402 ≠ permiso del usuario.\n03 / 20\nAvalanche · Primary Network  /  x402 · HTTP 402  /  Agent Payments Protocol\n1.5 MIN",
-        "notes": "SLIDE 03 · PAGOS PROGRAMABLES\nTIEMPO: 1.5 min | tramo 02:00–03:30 de 30:00\n\nPedí a la audiencia ubicar cada pieza: Fuji es una red de pruebas; el token de pago es un activo; x402 define un intercambio; la política del signer o un mandato expresa autoridad. Un protocolo de autorización no mueve dinero por sí solo. Este mapa permite entender Twin sin forzar que sea parte de la misma red o implementación.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nAgent Payments Protocol — https://ap2-protocol.org/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "steps",
-        "heading": "Un pago tiene cuatro capas",
-        "body": [
-          [
-            "Red",
-            "Dónde se liquida"
-          ],
-          [
-            "Activo",
-            "Qué se transfiere"
-          ],
-          [
-            "Protocolo",
-            "Cómo se pide y prueba"
-          ],
-          [
-            "Permisos",
-            "Quién autoriza"
-          ]
-        ],
-        "takeaway": "Avalanche · USDC · x402 · permiso del usuario",
-        "number": 22
-      },
-      {
-        "title": "Qué resuelve cada enfoque",
-        "text": "x402 y otros: qué resuelve cada enfoque\nMPP puede soportar flujos x402. AP2 puede complementarlos.\n04 / 20\nERC-20  /  x402 · HTTP 402  /  Machine Payments Protocol  /  más en notas\n2 MIN",
-        "notes": "SLIDE 04 · PAGOS PROGRAMABLES\nTIEMPO: 2 min | tramo 03:30–05:30 de 30:00\n\nPresentá el cuadro como comparación funcional, no como ranking. La transferencia de un token no vincula por sí sola un pago con la entrega de una API. MPP es extensible a métodos de pago y contempla sesiones; su documentación anuncia soporte EVM/x402. AP2 enfoca autorización y evidencia mediante mandatos, y publica ejemplos con x402. No son cinco productos mutuamente excluyentes. No profundizar en especificaciones de MPP/AP2 durante esta charla.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nERC-20 — https://eips.ethereum.org/EIPS/eip-20\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nMachine Payments Protocol — https://mpp.dev/\nAgent Payments Protocol — https://ap2-protocol.org/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "table",
-        "heading": "Qué resuelve cada enfoque",
-        "body": [
-          [
-            "ERC-20",
-            "Transferir un token",
-            "Entrega del recurso"
-          ],
-          [
-            "Checkout",
-            "Cobro y facturación",
-            "Control del agente"
-          ],
-          [
-            "x402",
-            "Pago en el acceso HTTP",
-            "Autorización de negocio"
-          ],
-          [
-            "MPP",
-            "Métodos y sesiones",
-            "Elección de activo y red"
-          ],
-          [
-            "AP2",
-            "Mandatos verificables",
-            "Liquidación"
-          ]
-        ],
-        "takeaway": "Pueden complementarse. Cada capa tiene su función.",
-        "number": 23
-      },
-      {
-        "title": "x402: del pedido al recurso",
-        "text": "x402: del pedido a la evidencia\nCLIENTE\nSERVIDOR\nFACILITATOR\n1  Solicita recurso\n2  402 + condiciones\n3  Reintenta + autorización\n4  Verificar + liquidar\n5  Resultado\n6  Recurso + evidencia\nVerificar una autorización no confirma su liquidación.\n05 / 20\nx402 · HTTP 402  /  x402 · Facilitator\n2.5 MIN",
-        "notes": "SLIDE 05 · X402\nTIEMPO: 2.5 min | tramo 05:30–08:00 de 30:00\n\nContá la historia de izquierda a derecha. Un cliente pide un recurso; recibe 402 con condiciones; evalúa precio, red, activo y destino; prepara la autorización y reintenta. El servidor puede delegar validación y liquidación a un facilitator. En el recorrido básico mostrado, solo tras liquidación exitosa entrega el recurso y la evidencia. Verificar una firma no equivale a confirmar liquidación. Hay esquemas/extensiones con otras modalidades; no asumirlas en el kit.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "sequence",
-        "heading": "x402: del pedido al recurso",
-        "body": null,
-        "takeaway": "Verificar una autorización no confirma la liquidación.",
-        "number": 24
-      },
-      {
-        "title": "Tres headers para seguir el pago",
-        "text": "x402 v2: qué mirar en DevTools\nHTTP/1.1 402 Payment Required\nPAYMENT-REQUIRED: <condiciones en base64>\n\nGET /recurso\nPAYMENT-SIGNATURE: <autorización en base64>\n\nHTTP/1.1 200 OK\nPAYMENT-RESPONSE: <resultado de liquidación en base64>\nReferencia HTTP v2. Comprobá la versión real del kit.\nv1 usa otros nombres, como X-PAYMENT. Comprobá SDK y versión.\n06 / 20\nx402 · HTTP transport v2  /  x402 · HTTP 402\n1.5 MIN",
-        "notes": "SLIDE 06 · X402\nTIEMPO: 1.5 min | tramo 08:00–09:30 de 30:00\n\nEstos nombres corresponden a la especificación HTTP v2 consultada, no a una captura del starter kit. El README del kit indica Thirdweb v5, pero eso no identifica por sí mismo la versión del protocolo x402. Antes del evento hay que revisar los paquetes fijados y los headers reales en Network. Base64 es codificación, no cifrado. Nunca mostrar claves privadas o credenciales junto al tráfico de pago.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · HTTP transport v2 — https://github.com/x402-foundation/x402/blob/main/specs/transports-v2/http.md\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "code",
-        "heading": "Tres headers para seguir el pago",
-        "body": "402 Payment Required\nPAYMENT-REQUIRED: <condiciones>\n\nGET /recurso\nPAYMENT-SIGNATURE: <autorización>\n\n200 OK\nPAYMENT-RESPONSE: <liquidación>",
-        "takeaway": "HTTP v2 · Valores codificados en base64. Comprobá la versión del kit.",
-        "number": 25
-      },
-      {
-        "title": "Cada componente tiene un rol",
-        "text": "Tres componentes, responsabilidades claras\nCLIENTE\nDecide y autoriza\nSERVIDOR\nProtege el recurso\nFACILITATOR\nVerifica y liquida\nEvalúa condiciones.\nAplica presupuesto.\nPrepara la firma.\nPublica el precio.\nVincula pago y pedido.\nEntrega la respuesta.\nValida el payload.\nEnvía la liquidación.\nDevuelve el resultado.\nEl facilitator es opcional; el starter kit usa Thirdweb.\n07 / 20\nx402 · Facilitator  /  x402 Starter Kit · README\n1.5 MIN",
-        "notes": "SLIDE 07 · X402\nTIEMPO: 1.5 min | tramo 09:30–11:00 de 30:00\n\nEl facilitator evita que cada servidor implemente toda la conectividad y verificación on-chain. La función de facilitator no requiere custodiar los fondos del comprador: actúa sobre autorizaciones firmadas. El servidor conserva responsabilidad sobre entrega, conciliación y tratamiento de errores. En esta demo seguimos el camino Thirdweb del repositorio, no intercambiamos facilitators o redes sin comprobar soporte.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\nx402 Starter Kit · README — https://github.com/federiconardelli7/x402-starter-kit\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "cards",
-        "heading": "Cada componente tiene un rol",
-        "body": [
-          [
-            "Cliente",
-            "Autoriza",
-            "Condiciones y presupuesto"
-          ],
-          [
-            "Servidor",
-            "Entrega",
-            "Precio, recurso y pedido"
-          ],
-          [
-            "Facilitator",
-            "Liquida",
-            "Verifica y envía el pago"
-          ]
-        ],
-        "takeaway": "El facilitator es opcional. Este kit usa Thirdweb.",
-        "number": 26
-      },
-      {
-        "title": "Prepará el starter kit",
-        "text": "Prepará el kit antes de la charla\ngit clone \\\n  https://github.com/federiconardelli7/x402-starter-kit.git\ncd x402-starter-kit\nnpm ci\ncp .env.example .env.local\n# Completar configuración fuera de la pantalla compartida.\nnpm run dev\nStarter kit de Federico Nardelli · Thirdweb · Avalanche Fuji.\nWallet y activo de prueba; gas para el facilitator.\n08 / 20\nx402 Starter Kit · README\n2 MIN",
-        "notes": "SLIDE 08 · PREPARACIÓN\nTIEMPO: 2 min | tramo 11:00–13:00 de 30:00\n\nEl repositorio suministrado documenta modo Human Payment y modos de agentes. Preparar un proyecto Thirdweb y las variables NEXT_PUBLIC_THIRDWEB_CLIENT_ID, THIRDWEB_SECRET_KEY, THIRDWEB_SERVER_WALLET_ADDRESS y MERCHANT_WALLET_ADDRESS. OPENROUTER_API_KEY corresponde al modo de IA. El README exige una dirección de smart account ERC-4337 para el facilitator y gas de prueba; no tratarlo como requisito universal de x402. npm ci es una elección para usar el lockfile. Revisar scripts y dependencias antes de instalar. No se instaló ni ejecutó el repositorio en este entorno de preparación.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 Starter Kit · README — https://github.com/federiconardelli7/x402-starter-kit\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "code",
-        "heading": "Prepará el starter kit",
-        "body": "git clone \\\n  https://github.com/federiconardelli7/x402-starter-kit.git\ncd x402-starter-kit\nnpm ci\ncp .env.example .env.local\n# Configurar fuera de la pantalla compartida.",
-        "takeaway": "Avalanche Fuji · Thirdweb · Wallet y fondos de prueba. Comandos completos en notas.",
-        "number": 27
-      },
-      {
-        "title": "Un recurso. Un pago. Su evidencia.",
-        "text": "Demo 1 · recurso, pago y evidencia\nQué debe verse\nCondiciones de pago legibles.\nLa autorización antes del cobro.\nLiquidación confirmada y transacción real.\nUn fallo controlado sin entregar el recurso.\nRecorrido en la app\nAbrir Human Payment en Fuji.\nSolicitar el recurso y observar el 402.\nRevisar monto y destino; autorizar.\nVer recurso entregado y registro del pago.\nSolo fondos de prueba. La firma no es el comprobante final.\n09 / 20\nx402 Starter Kit · README  /  x402 · HTTP 402  /  x402 · Facilitator\n4 MIN",
-        "notes": "SLIDE 09 · DEMO EN VIVO\nTIEMPO: 4 min | tramo 13:00–17:00 de 30:00\n\nGuion de 4 minutos: 0:00–0:45 abrir app local y confirmar Fuji; 0:45–1:30 pedir recurso con Network abierto; 1:30–2:30 revisar condiciones y autorizar con wallet de prueba; 2:30–3:15 mostrar respuesta y, si existe, tx del intento actual en explorador; 3:15–4:00 cancelar un segundo intento o usar saldo de prueba insuficiente para observar error. No usar dinero real ni aprobar permisos ilimitados. El resultado exacto y los headers deben ensayarse antes. Si el servicio externo falla, ir al anexo ilustrativo: no inventar una tx ni decir que fue ejecutada.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 Starter Kit · README — https://github.com/federiconardelli7/x402-starter-kit\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "demo",
-        "heading": "Un recurso. Un pago. Su evidencia.",
-        "body": [
-          [
-            "01",
-            "Solicitar",
-            "Observar el HTTP 402"
-          ],
-          [
-            "02",
-            "Autorizar",
-            "Revisar monto, red y destino"
-          ],
-          [
-            "03",
-            "Verificar",
-            "Liquidación, recurso y fallo controlado"
-          ]
-        ],
-        "takeaway": "Demo en Fuji con fondos de prueba. La firma no es el recibo final.",
-        "number": 28
-      },
-      {
-        "title": "Autonomía con límites verificables",
-        "text": "Autonomía con presupuesto, no acceso ilimitado\nLÍMITE\nCuánto puede gastar\nDESTINO\nDónde puede pagar\nEVIDENCIA\nQué debe registrar\nTope por llamada.\nTope total por sesión.\nPausa al agotarse.\nRed y activo permitidos.\nServicios y destinatarios\npreviamente aprobados.\nPedido y autorización.\nResultado y recibo.\nReintentos conciliados.\nUn presupuesto en la interfaz no prueba que el signer lo imponga.\n10 / 20\nx402 Starter Kit · README  /  Agent Payments Protocol\n2 MIN",
-        "notes": "SLIDE 10 · AGENTES\nTIEMPO: 2 min | tramo 17:00–19:00 de 30:00\n\nEl README del kit ofrece un modo de presupuesto preautorizado para agentes. No afirmar que todos los límites de esta slide estén implementados ahí: son criterios de diseño para revisar. Como ejemplo de ensayo, elegí un presupuesto pequeño de tokens de prueba y verificá qué pasa al agotarse. Separá política del modelo de enforcement en wallet/backend. Un agente no debe cambiar el destino o ampliar su propio presupuesto por instrucciones del servicio que está pagando.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 Starter Kit · README — https://github.com/federiconardelli7/x402-starter-kit\nAgent Payments Protocol — https://ap2-protocol.org/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "cards",
-        "heading": "Autonomía con límites verificables",
-        "body": [
-          [
-            "Presupuesto",
-            "Cuánto",
-            "Tope por llamada y sesión"
-          ],
-          [
-            "Destino",
-            "Dónde",
-            "Red, activo y servicio permitidos"
-          ],
-          [
-            "Evidencia",
-            "Qué pasó",
-            "Autorización, resultado y recibo"
-          ]
-        ],
-        "takeaway": "El signer o backend debe imponer los límites.",
-        "number": 29
-      },
-      {
-        "title": "El pago continúa después de firmar",
-        "text": "El pago no termina en la firma\nDespués de enviar\nConfirmar la liquidación real.\nConciliar reintentos y evitar cobros duplicados.\nRegistrar evidencia sin filtrar secretos.\nAntes de autorizar\nComparar precio, activo, red y destino.\nRevisar expiración, nonce y permisos.\nMantener claves fuera del contexto del LLM.\nPago válido ≠ servicio confiable. Revisá la contraparte.\n11 / 20\nx402 · HTTP transport v2  /  x402 · Facilitator\n1.5 MIN",
-        "notes": "SLIDE 11 · SEGURIDAD\nTIEMPO: 1.5 min | tramo 19:00–20:30 de 30:00\n\nChecklist propuesto para este workshop: la respuesta HTTP de un proveedor es entrada no confiable, no una nueva instrucción de sistema. Una autorización debe coincidir con la intención original. Cuando hay timeout, no reintentar ciegamente un cobro; consultar y conciliar su estado. El nonce del esquema de pago ayuda contra replay, pero la idempotencia de un pedido también requiere diseño de aplicación. Evitar presentar testnet como garantía de seguridad en producción.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · HTTP transport v2 — https://github.com/x402-foundation/x402/blob/main/specs/transports-v2/http.md\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "pair",
-        "heading": "El pago continúa después de firmar",
-        "body": [
-          [
-            "Antes",
-            "Verificar precio, activo, red y destino.",
-            "Revisar expiración, nonce y permisos."
-          ],
-          [
-            "Después",
-            "Confirmar la liquidación.",
-            "Conciliar reintentos y evitar duplicados."
-          ]
-        ],
-        "takeaway": "Un pago válido no garantiza un servicio confiable.",
-        "number": 30
-      },
-      {
-        "title": "Twin: activos y pagos locales",
-        "text": "Twin: activos y pagos locales\nActivos tokenizados\nOtra línea de producto ofrece exposición a activos.\nRevisar derechos, elegibilidad y custodia.\nEl token no reemplaza la documentación.\nStablecoins locales\nARGt representa pesos argentinos.\nOtros tokens siguen monedas de LATAM.\nPagos y liquidación; no prometen rendimiento.\nRegistro consultado: Base, Polygon, Arbitrum y Ethereum; no Avalanche.\n12 / 20\nTwin · productos  /  Twin · preguntas frecuentes  /  Twin · contratos\n1.5 MIN",
-        "notes": "SLIDE 12 · TWIN\nTIEMPO: 1.5 min | tramo 20:30–22:00 de 30:00\n\nDescribí los productos como los presenta Twin, sin avalar reservas ni recomendar inversiones. ARGt busca seguir ARS, no USD. Las stablecoins no pagan rendimiento por el solo hecho de tenerlas. El sitio de producto y la app pueden tener cobertura distinta: el FAQ enumera Base/Polygon para Twin App, mientras el registro de contratos enumera cuatro redes. La demo usa Base y una dirección tomada del registro oficial. No hay integración Twin–Avalanche confirmada en los recursos revisados.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nTwin · productos — https://www.twin.finance/\nTwin · preguntas frecuentes — https://www.twin.finance/faqs\nTwin · contratos — https://docs.twin.finance/stablecoins/contracts\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "pair",
-        "heading": "Twin: activos y pagos locales",
-        "body": [
-          [
-            "Stablecoins",
-            "ARGt sigue el peso argentino.",
-            "Pagos y liquidación en monedas locales."
-          ],
-          [
-            "Activos tokenizados",
-            "Exposición según cada producto.",
-            "Revisar derechos, custodia y elegibilidad."
-          ]
-        ],
-        "takeaway": "Registro consultado: Base, Polygon, Arbitrum y Ethereum; sin Avalanche.",
-        "number": 31
-      },
-      {
-        "title": "Consultar ARGt sin firmar",
-        "text": "Demo 2 · consultar ARGt sin firmar\nTOKEN=0xf016413834E6D1A14F3D628B11D6Ef725a6bdbDD\ncast chain-id --rpc-url \"$BASE_RPC_URL\"\ncast call \"$TOKEN\" \"symbol()(string)\" --rpc-url \"$BASE_RPC_URL\"\ncast call \"$TOKEN\" \"decimals()(uint8)\" --rpc-url \"$BASE_RPC_URL\"\n\nOpción sin terminal: explorador → contrato → Read / Read as Proxy.\nBase / chain ID 8453 · dirección tomada del registro oficial de Twin.\nLectura pública: verificá red y contrato. No requiere conectar una wallet.\n13 / 20\nTwin · contratos  /  ERC-20\n2.5 MIN",
-        "notes": "SLIDE 13 · DEMO EN VIVO\nTIEMPO: 2.5 min | tramo 22:00–24:30 de 30:00\n\nPreparación: Foundry/cast disponible y BASE_RPC_URL configurada con un proveedor confiable. No usar una clave privada. La dirección de ARGt en Base fue tomada de docs.twin.finance/stablecoins/contracts. Guion: abrir esa tabla; comprobar chain ID 8453; consultar symbol y decimals; explicar balanceOf y totalSupply como lecturas adicionales. El registro publica 18 decimales. No mostrar balances inventados. Se puede usar el explorador enlazado por Twin si no hay terminal. Estas lecturas no verifican reservas bancarias y no son operaciones de inversión. No se consultó el contrato en vivo durante la preparación.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nTwin · contratos — https://docs.twin.finance/stablecoins/contracts\nERC-20 — https://eips.ethereum.org/EIPS/eip-20\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "code",
-        "heading": "Consultar ARGt sin firmar",
-        "body": "TOKEN=0xf016413834E6D1A14F3D628B11D6Ef725a6bdbDD\ncast chain-id --rpc-url \"$BASE_RPC_URL\"\ncast call \"$TOKEN\" \"symbol()(string)\" \\\n  --rpc-url \"$BASE_RPC_URL\"\ncast call \"$TOKEN\" \"decimals()(uint8)\" \\\n  --rpc-url \"$BASE_RPC_URL\"",
-        "takeaway": "Base · chain ID 8453 · Alternativa: explorador → Read / Read as Proxy.",
-        "number": 32
-      },
-      {
-        "title": "Token, reserva y vault",
-        "text": "Token, reserva y vault\nReserva / respaldo\nRevisar reportes, fecha de corte y custodia.\ntotalSupply() describe oferta on-chain; no prueba reservas bancarias.\nLeer un ERC-20 no demuestra reservas ni lo convierte en un vault.\nVault / ERC-4626, cuando corresponda\nPuede exponer asset(), totalAssets() y convertToAssets().\nEsta demo no tiene un vault Twin ni un APY verificados.\n14 / 20\nTwin · reservas  /  ERC-4626\n1 MIN",
-        "notes": "SLIDE 14 · TWIN\nTIEMPO: 1 min | tramo 24:30–25:30 de 30:00\n\nEsta slide responde la pregunta de contratos y vaults sin atribuir a Twin capacidades no verificadas. ERC-4626 estandariza shares de un activo subyacente; ERC-20 por sí solo no incluye esa interfaz. Los reportes de reservas tienen una fecha de corte: no equivalen a una garantía permanente. No se encontró ni validó una dirección de vault Twin para usar en el workshop. Si luego se incorpora un vault, verificar contrato, ABI, proxy, permisos y modelo de riesgo antes de mostrar depósitos.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nTwin · reservas — https://www.twin.finance/transparency\nERC-4626 — https://eips.ethereum.org/EIPS/eip-4626\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "cards",
-        "heading": "Token, reserva y vault",
-        "body": [
-          [
-            "Token",
-            "ERC-20",
-            "Balance y oferta on-chain"
-          ],
-          [
-            "Reserva",
-            "Respaldo",
-            "Reportes, fecha y custodia"
-          ],
-          [
-            "Vault",
-            "ERC-4626",
-            "Activo subyacente y shares"
-          ]
-        ],
-        "takeaway": "La demo no verifica reservas, un vault Twin ni un APY.",
-        "number": 33
-      },
-      {
-        "title": "¿Qué falta para unir x402 y Twin?",
-        "text": "¿Qué falta para unir x402 y Twin?\nLo necesario para integrarlos\nMisma red y activo soportado.\nEsquema de autorización compatible.\nFacilitator, liquidez y operación revisados.\nDos demos separadas\nx402 con el kit sobre Avalanche Fuji.\nLectura de ARGt en Base.\nDos recorridos independientes y verificables.\nSer ERC-20 no implica compatibilidad automática con x402.\n15 / 20\nx402 · HTTP 402  /  x402 · Facilitator  /  Twin · contratos  /  más en notas\n1.5 MIN",
-        "notes": "SLIDE 15 · INTEGRACIÓN\nTIEMPO: 1.5 min | tramo 25:30–27:00 de 30:00\n\nPropuesta conceptual, no una integración disponible: un servicio puede ofrecer pago en un activo admitido por su esquema y facilitator. Para usar ARGt hace falta verificar autorización soportada por el token, aprobaciones necesarias, red y soporte del proveedor. No asumir que el modo exact funciona con cualquier ERC-20 ni transportar un token entre redes de forma implícita. Si se usa conversión o bridge, son operaciones adicionales con permisos y riesgos propios. El objetivo del cierre es mostrar cómo evaluar factibilidad con evidencia.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\nTwin · contratos — https://docs.twin.finance/stablecoins/contracts\nERC-20 — https://eips.ethereum.org/EIPS/eip-20\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "pair",
-        "heading": "¿Qué falta para unir x402 y Twin?",
-        "body": [
-          [
-            "Demos actuales",
-            "x402 en Avalanche Fuji.",
-            "Lectura de ARGt en Base."
-          ],
-          [
-            "Para integrarlos",
-            "Red, activo y autorización compatibles.",
-            "Facilitator y operación verificados."
-          ]
-        ],
-        "takeaway": "Ser ERC-20 no implica compatibilidad automática con x402.",
-        "number": 34
-      },
-      {
-        "title": "Pagar es una capacidad.  Autorizar es una decisión.",
-        "text": "Pagar es una capacidad.\nAutorizar es una decisión.\nCIERRE\n¿Qué permitirías pagar a tu agente y bajo qué límites?  /  Preguntas\n16 / 20\n3 MIN",
-        "notes": "SLIDE 16 · CIERRE\nTIEMPO: 3 min | tramo 27:00–30:00 de 30:00\n\nRecapitulá: x402 inserta un flujo de pago en el acceso HTTP; otros protocolos cubren métodos, sesiones o autorización; Twin aporta activos e infraestructura que deben validarse por red y contrato. Reservá el cierre para preguntas sobre el caso real de la audiencia. Remarcá que las demos de fondos fueron preparadas para testnet y que el recorrido Twin es read-only. Una integración productiva exige pruebas y revisión independientes.\n\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": false,
-        "layout": "hero",
-        "heading": "Pagar es una capacidad.<br><em>Autorizar es una decisión.<\/em>",
-        "body": "¿Qué permitirías pagar a tu agente y bajo qué límites?",
-        "takeaway": "",
-        "number": 35
-      },
-      {
-        "title": "Recorrido ilustrativo",
-        "text": "Anexo · recorrido ilustrativo\nRECORRIDO ILUSTRATIVO · No representa una ejecución ni un pago real.\n01 · Pedido\nCliente pide\nun recurso\n›\n02 · 402\nServidor informa\ncondiciones\n›\n03 · Firma\nSe autoriza\nel reintento\n›\n04 · Respuesta\nTras liquidar:\nrecurso + evidencia\nSi falla la red, explicar el protocolo. No inventar hashes ni saldos.\n17 / 20\nx402 · HTTP 402  /  x402 · Facilitator\nANEXO",
-        "notes": "SLIDE 17 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nUsar exclusivamente como respaldo didáctico cuando el servicio externo o la conexión no funcionen. No contiene datos de una transacción. Los errores posibles incluyen rechazo de firma, expiración, saldo insuficiente, falta de gas, token no soportado y fallos del proveedor. Describir el error observado; no mostrar una respuesta esperada como si fuera la obtenida.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": true,
-        "layout": "steps",
-        "heading": "Recorrido ilustrativo",
-        "body": [
-          [
-            "Pedido",
-            "Solicitar el recurso"
-          ],
-          [
-            "402",
-            "Leer condiciones"
-          ],
-          [
-            "Firma",
-            "Autorizar el reintento"
-          ],
-          [
-            "Respuesta",
-            "Liquidación + recurso"
-          ]
-        ],
-        "takeaway": "Respaldo didáctico. No representa una ejecución ni un pago real.",
-        "number": 36
-      },
-      {
-        "title": "Preflight del kit",
-        "text": "Anexo · preflight del kit\nThirdweb y destinatario\nNEXT_PUBLIC_THIRDWEB_CLIENT_ID · THIRDWEB_SECRET_KEY\nTHIRDWEB_SERVER_WALLET_ADDRESS · MERCHANT_WALLET_ADDRESS\nConfigurar fuera del escenario. No compartir .env.local.\nModo IA y pruebas\nOPENROUTER_API_KEY para la experiencia de IA.\nComprobar ERC-4337 del facilitator, gas y activo de prueba antes de ensayar.\n18 / 20\nx402 Starter Kit · README\nANEXO",
-        "notes": "SLIDE 18 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nEl README prescribe smart account ERC-4337 para el facilitator y advierte no usar ERC-7702 para ese caso del kit. No generalizar esta restricción a todo x402. Separar merchant, comprador y facilitator. Revisar exactamente qué activo acepta la app y qué credenciales necesita cada modo. Registrar commit y versiones probadas después del ensayo; no se fijó aquí un commit no verificado. No ejecutar instalaciones durante los cuatro minutos asignados a la demo.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 Starter Kit · README — https://github.com/federiconardelli7/x402-starter-kit\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": true,
-        "layout": "pair",
-        "heading": "Preflight del kit",
-        "body": [
-          [
-            "Thirdweb",
-            "Cliente, servidor y merchant configurados.",
-            "Smart account ERC-4337 para este kit."
-          ],
-          [
-            "Modo IA",
-            "OPENROUTER_API_KEY configurada.",
-            "Gas y activo de prueba comprobados."
-          ]
-        ],
-        "takeaway": "Configuración fuera del escenario. Nombres de variables en notas.",
-        "number": 37
-      },
-      {
-        "title": "Leer un token o un vault",
-        "text": "Anexo · token o vault\nERC-4626, si está implementado\nasset() / totalAssets()\nconvertToAssets(shares)\npreviewDeposit(assets)\nLas vistas no garantizan la ejecución.\nERC-20\nsymbol() / decimals()\nbalanceOf(wallet)\ntotalSupply()\nIdentidad, balance y oferta del token.\ndeposit(), withdraw() y approvals son escrituras: requieren otra revisión.\n19 / 20\nERC-20  /  ERC-4626\nANEXO",
-        "notes": "SLIDE 19 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nNo atribuir ERC-4626 a Twin sin validar el contrato concreto. convertToAssets es una conversión ideal que no incorpora necesariamente comisiones o slippage; previewDeposit aproxima el resultado según las reglas del vault pero no implica permiso o cupo disponible. totalAssets está expresado en unidades del activo subyacente, no necesariamente en dólares. Toda escritura requiere evaluación de fondos, límites, autorizaciones y simulación separadas.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nERC-20 — https://eips.ethereum.org/EIPS/eip-20\nERC-4626 — https://eips.ethereum.org/EIPS/eip-4626\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": true,
-        "layout": "pair",
-        "heading": "Leer un token o un vault",
-        "body": [
-          [
-            "ERC-20",
-            "symbol() · decimals()",
-            "balanceOf() · totalSupply()"
-          ],
-          [
-            "ERC-4626, si aplica",
-            "asset() · totalAssets()",
-            "convertToAssets() · previewDeposit()"
-          ]
-        ],
-        "takeaway": "Depositar, retirar y aprobar son escrituras con otra revisión.",
-        "number": 38
-      },
-      {
-        "title": "Código y contratos",
-        "text": "Anexo · código y contratos\nx402 Starter Kit\nRepositorio usado para preparar la demo\nTwin · contratos\nRegistro oficial por red y activo\nx402 · MPP · AP2 · Twin · ERC-20 · ERC-4626\n20 / 20\nx402 Starter Kit · README  /  x402 · HTTP 402  /  x402 · HTTP transport v2  /  más en notas\nANEXO",
-        "notes": "SLIDE 20 · FUENTES / REVISADAS 03 NOV 2026\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nEnlaces de consulta, no recomendaciones de inversión. Los QR apuntan al repositorio y al registro de contratos; no abren un flujo de pago. Fuentes revisadas el 3 de noviembre de 2026. Antes del evento verificar SDK, headers, direcciones, redes y disponibilidad del facilitator.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 Starter Kit · README — https://github.com/federiconardelli7/x402-starter-kit\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nx402 · HTTP transport v2 — https://github.com/x402-foundation/x402/blob/main/specs/transports-v2/http.md\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\nMachine Payments Protocol — https://mpp.dev/\nAgent Payments Protocol — https://ap2-protocol.org/\nTwin · productos — https://www.twin.finance/\nTwin · contratos — https://docs.twin.finance/stablecoins/contracts\nTwin · reservas — https://www.twin.finance/transparency\nERC-20 — https://eips.ethereum.org/EIPS/eip-20\nERC-4626 — https://eips.ethereum.org/EIPS/eip-4626\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
-        "annex": true,
-        "layout": "links",
-        "heading": "Código y contratos",
-        "body": [
-          [
-            "x402 Starter Kit",
-            "https://github.com/federiconardelli7/x402-starter-kit"
-          ],
-          [
-            "Twin · contratos",
-            "https://docs.twin.finance/stablecoins/contracts"
-          ],
-          [
-            "x402 · documentación",
-            "https://docs.x402.org/"
-          ]
-        ],
-        "takeaway": "Fuentes y detalles técnicos en las notas de cada diapositiva.",
-        "number": 39
-      }
-    ]
-  }
+ {
+  "title": "Blockchain, Avalanche y Twin",
+  "slides": [
+   {
+    "title": "Blockchain, Avalanche + Twin",
+    "text": "Blockchain\n+ Avalanche\nWORKSHOP 01  /  30 MINUTOS\nDe entender una transacción a construir con agentes\n01 / 20\n0.5 MIN",
+    "notes": "SLIDE 01 · APERTURA\nTIEMPO: 0.5 min | tramo 00:00–00:30 de 30:00\n\nAbrí con el resultado esperado: entender el recorrido de una transacción, distinguir C-Chain de una L1 propia y usar skills + MCP sin ceder control de las firmas. La audiencia objetivo es técnica inicial/intermedia. No prometas desplegar una red completa en media hora. El original Team1 se usó como base visual; esta es una presentación independiente.\n\nRecorrido de esta versión: 1) qué es una blockchain y cómo viaja una transacción; 2) Avalanche: Primary Network, C-Chain y L1s; 3) Twin: un token real (ARGt) para ver todo lo anterior en acción; 4) agentes: skills, MCP y límites de firma.\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "hero",
+    "heading": "Blockchain,<br>Avalanche <em>+ Twin<\/em>",
+    "body": "Qué es una blockchain, cómo se organiza Avalanche y un token real en pesos.",
+    "takeaway": "",
+    "section": "",
+    "number": 0
+   },
+   {
+    "title": "¿Qué es una blockchain?",
+    "text": "(Slide nueva en esta versión.)",
+    "notes": "SLIDE 02 · FUNDAMENTOS\nTIEMPO: 1.5 min | tramo 00:30–02:00 de 30:00\n\nDefinición en una frase, antes de cualquier término técnico. Ethereum.org la define como una base de datos pública que se actualiza y se comparte entre muchas computadoras de una red. \"Bloque\": grupo de transacciones. \"Cadena\": cada bloque referencia criptográficamente a su padre, así que cambiar un bloque obliga a cambiar todos los siguientes, y eso requiere el consenso de la red. Hash = huella digital: un resumen corto que cambia por completo si cambia un solo dato. Los nombres y montos del diagrama son ilustrativos, no datos reales.\n\nFUENTES (consultadas el 4 de noviembre de 2026)\nEthereum · Intro to Ethereum — https://ethereum.org/en/developers/docs/intro-to-ethereum/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "chain",
+    "heading": "¿Qué es una <em>blockchain<\/em>?",
+    "body": {
+     "def": "Un registro de movimientos que muchas computadoras guardan y verifican a la vez.",
+     "blocks": [
+      [
+       "Bloque 1",
+       [
+        "Ana → Beto · 5",
+        "Beto → Caro · 2"
+       ]
+      ],
+      [
+       "Bloque 2",
+       [
+        "Caro → Dani · 1",
+        "Ana → Caro · 3"
+       ]
+      ],
+      [
+       "Bloque 3",
+       [
+        "próximo bloque…"
+       ]
+      ]
+     ],
+     "link": "huella del anterior"
+    },
+    "takeaway": "Cada bloque guarda la huella (hash) del anterior. Si alguien altera uno, la cadena deja de coincidir.",
+    "section": "Blockchain",
+    "number": 1
+   },
+   {
+    "title": "¿Cuándo conviene?",
+    "text": "Empezá por el problema de confianza\nUn registro compartido aporta\nVarios actores verifican el mismo estado.\nReglas y transferencias comprobables.\nCosto de coordinación y operación.\nUna base de datos suele bastar\nUn operador controla el sistema.\nLos participantes confían en ese operador.\nPrioridad: simplicidad y privacidad.\nPrimero la necesidad de confianza. Después la tecnología.\n02 / 20\n1.5 MIN",
+    "notes": "SLIDE 03 · FUNDAMENTOS\nTIEMPO: 1 min | tramo 02:00–03:00 de 30:00\n\nPlanteá un ejemplo propio: tres empresas concilian movimientos de un activo. Preguntá quién mantiene el registro y quién puede auditarlo. No vendas blockchain como reemplazo universal de PostgreSQL. Este es un criterio de diseño, no una regla absoluta: si no hay necesidad de verificación compartida, una arquitectura tradicional puede ser más simple. Transición: ¿qué verifica realmente una blockchain?\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "pair",
+    "heading": "¿Cuándo <em>conviene<\/em> una blockchain?",
+    "body": [
+     [
+      "Base de datos",
+      "Un operador mantiene el registro.",
+      "Los demás confían en ese operador."
+     ],
+     [
+      "Registro compartido",
+      "Varios actores verifican el mismo estado.",
+      "Nadie depende de un solo operador."
+     ]
+    ],
+    "takeaway": "Primero preguntá quién necesita verificar. Después elegí la tecnología.",
+    "section": "Blockchain",
+    "number": 2
+   },
+   {
+    "title": "Tres piezas",
+    "text": "Blockchain: historial verificable\nEstado: quién tiene qué y qué reglas aplican.\nTransacciones: solicitudes para cambiar el estado.\nConsenso: los validadores acuerdan el historial.\nHashes y firmas permiten detectar alteraciones.\nVerificar el registro no vuelve verdadero cualquier dato de entrada.\n03 / 20\nEthereum · Transactions  /  Ethereum · Smart contracts\n2 MIN",
+    "notes": "SLIDE 04 · FUNDAMENTOS\nTIEMPO: 1 min | tramo 03:00–04:00 de 30:00\n\nUsá la ilustración como modelo de bloques conectados, no como un diagrama exacto del consenso Avalanche. Una firma permite verificar autorización; la red valida reglas y ordena cambios. La resistencia a reescrituras depende del protocolo y de sus supuestos de seguridad. Evitá el absoluto “nunca puede cambiar”. Un dato falso ingresado por una fuente externa sigue siendo falso: la verificación del mundo real requiere otros controles.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nEthereum · Transactions — https://ethereum.org/en/developers/docs/transactions/\nEthereum · Smart contracts — https://ethereum.org/en/developers/docs/smart-contracts/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "steps",
+    "heading": "Tres piezas para entenderla",
+    "body": [
+     [
+      "Estado",
+      "Quién tiene qué, ahora"
+     ],
+     [
+      "Transacción",
+      "Un pedido para cambiar el estado"
+     ],
+     [
+      "Consenso",
+      "Los validadores acuerdan el orden"
+     ]
+    ],
+    "takeaway": "Validador: computadora de la red que revisa las reglas y agrega bloques.",
+    "section": "Blockchain",
+    "number": 3
+   },
+   {
+    "title": "El recorrido de una transacción",
+    "text": "Una transacción, de principio a fin\nEjemplo: transferir un token en una red EVM.\nFirmar\nLa wallet\nautoriza\n›\nEnviar\nUn RPC\nrecibe la tx\n›\nValidar\nLa red verifica\ny ejecuta\n›\nConfirmar\nRecibo, estado\ny eventos\nFirma ≠ inclusión ≠ confirmación. Revisá el recibo.\n04 / 20\nEthereum · Transactions\n2 MIN",
+    "notes": "SLIDE 05 · FUNDAMENTOS\nTIEMPO: 1.5 min | tramo 04:00–05:30 de 30:00\n\nRecorré cuatro etapas con un pago imaginario. La firma no implica que el pago haya sucedido. El RPC tampoco es la blockchain: es una interfaz a un nodo. Una transacción puede fallar; el recibo y los eventos son evidencia técnica del resultado. Una escritura usa gas. Las lecturas RPC pueden no requerir firma ni una transacción on-chain, aunque el proveedor RPC pueda cobrar por su servicio.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nEthereum · Transactions — https://ethereum.org/en/developers/docs/transactions/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "steps",
+    "heading": "El recorrido de una transacción",
+    "body": [
+     [
+      "Firmar",
+      "Tu wallet la autoriza"
+     ],
+     [
+      "Enviar",
+      "Un RPC la recibe"
+     ],
+     [
+      "Validar",
+      "La red la ejecuta"
+     ],
+     [
+      "Confirmar",
+      "Queda un recibo"
+     ]
+    ],
+    "takeaway": "RPC: la puerta de entrada a un nodo. Firmar no es confirmar: mirá el recibo.",
+    "section": "Blockchain",
+    "number": 4
+   },
+   {
+    "title": "Wallet y contrato",
+    "text": "Wallet y contrato: roles distintos\nContrato: reglas\nCódigo y estado en una dirección.\nSe ejecuta cuando alguien lo invoca.\nPuede depender de oráculos y administradores.\nWallet: autoridad\nGestiona claves o un mecanismo de firma.\nLa dirección identifica una cuenta.\nUna firma puede autorizar acciones sensibles.\nLa IA propone. La autoridad de firma se concede por separado.\n05 / 20\nEthereum · Smart contracts\n2 MIN",
+    "notes": "SLIDE 06 · FUNDAMENTOS\nTIEMPO: 1 min | tramo 05:30–06:30 de 30:00\n\nAclaración práctica: los activos se registran en la cadena; la interfaz de wallet no es una caja que almacena monedas. Tampoco todos los contratos son inmutables en su comportamiento: existen proxies, pausas y permisos administrativos. “Automático” significa que el código aplica reglas al ser ejecutado, no que se despierte solo. Para datos externos necesita mecanismos como oráculos. Conectá esta idea con los permisos del agente más adelante.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nEthereum · Smart contracts — https://ethereum.org/en/developers/docs/smart-contracts/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "pair",
+    "heading": "La wallet firma.<br><em>El contrato aplica reglas.<\/em>",
+    "body": [
+     [
+      "Wallet",
+      "Guarda las claves que firman.",
+      "Una firma autoriza una acción."
+     ],
+     [
+      "Contrato inteligente",
+      "Un programa publicado en la cadena.",
+      "Corre sus reglas cuando alguien lo llama."
+     ]
+    ],
+    "takeaway": "Una IA puede proponer una acción. Firmarla es otra autorización.",
+    "section": "Blockchain",
+    "number": 5
+   },
+   {
+    "title": "Una red de redes",
+    "text": "Avalanche:\nuna red de redes\nAVALANCHE\nC-Chain para empezar. L1 propias cuando necesitás otras reglas.\n07 / 20\nAvalanche · Primary Network  /  Avalanche · L1s\n1 MIN",
+    "notes": "SLIDE 07 · AVALANCHE\nTIEMPO: 0.5 min | tramo 06:30–07:00 de 30:00\n\nPresentá Avalanche como una arquitectura multichain. La C-Chain ofrece un entorno EVM compartido; las L1 permiten definir condiciones específicas. No uses cifras de TPS, tarifas o finalidad como garantías universales: dependen de red, configuración y condiciones. Transición al mapa de la arquitectura.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\nAvalanche · L1s — https://build.avax.network/docs/avalanche-l1s\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "hero",
+    "heading": "Una red<br><em>de redes.<\/em>",
+    "body": "Avalanche permite muchas blockchains conectadas. Empezás en C-Chain; si necesitás reglas propias, armás una L1.",
+    "takeaway": "",
+    "section": "Avalanche",
+    "number": 6
+   },
+   {
+    "title": "Avalanche en tres números",
+    "text": "(Slide nueva en esta versión.)",
+    "notes": "SLIDE 08 · AVALANCHE\nTIEMPO: 1 min | tramo 07:00–08:00 de 30:00\n\nTres números que la audiencia va a volver a ver en las demos. La Primary Network es una L1 especial que corre tres blockchains: C-Chain (contratos, EVM), P-Chain (validadores y L1s) y X-Chain (activos nativos). Chain ID = número que identifica una red para que una wallet no firme en la red equivocada. C-Chain mainnet 43114 (0xA86A); Fuji 43113 (0xA869). No agregar cifras de TPS ni tarifas: dependen de red y condiciones.\n\nFUENTES (consultadas el 4 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "stats",
+    "heading": "Avalanche en <em>tres números<\/em>",
+    "body": [
+     [
+      "3",
+      "blockchains",
+      "La Primary Network corre C-Chain, P-Chain y X-Chain."
+     ],
+     [
+      "43114",
+      "chain ID · C-Chain",
+      "La red principal donde corren los contratos."
+     ],
+     [
+      "43113",
+      "chain ID · Fuji",
+      "La testnet: mismo entorno, AVAX de prueba."
+     ]
+    ],
+    "takeaway": "C-Chain es EVM: la misma máquina virtual que Ethereum, con Solidity y sus herramientas.",
+    "section": "Avalanche",
+    "number": 7
+   },
+   {
+    "title": "El mapa de Avalanche",
+    "text": "Primary Network y Avalanche L1s\nPRIMARY NETWORK\nC-Chain\nContratos EVM\nP-Chain\nValidadores y L1\nX-Chain\nActivos nativos\nAVALANCHE L1 A\nReglas + validadores propios\nAVALANCHE L1 B\nReglas + validadores propios\nICM\nLas L1 no son rollups de C-Chain ni heredan sus garantías.\n08 / 20\nAvalanche · Primary Network  /  Avalanche · L1s\n2 MIN",
+    "notes": "SLIDE 09 · AVALANCHE\nTIEMPO: 1.5 min | tramo 08:00–09:30 de 30:00\n\nC-Chain ejecuta contratos EVM; P-Chain coordina operaciones de validadores y L1; X-Chain gestiona activos nativos Avalanche. Las L1 adicionales tienen su propia validación y configuración. Desde Etna, un validador L1 no necesita validar toda la Primary Network: sincroniza P-Chain para la coordinación correspondiente. No confundir una L1 Avalanche con un rollup de Ethereum ni asumir seguridad compartida idéntica entre todas las redes.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\nAvalanche · L1s — https://build.avax.network/docs/avalanche-l1s\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "network",
+    "heading": "El mapa de Avalanche",
+    "body": null,
+    "takeaway": "Cada L1 tiene sus propios validadores. No es un rollup de C-Chain.",
+    "section": "Avalanche",
+    "number": 8
+   },
+   {
+    "title": "¿Qué es una L1?",
+    "text": "(Slide nueva en esta versión.)",
+    "notes": "SLIDE 10 · AVALANCHE\nTIEMPO: 1 min | tramo 09:30–10:30 de 30:00\n\nGlosario en una slide. La documentación define una Avalanche L1 como una red soberana que define sus propias reglas de membresía y economía de token. Desde Etna (ACP-77) los validadores de una L1 no tienen que validar la Primary Network: solo sincronizan la P-Chain. Nomenclatura: ACP-77 indica que las redes creadas con el flujo anterior se siguen llamando Subnets, y la comunidad llama L1 a las nuevas. Por eso el identificador sigue siendo subnetID. Las L1 se despliegan por defecto con Subnet-EVM, un fork de go-ethereum.\n\nFUENTES (consultadas el 4 de noviembre de 2026)\nAvalanche · L1s — https://build.avax.network/docs/avalanche-l1s\nAvalanche · ACP-77 Reinventing Subnets — https://build.avax.network/docs/acps/77-reinventing-subnets\nAvalanche · Validator Manager (nomenclatura subnetID) — https://docs.avax.network/docs/avalanche-l1s/validator-manager/contract\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "define",
+    "heading": "¿Qué es una <em>L1<\/em>?",
+    "body": [
+     "L1",
+     "Una blockchain propia dentro de Avalanche: elige sus validadores, su token de gas y sus reglas.",
+     [
+      "Desde Etna (ACP-77), sus validadores solo sincronizan la P-Chain.",
+      "Es la evolución de las “subnets”.",
+      "Por defecto corre Subnet-EVM: Solidity y herramientas EVM."
+     ]
+    ],
+    "takeaway": "“Subnet” sigue apareciendo en IDs y herramientas, por ejemplo subnetID.",
+    "section": "Avalanche",
+    "number": 9
+   },
+   {
+    "title": "¿C-Chain o una L1 propia?",
+    "text": "C-Chain o L1: elegí por necesidad\nL1 propia\nNecesitás gas, permisos o ejecución a medida.\nRequerís aislamiento de capacidad.\nPodés operar y gobernar una red.\nC-Chain\nQuerés lanzar una app EVM.\nNo necesitás cambiar reglas de red.\nPreferís aprovechar infraestructura existente.\nUna L1 agrega decisiones operativas y de seguridad.\n09 / 20\nAvalanche · L1s\n2 MIN",
+    "notes": "SLIDE 11 · AVALANCHE\nTIEMPO: 1.5 min | tramo 10:30–12:00 de 30:00\n\nHacé una mini decisión de arquitectura. Una API de pago inicial normalmente no necesita su propia cadena. Un entorno con requisitos específicos de validación, acceso o ejecución puede justificar una L1. El costo no es solo desplegar: también es mantener validadores, RPC, explorador, observabilidad, actualizaciones e interoperabilidad. Es una recomendación de alcance para el workshop, no una limitación del producto.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · L1s — https://build.avax.network/docs/avalanche-l1s\n\nFUENTE ADICIONAL (consultada el 4 de noviembre de 2026)\nAvalanche · L1s — https://build.avax.network/docs/avalanche-l1s\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "pair",
+    "heading": "¿C-Chain o una <em>L1 propia<\/em>?",
+    "body": [
+     [
+      "C-Chain",
+      "Lanzás una app EVM sin operar una red.",
+      "Usás infraestructura existente."
+     ],
+     [
+      "L1 propia",
+      "Necesitás gas, acceso o ejecución a medida.",
+      "Operás validadores, RPC y explorador."
+     ]
+    ],
+    "takeaway": "La documentación sugiere empezar en C-Chain y pasar a una L1 cuando quede chica.",
+    "section": "Avalanche",
+    "number": 10
+   },
+   {
+    "title": "Diseñar una L1: cuatro decisiones",
+    "text": "Cuatro decisiones para una L1\nPersonalizar una L1 exige definir sus políticas.\nValidación\nQuién valida\ny bajo qué reglas\n›\nGas\nToken, tarifas\ny destinatarios\n›\nAcceso\nQuién transacciona\ny despliega\n›\nEjecución\nVM, parámetros\ny precompiles\nDocumentá requisitos antes de elegir la configuración.\n10 / 20\nAvalanche · Customize an L1\n1.5 MIN",
+    "notes": "SLIDE 12 · AVALANCHE\nTIEMPO: 1 min | tramo 12:00–13:00 de 30:00\n\nNo conviertas esta slide en un tutorial de genesis. Explicá cuatro decisiones concretas con una app de pagos como ejemplo. Las allowlists y precompiles son herramientas técnicas; no garantizan por sí solos cumplimiento regulatorio. Una red permissioned no es automáticamente confidencial: hay que diseñar quién puede observar datos y operar nodos. La implementación exacta debe salir de documentación vigente, no de comandos inventados por el modelo.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Customize an L1 — https://build.avax.network/docs/avalanche-l1s/evm-configuration/customize-avalanche-l1\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "steps",
+    "heading": "Diseñar una L1: cuatro decisiones",
+    "body": [
+     [
+      "Validación",
+      "Quién valida"
+     ],
+     [
+      "Gas",
+      "Con qué token se paga"
+     ],
+     [
+      "Acceso",
+      "Quién puede usarla"
+     ],
+     [
+      "Ejecución",
+      "Qué VM y parámetros"
+     ]
+    ],
+    "takeaway": "Primero los requisitos. Después la configuración.",
+    "section": "Avalanche",
+    "number": 11
+   },
+   {
+    "title": "Mensajes entre redes",
+    "text": "Interoperar también exige verificar\nICM transmite mensajes; ICTT construye transferencias de tokens.\nOrigen\nSe produce\nun mensaje\n›\nFirmas\nValidadores\nlo autentican\n›\nEntrega\nSe agrega\ny transporta\n›\nDestino\nSe verifica\ny procesa\nRevisar red de origen, validadores, relayer y lógica receptora.\n11 / 20\nAvalanche · ICM  /  Avalanche · L1s\n1 MIN",
+    "notes": "SLIDE 13 · AVALANCHE\nTIEMPO: 1 min | tramo 13:00–14:00 de 30:00\n\nUsá el recorrido para evitar la idea de que todas las L1 comparten un único estado. ICM es mensajería entre redes; una transferencia de tokens requiere lógica adicional. La autenticidad del mensaje no elimina bugs del contrato receptor ni riesgos del activo. No hace falta entrar en BLS o quórums durante esta introducción.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · ICM — https://build.avax.network/docs/cross-chain/avalanche-warp-messaging/overview\nAvalanche · L1s — https://build.avax.network/docs/avalanche-l1s\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "steps",
+    "heading": "Mensajes entre redes: <em>ICM<\/em>",
+    "body": [
+     [
+      "Origen",
+      "Una L1 emite un mensaje"
+     ],
+     [
+      "Firmas",
+      "Sus validadores lo firman"
+     ],
+     [
+      "Entrega",
+      "Un relayer lo lleva"
+     ],
+     [
+      "Destino",
+      "La otra red lo verifica"
+     ]
+    ],
+    "takeaway": "ICM (Interchain Messaging) lleva mensajes. ICTT (Interchain Token Transfer) mueve tokens.",
+    "section": "Avalanche",
+    "number": 12
+   },
+   {
+    "title": "Dos tipos de activo",
+    "text": "AVAX y ERC-20: funciones distintas\nAVAX / moneda nativa\nEn C-Chain, el gas se paga en AVAX.\nNo necesitás emitir una moneda para crear una app.\nSepará el activo que paga la red del activo que mueve tu aplicación.\nERC-20 / token de una aplicación\nDefine balances, transferencias y autorizaciones.\nEl respaldo de una stablecoin se verifica aparte.\n06 / 20\nAvalanche · Primary Network  /  ERC-20  /  Twin · reservas\n1.5 MIN",
+    "notes": "SLIDE 14 · AVALANCHE\nTIEMPO: 1 min | tramo 14:00–15:00 de 30:00\n\nUsá AVAX para el rol de gas y una stablecoin para el rol de unidad de pago. ERC-20 es una interfaz, no una garantía económica ni una certificación de reservas. El número de decimales importa al convertir montos humanos a unidades enteras. El gas token puede ser distinto en una L1 personalizada; esa posibilidad aparece en el siguiente bloque.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\nERC-20 — https://eips.ethereum.org/EIPS/eip-20\nTwin · reservas — https://www.twin.finance/transparency\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "pair",
+    "heading": "Dos tipos de activo",
+    "body": [
+     [
+      "AVAX",
+      "La moneda nativa de la red.",
+      "Paga el gas en C-Chain."
+     ],
+     [
+      "Token ERC-20",
+      "Un contrato con balances y transferencias.",
+      "Lo emite una app o una empresa."
+     ]
+    ],
+    "takeaway": "ERC-20 es el estándar de tokens EVM. No dice nada sobre su respaldo. Ejemplo real: Twin.",
+    "section": "Avalanche",
+    "number": 13
+   },
+   {
+    "title": "¿Qué es Twin?",
+    "text": "(Slide nueva en esta versión. Reemplaza la presentación de Twin de la slide 2-12 original.)",
+    "notes": "SLIDE 15 · TWIN\nTIEMPO: 1 min | tramo 15:00–16:00 de 30:00\n\nBloque nuevo: Twin pasa del Workshop 02 al 01 para mostrar un token real después de explicar ERC-20. Según su sitio, Twin construye dos productos: stablecoins locales totalmente respaldadas para pagos y liquidación, y acceso tokenizado a activos globales. ARGt es la stablecoin del peso argentino emitida por Twin, diseñada para mantener paridad con ARS y respaldada por activos de reserva. Twin aclara que sus stablecoins son instrumentos de pago y no generan interés ni rendimiento. Emisor de las stablecoins: Twin Finance S.A.S. (Uruguay). No recomendar inversiones ni avalar reservas. No hay integración Twin–Avalanche confirmada en los recursos revisados.\n\nFUENTES (consultadas el 4 de noviembre de 2026)\nTwin · productos y FAQ — https://www.twin.finance/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "define",
+    "heading": "¿Qué es <em>Twin<\/em>?",
+    "body": [
+     "Twin",
+     "Infraestructura financiera on-chain para América Latina: stablecoins en monedas locales y tokens de activos globales.",
+     [
+      "Stablecoin: un token que busca valer lo mismo que una moneda.",
+      "ARGt busca paridad con el peso argentino (ARS).",
+      "Es un instrumento de pago: no genera rendimiento."
+     ]
+    ],
+    "takeaway": "En este workshop, Twin = Twin Finance (twin.finance). Lo usamos como ejemplo real de token.",
+    "section": "Twin",
+    "number": 14
+   },
+   {
+    "title": "Twin en tres números",
+    "text": "(Slide nueva en esta versión.)",
+    "notes": "SLIDE 16 · TWIN\nTIEMPO: 1 min | tramo 16:00–17:00 de 30:00\n\nDatos del registro oficial de contratos: los 10 tokens Twin son ERC-20 de 18 decimales y están desplegados en 4 redes (Base 8453, Polygon 137, Arbitrum 42161, Ethereum 1). Decimales: el contrato guarda enteros; 1 ARGt se representa como 1 seguido de 18 ceros. Por eso convertir montos humanos a unidades del contrato importa. Avalanche no figura en ese registro: no afirmar integración. Atención: una misma dirección puede corresponder a contratos distintos en redes distintas; usar siempre la tabla de la red correcta.\n\nFUENTES (consultadas el 4 de noviembre de 2026)\nTwin · contratos — https://docs.twin.finance/stablecoins/contracts\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "stats",
+    "heading": "Twin en <em>tres números<\/em>",
+    "body": [
+     [
+      "10",
+      "stablecoins",
+      "Una por moneda local: ARS, BRL, MXN, COP y otras."
+     ],
+     [
+      "4",
+      "redes",
+      "Base, Polygon, Arbitrum y Ethereum."
+     ],
+     [
+      "18",
+      "decimales",
+      "1 ARGt = 10¹⁸ unidades dentro del contrato."
+     ]
+    ],
+    "takeaway": "Avalanche no aparece en el registro de contratos consultado.",
+    "section": "Twin",
+    "number": 15
+   },
+   {
+    "title": "¿Por qué una stablecoin en pesos?",
+    "text": "(Slide nueva en esta versión.)",
+    "notes": "SLIDE 17 · TWIN\nTIEMPO: 1 min | tramo 17:00–18:00 de 30:00\n\nPor qué importa (según el FAQ de Twin): la mayor parte de la actividad on-chain usa stablecoins en dólares, y eso agrega fricción cambiaria a cada operación denominada en moneda local. Una stablecoin local permite liquidar en pesos sin convertir a dólares y volver. Remarcar el límite: leer el contrato no prueba reservas; las reservas se revisan en los reportes, que tienen fecha de corte.\n\nFUENTES (consultadas el 4 de noviembre de 2026)\nTwin · productos y FAQ — https://www.twin.finance/\nTwin · reservas — https://www.twin.finance/transparency\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "pair",
+    "heading": "¿Por qué una stablecoin <em>en pesos<\/em>?",
+    "body": [
+     [
+      "USDC / USDT",
+      "Siguen al dólar.",
+      "Un pago en pesos pasa por una conversión."
+     ],
+     [
+      "ARGt",
+      "Sigue al peso.",
+      "Se liquida en pesos, sin pasar por el dólar."
+     ]
+    ],
+    "takeaway": "El respaldo se verifica aparte: Twin publica reportes de reservas en su página de transparencia.",
+    "section": "Twin",
+    "number": 16
+   },
+   {
+    "title": "Consultar ARGt sin firmar",
+    "text": "Demo 2 · consultar ARGt sin firmar\nTOKEN=0xf016413834E6D1A14F3D628B11D6Ef725a6bdbDD\ncast chain-id --rpc-url \"$BASE_RPC_URL\"\ncast call \"$TOKEN\" \"symbol()(string)\" --rpc-url \"$BASE_RPC_URL\"\ncast call \"$TOKEN\" \"decimals()(uint8)\" --rpc-url \"$BASE_RPC_URL\"\n\nOpción sin terminal: explorador → contrato → Read / Read as Proxy.\nBase / chain ID 8453 · dirección tomada del registro oficial de Twin.\nLectura pública: verificá red y contrato. No requiere conectar una wallet.\n13 / 20\nTwin · contratos  /  ERC-20\n2.5 MIN",
+    "notes": "SLIDE 18 · DEMO EN VIVO\nTIEMPO: 2 min | tramo 18:00–20:00 de 30:00\n\nCAMBIO EN ESTA VERSIÓN: Movida desde el Workshop 02 (slide 2-13 original).\n\nPreparación: Foundry/cast disponible y BASE_RPC_URL configurada con un proveedor confiable. No usar una clave privada. La dirección de ARGt en Base fue tomada de docs.twin.finance/stablecoins/contracts. Guion: abrir esa tabla; comprobar chain ID 8453; consultar symbol y decimals; explicar balanceOf y totalSupply como lecturas adicionales. El registro publica 18 decimales. No mostrar balances inventados. Se puede usar el explorador enlazado por Twin si no hay terminal. Estas lecturas no verifican reservas bancarias y no son operaciones de inversión. No se consultó el contrato en vivo durante la preparación.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nTwin · contratos — https://docs.twin.finance/stablecoins/contracts\nERC-20 — https://eips.ethereum.org/EIPS/eip-20\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "code",
+    "heading": "Demo: leer ARGt <em>sin firmar<\/em>",
+    "body": "TOKEN=0xf016413834E6D1A14F3D628B11D6Ef725a6bdbDD\ncast chain-id --rpc-url \"$BASE_RPC_URL\"\ncast call \"$TOKEN\" \"symbol()(string)\" \\\n  --rpc-url \"$BASE_RPC_URL\"\ncast call \"$TOKEN\" \"decimals()(uint8)\" \\\n  --rpc-url \"$BASE_RPC_URL\"",
+    "takeaway": "Base · chain ID 8453 · Solo lectura: no hace falta conectar una wallet.",
+    "section": "Twin",
+    "number": 17
+   },
+   {
+    "title": "Token, reserva y vault",
+    "text": "Token, reserva y vault\nReserva / respaldo\nRevisar reportes, fecha de corte y custodia.\ntotalSupply() describe oferta on-chain; no prueba reservas bancarias.\nLeer un ERC-20 no demuestra reservas ni lo convierte en un vault.\nVault / ERC-4626, cuando corresponda\nPuede exponer asset(), totalAssets() y convertToAssets().\nEsta demo no tiene un vault Twin ni un APY verificados.\n14 / 20\nTwin · reservas  /  ERC-4626\n1 MIN",
+    "notes": "SLIDE 19 · TWIN\nTIEMPO: 1 min | tramo 20:00–21:00 de 30:00\n\nCAMBIO EN ESTA VERSIÓN: Movida desde el Workshop 02 (slide 2-14 original).\n\nEsta slide responde la pregunta de contratos y vaults sin atribuir a Twin capacidades no verificadas. ERC-4626 estandariza shares de un activo subyacente; ERC-20 por sí solo no incluye esa interfaz. Los reportes de reservas tienen una fecha de corte: no equivalen a una garantía permanente. No se encontró ni validó una dirección de vault Twin para usar en el workshop. Si luego se incorpora un vault, verificar contrato, ABI, proxy, permisos y modelo de riesgo antes de mostrar depósitos.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nTwin · reservas — https://www.twin.finance/transparency\nERC-4626 — https://eips.ethereum.org/EIPS/eip-4626\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "cards",
+    "heading": "Token, reserva y vault",
+    "body": [
+     [
+      "Token",
+      "ERC-20",
+      "Balance y oferta on-chain"
+     ],
+     [
+      "Reserva",
+      "Respaldo",
+      "Reportes con fecha de corte"
+     ],
+     [
+      "Vault",
+      "ERC-4626",
+      "Depósito que emite shares"
+     ]
+    ],
+    "takeaway": "La demo no verifica reservas, un vault Twin ni un APY.",
+    "section": "Twin",
+    "number": 18
+   },
+   {
+    "title": "Tres capacidades distintas",
+    "text": "Skill ≠ MCP ≠ wallet\nSKILL\nConocimiento\nMCP\nHerramientas\nWALLET\nAutoridad\nGuías y procedimientos.\nEjemplos y criterios.\nNo otorga firmas.\nInterfaz para consultar\ndocumentación y datos.\nCapacidades explícitas.\nFirma o delegación.\nLímites verificables.\nAprobación cuando aplica.\nSaber cómo hacerlo no concede permiso para hacerlo.\n12 / 20\nETHSkills  /  AVAXSKILLS · comunidad  /  Avalanche · MCP Server\n1.5 MIN",
+    "notes": "SLIDE 20 · AGENTES\nTIEMPO: 1 min | tramo 21:00–22:00 de 30:00\n\nDefiní los términos por función, no por producto. Una skill es contenido e instrucciones que el agente carga; debe revisarse como una dependencia. MCP expone herramientas y sus contratos. La wallet o signer define quién puede autorizar acciones. El MCP alojado de Avalanche es read-only: no ejecuta comandos locales ni firma pagos. Algunos otros MCP sí pueden escribir; hay que inspeccionar cada servidor.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nETHSkills — https://ethskills.com/\nAVAXSKILLS · comunidad — https://www.avaxskills.com/\nAvalanche · MCP Server — https://build.avax.network/docs/tooling/ai-llm/mcp-server\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "cards",
+    "heading": "Skill, MCP y wallet: <em>tres cosas distintas<\/em>",
+    "body": [
+     [
+      "Skill",
+      "Conocimiento",
+      "Instrucciones que el agente lee"
+     ],
+     [
+      "MCP",
+      "Herramientas",
+      "Funciones que el agente puede llamar"
+     ],
+     [
+      "Wallet",
+      "Autoridad",
+      "La única que firma"
+     ]
+    ],
+    "takeaway": "MCP: Model Context Protocol. Saber cómo hacerlo no da permiso para hacerlo.",
+    "section": "Agentes",
+    "number": 19
+   },
+   {
+    "title": "Conectá el MCP de Avalanche",
+    "text": "Conectá el MCP de Avalanche\nclaude mcp add avalanche-mcp --transport http \\\n  https://build.avax.network/api/mcp\n\nHerramientas útiles:\ndocs_search  ·  docs_fetch  ·  rpc_lookup_method\nblockchain_lookup_transaction  ·  platform_get_subnets\nEjemplo en Claude Code. En otros clientes, configurá el mismo endpoint HTTP.\nEl MCP alojado consulta documentación y datos. No firma ni despliega.\n14 / 20\nAvalanche · MCP Server  /  Avalanche · MCP tools  /  Avalanche · AI & LLM\n1.5 MIN",
+    "notes": "SLIDE 21 · AGENTES\nTIEMPO: 1.5 min | tramo 22:00–23:30 de 30:00\n\nMostrá la URL oficial y las herramientas disponibles en el cliente; comprobá el listado antes de la charla porque puede cambiar. El catálogo consultado incluye documentación, referencias RPC/CLI y consultas de blockchain/P-Chain. No asumas que este MCP tiene un lector ABI genérico o una wallet. La ejecución local de CLI y la firma necesitan herramientas separadas. Evitá pegar credenciales en el chat o permitir acceso amplio al filesystem.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · MCP Server — https://build.avax.network/docs/tooling/ai-llm/mcp-server\nAvalanche · MCP tools — https://build.avax.network/api/mcp\nAvalanche · AI & LLM — https://build.avax.network/docs/tooling/ai-llm\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "code",
+    "heading": "Conectá el MCP de Avalanche",
+    "body": "claude mcp add avalanche-mcp --transport http \\\n  https://build.avax.network/api/mcp",
+    "takeaway": "El servidor alojado consulta documentación y datos. No firma ni despliega.",
+    "section": "Agentes",
+    "number": 20
+   },
+   {
+    "title": "Del pedido al plan verificable",
+    "text": "Demo · del pedido al plan verificable\nQué vamos a comprobar\nFuentes reales y trazables.\nRed: chain ID y RPC correctos.\nSalida: requisitos, pasos y riesgos.\nPedido al agente\n“Compará C-Chain con una L1 para una API de pagos.”\n“Citá documentación y marcá supuestos.”\n“Prepará un plan de pruebas en Fuji. No ejecutes nada.”\nLuego verificamos eth_chainId por RPC: lectura sin firma.\n15 / 20\nAvalanche · MCP Server  /  Avalanche · Primary Network\n4 MIN",
+    "notes": "SLIDE 22 · DEMO EN VIVO\nTIEMPO: 3 min | tramo 23:30–26:30 de 30:00\n\nGuion de 4 minutos: 0:00–1:30 cargar el pedido y observar búsqueda documental; 1:30–2:30 revisar referencias y decisiones; 2:30–3:30 ejecutar la consulta read-only eth_chainId del anexo; 3:30–4:00 comparar el resultado esperado de Fuji, 43113 / 0xa869. Preparar el cliente antes de subir al escenario. No desplegar una L1 durante esta demo: implica aprovisionamiento y permisos adicionales. Si el agente o RPC falla, usar el recorrido del anexo y decir explícitamente que es material de respaldo. No se ejecutó esta demo end-to-end durante la preparación del deck.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · MCP Server — https://build.avax.network/docs/tooling/ai-llm/mcp-server\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "demo",
+    "heading": "Del pedido al plan verificable",
+    "body": [
+     [
+      "01",
+      "Comparar",
+      "C-Chain vs. L1 para una API de pagos"
+     ],
+     [
+      "02",
+      "Fundamentar",
+      "Fuentes, supuestos y riesgos"
+     ],
+     [
+      "03",
+      "Comprobar",
+      "Fuji: eth_chainId → 43113"
+     ]
+    ],
+    "takeaway": "Demo de lectura: preparamos un plan, sin desplegar ni firmar.",
+    "section": "Agentes",
+    "number": 21
+   },
+   {
+    "title": "Definí los límites antes de ejecutar",
+    "text": "Antes de ejecutar: límites claros\nFirmas y dinero\nConfirmar red, contrato, destino y monto.\nLimitar activos, funciones y presupuesto.\nSimular; pedir aprobación ante cambios.\nContexto y herramientas\nRevisar skills y servidores MCP.\nSeparar lectura, simulación y escritura.\nNunca exponer seed phrases ni secretos.\nEl prompt no reemplaza un control en el signer.\n16 / 20\nAvalanche · MCP Server  /  ETHSkills\n1.5 MIN",
+    "notes": "SLIDE 23 · SEGURIDAD\nTIEMPO: 1 min | tramo 26:30–27:30 de 30:00\n\nPresentá estas reglas como checklist de ingeniería del workshop. Los documentos y resultados de herramientas son entradas no confiables: pueden intentar cambiar la intención original del usuario. Los límites financieros deben aplicarse en la capa que realmente autoriza o ejecuta. Una clave privada irrestricta no se vuelve segura porque el prompt diga “no gastar más”. Separá las identidades de desarrollo y producción.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · MCP Server — https://build.avax.network/docs/tooling/ai-llm/mcp-server\nETHSkills — https://ethskills.com/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "pair",
+    "heading": "Límites <em>antes<\/em> de ejecutar",
+    "body": [
+     [
+      "Herramientas",
+      "Revisá skills y servidores MCP.",
+      "Separá lectura, simulación y escritura."
+     ],
+     [
+      "Firmas",
+      "Confirmá red, contrato, destino y monto.",
+      "Poné los límites en el signer."
+     ]
+    ],
+    "takeaway": "Las claves y seed phrases nunca entran al contexto del agente.",
+    "section": "Agentes",
+    "number": 22
+   },
+   {
+    "title": "Red correcta. Reglas claras. Firmas controladas.",
+    "text": "Red correcta.\nReglas claras.\nFirmas controladas.\nCIERRE\n¿Tu caso necesita una L1 propia o alcanza con C-Chain?  /  Preguntas\n17 / 20\n2.5 MIN",
+    "notes": "SLIDE 24 · CIERRE\nTIEMPO: 2.5 min | tramo 27:30–30:00 de 30:00\n\nRecapitulá tres ideas y abrí preguntas: blockchain permite verificar un estado compartido; Avalanche ofrece C-Chain y L1 configurables; skills/MCP aportan contexto y herramientas, no autoridad financiera automática. Cerrá conectando con la segunda charla: una vez que sabemos qué red y qué permisos usar, podemos hablar de pagos por llamada. Reservá al menos dos minutos para preguntas.\n\nRecap de esta versión, en cuatro frases: una blockchain es un registro compartido que la red verifica; Avalanche ofrece C-Chain y L1 propias; ARGt de Twin es un ERC-20 real que podemos leer sin firmar; skills y MCP aportan contexto y herramientas, no autoridad para firmar. Transición a la segunda charla: con red, token y permisos claros, podemos hablar de pagos por pedido (x402).\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "hero",
+    "heading": "Red correcta.<br>Reglas claras.<br><em>Firmas controladas.<\/em>",
+    "body": "¿Tu caso necesita una L1 o alcanza con C-Chain?",
+    "takeaway": "",
+    "section": "",
+    "number": 23
+   },
+   {
+    "title": "Fuji, sin firmar",
+    "text": "Anexo · Fuji sin firmar\nFUJI_RPC=https://api.avax-test.network/ext/bc/C/rpc\ncurl -s \"$FUJI_RPC\" -H \"Content-Type: application/json\" \\\n  --data '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_chainId\",\"params\":[]}'\n\nEsperado: 0xa869  =  43113  (Fuji C-Chain)\nPreparar terminal con curl. No requiere wallet ni fondos.\nMainnet C-Chain es 43114. No mezclar entornos.\n18 / 20\nAvalanche · Primary Network\nANEXO",
+    "notes": "SLIDE 25 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nEl resultado mostrado es el valor esperado según la configuración oficial, no una captura de ejecución. Ante un error HTTP, timeout o una red distinta, detener la demo y revisar el endpoint. No sustituir el RPC por uno de origen desconocido. Para desplegar contratos en una sesión posterior, se necesitarán wallet de pruebas, AVAX de faucet y un proceso de revisión separado.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": true,
+    "layout": "code",
+    "heading": "Fuji, sin firmar",
+    "body": "curl -s https://api.avax-test.network/ext/bc/C/rpc \\\n  -H \"Content-Type: application/json\" \\\n  --data '{\"jsonrpc\":\"2.0\",\"id\":1,\n    \"method\":\"eth_chainId\",\"params\":[]}'",
+    "takeaway": "Esperado: 0xa869 = 43113. Mainnet C-Chain: 43114.",
+    "section": "",
+    "number": 24
+   },
+   {
+    "title": "Contexto antes del código",
+    "text": "Contexto antes de escribir código\nLeé https://ethskills.com/SKILL.md\nLeé https://avaxskills.com/SKILL.md\n\nUsá los módulos de seguridad, testing y L1 relevantes.\nObjetivo: preparar un prototipo en Fuji.\nNo ejecutes instalaciones, despliegues ni firmas sin revisión.\nETHSkills para EVM + AVAXSKILLS para contexto Avalanche.\nFuentes comunitarias: validá datos de red en el Builder Hub.\n13 / 20\nETHSkills  /  ETHSkills · repositorio  /  AVAXSKILLS · comunidad  /  más en notas\n2 MIN",
+    "notes": "SLIDE 26 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nCAMBIO EN ESTA VERSIÓN: Pasó a anexo para hacer lugar al bloque Twin dentro de los 30 minutos.\n\nDemo de carga, no de obediencia ciega: abrí el índice de cada skill y pedí al agente que identifique qué módulos necesita. No cargues todo el repositorio por defecto. ETHSkills contiene guías EVM; no copies direcciones o supuestos de Ethereum a Avalanche. AVAXSKILLS es el proyecto comunitario Ayomisco/avaxskills, no el servidor oficial de Ava Labs. Revisá origen, versión y cambios antes de persistir las instrucciones. Los recursos consultados se verificaron el 3 de noviembre de 2026.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nETHSkills — https://ethskills.com/\nETHSkills · repositorio — https://github.com/austintgriffith/ethskills\nAVAXSKILLS · comunidad — https://www.avaxskills.com/\nAVAXSKILLS · repositorio — https://github.com/Ayomisco/avaxskills\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": true,
+    "layout": "code",
+    "heading": "Contexto antes del código",
+    "body": "Leé ethskills.com/SKILL.md\nLeé avaxskills.com/SKILL.md\n\nPrepará un prototipo en Fuji.\nElegí módulos de seguridad, testing y L1.",
+    "takeaway": "Skills comunitarias: contrastá datos de red con Builder Hub.",
+    "section": "",
+    "number": 25
+   },
+   {
+    "title": "Leer un token o un vault",
+    "text": "Anexo · token o vault\nERC-4626, si está implementado\nasset() / totalAssets()\nconvertToAssets(shares)\npreviewDeposit(assets)\nLas vistas no garantizan la ejecución.\nERC-20\nsymbol() / decimals()\nbalanceOf(wallet)\ntotalSupply()\nIdentidad, balance y oferta del token.\ndeposit(), withdraw() y approvals son escrituras: requieren otra revisión.\n19 / 20\nERC-20  /  ERC-4626\nANEXO",
+    "notes": "SLIDE 27 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nCAMBIO EN ESTA VERSIÓN: Movida desde el Workshop 02 (slide 2-19 original).\n\nNo atribuir ERC-4626 a Twin sin validar el contrato concreto. convertToAssets es una conversión ideal que no incorpora necesariamente comisiones o slippage; previewDeposit aproxima el resultado según las reglas del vault pero no implica permiso o cupo disponible. totalAssets está expresado en unidades del activo subyacente, no necesariamente en dólares. Toda escritura requiere evaluación de fondos, límites, autorizaciones y simulación separadas.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nERC-20 — https://eips.ethereum.org/EIPS/eip-20\nERC-4626 — https://eips.ethereum.org/EIPS/eip-4626\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": true,
+    "layout": "pair",
+    "heading": "Leer un token o un vault",
+    "body": [
+     [
+      "ERC-20",
+      "symbol() · decimals()",
+      "balanceOf() · totalSupply()"
+     ],
+     [
+      "ERC-4626, si aplica",
+      "asset() · totalAssets()",
+      "convertToAssets() · previewDeposit()"
+     ]
+    ],
+    "takeaway": "Depositar, retirar y aprobar son escrituras con otra revisión.",
+    "section": "",
+    "number": 26
+   },
+   {
+    "title": "Antes de la charla",
+    "text": "Anexo · checklist y respaldo\nSi falla la demo\nMostrar el prompt y el plan esperado.\nAbrir documentación descargada.\nExplicar firma → RPC → recibo.\nNo presentar una simulación como ejecución.\nAntes de la charla\nCliente de agente y MCP configurados.\nSkills revisadas y fuentes abiertas.\nTerminal y RPC Fuji comprobados.\nCaptura propia del ensayo, sin secretos.\nLa demo sirve para entender el flujo; ensayá la infraestructura antes.\n19 / 20\nANEXO",
+    "notes": "SLIDE 28 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nEnsayar toda la demo con la misma red y equipo que se usarán en el evento. Evitar actualizaciones automáticas de paquetes antes de presentar. Si cambia una herramienta, inspeccionar su esquema y adaptar el ejemplo. Este anexo sirve como runbook del orador y no está incluido en el cronómetro de 30 minutos.\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": true,
+    "layout": "pair",
+    "heading": "Antes de la charla",
+    "body": [
+     [
+      "Preparar",
+      "Cliente, MCP y skills revisados.",
+      "RPC Fuji probado; ensayo sin secretos."
+     ],
+     [
+      "Tener respaldo",
+      "Prompt y documentación descargada.",
+      "Identificar toda simulación como tal."
+     ]
+    ],
+    "takeaway": "La infraestructura de la demo debe ensayarse antes.",
+    "section": "",
+    "number": 27
+   },
+   {
+    "title": "Recursos para construir",
+    "text": "Anexo · recursos para construir\nBuilder Hub\nDocumentación oficial de Avalanche\nSkills para agentes\nETHSkills + AVAXSKILLS en las notas\nAvalanche L1s · MCP · ETHSkills · AVAXSKILLS\n20 / 20\nAvalanche · Primary Network  /  Avalanche · L1s  /  Avalanche · Customize an L1  /  más en notas\nANEXO",
+    "notes": "SLIDE 29 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nLos QR llevan a recursos externos, no a formularios ni wallets. Fuentes consultadas al 3 de noviembre de 2026. Los enlaces completos figuran debajo. AVAXSKILLS: https://avaxskills.com/SKILL.md. ETHSkills: https://ethskills.com/SKILL.md. Los datos temporales deben volver a comprobarse antes del evento.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\nAvalanche · L1s — https://build.avax.network/docs/avalanche-l1s\nAvalanche · Customize an L1 — https://build.avax.network/docs/avalanche-l1s/evm-configuration/customize-avalanche-l1\nAvalanche · ICM — https://build.avax.network/docs/cross-chain/avalanche-warp-messaging/overview\nAvalanche · AI & LLM — https://build.avax.network/docs/tooling/ai-llm\nAvalanche · MCP Server — https://build.avax.network/docs/tooling/ai-llm/mcp-server\nETHSkills — https://ethskills.com/\nAVAXSKILLS · comunidad — https://www.avaxskills.com/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": true,
+    "layout": "links",
+    "heading": "Recursos para construir",
+    "body": [
+     [
+      "Builder Hub",
+      "https://build.avax.network/"
+     ],
+     [
+      "Twin · contratos",
+      "https://docs.twin.finance/stablecoins/contracts"
+     ],
+     [
+      "ETHSkills",
+      "https://ethskills.com/"
+     ],
+     [
+      "AVAXSKILLS",
+      "https://avaxskills.com/"
+     ]
+    ],
+    "takeaway": "Documentación oficial, registro de Twin y guías comunitarias.",
+    "section": "",
+    "number": 28
+   }
+  ]
+ },
+ {
+  "title": "Pagos x402",
+  "slides": [
+   {
+    "title": "Pagos x402",
+    "text": "Pagos x402\n+ Twin\nWORKSHOP 02  /  30 MINUTOS\nDel HTTP 402 a pagos verificables para personas y agentes\n01 / 20\n0.5 MIN",
+    "notes": "SLIDE 01 · APERTURA\nTIEMPO: 0.5 min | tramo 00:00–00:30 de 30:00\n\nResultado esperado: explicar y observar el flujo de un pago x402, ubicar otros enfoques de pagos y consultar un contrato público de Twin sin firmar. La demo de pagos usa el starter kit indicado por el usuario sobre Avalanche Fuji. Twin se muestra como caso separado de activos e infraestructura: no se afirma integración existente con Avalanche o con el kit.\n\nEsta versión dedica el workshop completo a x402. Twin pasó al Workshop 01; acá solo vuelve en la slide de integración (¿y si pagamos en ARGt?).\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "hero",
+    "heading": "Pagos<br><em>x402<\/em>",
+    "body": "Cómo cobrar y pagar una API dentro del mismo pedido HTTP.",
+    "takeaway": "",
+    "section": "",
+    "number": 0
+   },
+   {
+    "title": "HTTP 402",
+    "text": "(Slide nueva en esta versión.)",
+    "notes": "SLIDE 02 · X402\nTIEMPO: 1 min | tramo 00:30–01:30 de 30:00\n\nAbrí con el número. RFC 9110 (HTTP Semantics), sección 15.5.3: \"The 402 (Payment Required) status code is reserved for future use.\" La documentación de x402 lo describe como un código estándar pero poco usado, reservado durante décadas. x402 lo activa para informar que hace falta un pago, comunicar monto, moneda y destino, y dar lo necesario para pagar de forma programática.\n\nFUENTES (consultadas el 4 de noviembre de 2026)\nRFC 9110 · HTTP Semantics §15.5.3 — https://www.rfc-editor.org/rfc/rfc9110#section-15.5.3\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "stats",
+    "heading": "Un código HTTP <em>casi sin uso<\/em>",
+    "body": [
+     [
+      "402",
+      "Payment Required",
+      "El estándar HTTP lo deja “reservado para uso futuro”. x402 le da un uso concreto: pedir un pago."
+     ]
+    ],
+    "takeaway": "Como 404 (Not Found), pero significa: “para ver esto, primero pagá”.",
+    "section": "Concepto",
+    "number": 1
+   },
+   {
+    "title": "¿Qué es x402?",
+    "text": "(Slide nueva en esta versión.)",
+    "notes": "SLIDE 03 · X402\nTIEMPO: 1 min | tramo 01:30–02:30 de 30:00\n\nDefinición según docs.x402.org: x402 es el estándar abierto de pagos que permite cobrar por acceso a APIs y contenido directamente sobre HTTP, construido alrededor del código 402, y permite a los clientes pagar de forma programática sin cuentas, sesiones ni gestión de credenciales. Es un estándar abierto bajo licencia Apache-2.0 y \"tiene 0 comisiones incorporadas\" (los proveedores de red o facilitators pueden tener sus propios costos [COMPLETAR: confirmar costos del facilitator Thirdweb usado en el kit]). Casos: APIs pagas por pedido, agentes que pagan solos, paywalls, micropagos.\n\nFUENTES (consultadas el 4 de noviembre de 2026)\nx402 · Introducción — https://docs.x402.org/introduction\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "define",
+    "heading": "¿Qué es <em>x402<\/em>?",
+    "body": [
+     "x402",
+     "Un estándar abierto para cobrar por APIs y contenido directamente sobre HTTP.",
+     [
+      "Sin cuentas ni sesiones: el pago viaja con el pedido.",
+      "Pensado para pagos por uso y para agentes de IA.",
+      "Licencia Apache-2.0. El estándar no suma comisiones propias."
+     ]
+    ],
+    "takeaway": "El pago se liquida on-chain, por ejemplo con una stablecoin.",
+    "section": "Concepto",
+    "number": 2
+   },
+   {
+    "title": "¿Cómo paga un agente por una API?",
+    "text": "¿Cómo paga un agente por una API?\nEl flujo programable\nRecibir condiciones de pago.\nAutorizar dentro de un límite.\nRecibir el recurso y la evidencia del cobro.\nEl flujo humano\nCrear una cuenta y cargar saldo.\nElegir un plan o pasar por checkout.\nConciliar facturas y acceso.\nLa decisión clave: qué le permitimos pagar.\n02 / 20\nx402 · HTTP 402\n1.5 MIN",
+    "notes": "SLIDE 04 · PAGOS PROGRAMABLES\nTIEMPO: 1.5 min | tramo 02:30–04:00 de 30:00\n\nUsá un ejemplo hipotético: un agente necesita una consulta de datos y el proveedor cobra por acceso. x402 permite negociar condiciones de pago dentro del intercambio HTTP, pero no elimina reglas del negocio, identificación cuando sea exigible ni controles de fraude. El ejemplo es didáctico, no una promesa de que toda API pueda usarse sin registro.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "pair",
+    "heading": "¿Cómo paga un agente <em>por una API<\/em>?",
+    "body": [
+     [
+      "Hoy, para personas",
+      "Cuenta, saldo y checkout.",
+      "Facturas y API keys."
+     ],
+     [
+      "Con x402",
+      "El servidor dice el precio.",
+      "El cliente paga y reintenta."
+     ]
+    ],
+    "takeaway": "La decisión clave no es técnica: qué le permitimos pagar.",
+    "section": "Por qué importa",
+    "number": 3
+   },
+   {
+    "title": "Un pago tiene cuatro capas",
+    "text": "Un pago tiene cuatro capas\nRed, activo, protocolo y permisos cumplen funciones distintas.\nRed\nDónde se\nliquida\n›\nActivo\nQué unidad\nse transfiere\n›\nProtocolo\nCómo se pide\ny prueba el pago\n›\nPermisos\nQuién puede\nautorizarlo\nAvalanche ≠ USDC ≠ x402 ≠ permiso del usuario.\n03 / 20\nAvalanche · Primary Network  /  x402 · HTTP 402  /  Agent Payments Protocol\n1.5 MIN",
+    "notes": "SLIDE 05 · PAGOS PROGRAMABLES\nTIEMPO: 1.5 min | tramo 04:00–05:30 de 30:00\n\nPedí a la audiencia ubicar cada pieza: Fuji es una red de pruebas; el token de pago es un activo; x402 define un intercambio; la política del signer o un mandato expresa autoridad. Un protocolo de autorización no mueve dinero por sí solo. Este mapa permite entender Twin sin forzar que sea parte de la misma red o implementación.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nAvalanche · Primary Network — https://build.avax.network/docs/primary-network\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nAgent Payments Protocol — https://ap2-protocol.org/\n\n[COMPLETAR: confirmar en el kit qué activo de prueba acepta la demo en Fuji; el original usaba USDC como ejemplo.]\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "steps",
+    "heading": "Un pago tiene cuatro capas",
+    "body": [
+     [
+      "Red",
+      "Dónde se liquida"
+     ],
+     [
+      "Activo",
+      "Qué se transfiere"
+     ],
+     [
+      "Protocolo",
+      "Cómo se pide y prueba"
+     ],
+     [
+      "Permisos",
+      "Quién autoriza"
+     ]
+    ],
+    "takeaway": "Ejemplo: Avalanche Fuji · USDC · x402 · el límite que vos definís.",
+    "section": "Por qué importa",
+    "number": 4
+   },
+   {
+    "title": "x402: del pedido al recurso",
+    "text": "x402: del pedido a la evidencia\nCLIENTE\nSERVIDOR\nFACILITATOR\n1  Solicita recurso\n2  402 + condiciones\n3  Reintenta + autorización\n4  Verificar + liquidar\n5  Resultado\n6  Recurso + evidencia\nVerificar una autorización no confirma su liquidación.\n05 / 20\nx402 · HTTP 402  /  x402 · Facilitator\n2.5 MIN",
+    "notes": "SLIDE 06 · X402\nTIEMPO: 3 min | tramo 05:30–08:30 de 30:00\n\nContá la historia de izquierda a derecha. Un cliente pide un recurso; recibe 402 con condiciones; evalúa precio, red, activo y destino; prepara la autorización y reintenta. El servidor puede delegar validación y liquidación a un facilitator. En el recorrido básico mostrado, solo tras liquidación exitosa entrega el recurso y la evidencia. Verificar una firma no equivale a confirmar liquidación. Hay esquemas/extensiones con otras modalidades; no asumirlas en el kit.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "sequence",
+    "heading": "x402 en <em>seis pasos<\/em>",
+    "body": null,
+    "takeaway": "Facilitator: servicio que verifica y liquida el pago en nombre del servidor.",
+    "section": "Cómo funciona",
+    "number": 5
+   },
+   {
+    "title": "Tres headers para seguir el pago",
+    "text": "x402 v2: qué mirar en DevTools\nHTTP/1.1 402 Payment Required\nPAYMENT-REQUIRED: <condiciones en base64>\n\nGET /recurso\nPAYMENT-SIGNATURE: <autorización en base64>\n\nHTTP/1.1 200 OK\nPAYMENT-RESPONSE: <resultado de liquidación en base64>\nReferencia HTTP v2. Comprobá la versión real del kit.\nv1 usa otros nombres, como X-PAYMENT. Comprobá SDK y versión.\n06 / 20\nx402 · HTTP transport v2  /  x402 · HTTP 402\n1.5 MIN",
+    "notes": "SLIDE 07 · X402\nTIEMPO: 2 min | tramo 08:30–10:30 de 30:00\n\nEstos nombres corresponden a la especificación HTTP v2 consultada, no a una captura del starter kit. El README del kit indica Thirdweb v5, pero eso no identifica por sí mismo la versión del protocolo x402. Antes del evento hay que revisar los paquetes fijados y los headers reales en Network. Base64 es codificación, no cifrado. Nunca mostrar claves privadas o credenciales junto al tráfico de pago.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · HTTP transport v2 — https://github.com/x402-foundation/x402/blob/main/specs/transports-v2/http.md\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "code",
+    "heading": "Tres headers para seguir el pago",
+    "body": "HTTP 402 Payment Required\nPAYMENT-REQUIRED: <precio, red, destino>\n\nGET /recurso\nPAYMENT-SIGNATURE: <pago firmado>\n\nHTTP 200 OK\nPAYMENT-RESPONSE: <resultado de la liquidación>",
+    "takeaway": "x402 v2 · JSON en base64 (codificado, no cifrado). Comprobá la versión del kit.",
+    "section": "Cómo funciona",
+    "number": 6
+   },
+   {
+    "title": "Cada componente tiene un rol",
+    "text": "Tres componentes, responsabilidades claras\nCLIENTE\nDecide y autoriza\nSERVIDOR\nProtege el recurso\nFACILITATOR\nVerifica y liquida\nEvalúa condiciones.\nAplica presupuesto.\nPrepara la firma.\nPublica el precio.\nVincula pago y pedido.\nEntrega la respuesta.\nValida el payload.\nEnvía la liquidación.\nDevuelve el resultado.\nEl facilitator es opcional; el starter kit usa Thirdweb.\n07 / 20\nx402 · Facilitator  /  x402 Starter Kit · README\n1.5 MIN",
+    "notes": "SLIDE 08 · X402\nTIEMPO: 1.5 min | tramo 10:30–12:00 de 30:00\n\nEl facilitator evita que cada servidor implemente toda la conectividad y verificación on-chain. La función de facilitator no requiere custodiar los fondos del comprador: actúa sobre autorizaciones firmadas. El servidor conserva responsabilidad sobre entrega, conciliación y tratamiento de errores. En esta demo seguimos el camino Thirdweb del repositorio, no intercambiamos facilitators o redes sin comprobar soporte.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\nx402 Starter Kit · README — https://github.com/federiconardelli7/x402-starter-kit\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "cards",
+    "heading": "Tres roles",
+    "body": [
+     [
+      "Cliente",
+      "Autoriza",
+      "Persona o agente que paga"
+     ],
+     [
+      "Servidor",
+      "Entrega",
+      "Pone el precio y el recurso"
+     ],
+     [
+      "Facilitator",
+      "Liquida",
+      "Verifica y envía el pago"
+     ]
+    ],
+    "takeaway": "El facilitator es opcional. El kit de la demo usa Thirdweb.",
+    "section": "Cómo funciona",
+    "number": 7
+   },
+   {
+    "title": "Qué resuelve cada enfoque",
+    "text": "x402 y otros: qué resuelve cada enfoque\nMPP puede soportar flujos x402. AP2 puede complementarlos.\n04 / 20\nERC-20  /  x402 · HTTP 402  /  Machine Payments Protocol  /  más en notas\n2 MIN",
+    "notes": "SLIDE 09 · PAGOS PROGRAMABLES\nTIEMPO: 2 min | tramo 12:00–14:00 de 30:00\n\nPresentá el cuadro como comparación funcional, no como ranking. La transferencia de un token no vincula por sí sola un pago con la entrega de una API. MPP es extensible a métodos de pago y contempla sesiones; su documentación anuncia soporte EVM/x402. AP2 enfoca autorización y evidencia mediante mandatos, y publica ejemplos con x402. No son cinco productos mutuamente excluyentes. No profundizar en especificaciones de MPP/AP2 durante esta charla.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nERC-20 — https://eips.ethereum.org/EIPS/eip-20\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nMachine Payments Protocol — https://mpp.dev/\nAgent Payments Protocol — https://ap2-protocol.org/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "table",
+    "heading": "x402 y sus vecinos",
+    "body": [
+     [
+      "ERC-20",
+      "Transferir un token",
+      "Entrega del recurso"
+     ],
+     [
+      "Checkout",
+      "Cobro y facturación",
+      "Control del agente"
+     ],
+     [
+      "x402",
+      "Pago dentro del pedido HTTP",
+      "Reglas de negocio"
+     ],
+     [
+      "MPP · Machine Payments",
+      "Métodos y sesiones",
+      "Elegir activo y red"
+     ],
+     [
+      "AP2 · Agent Payments",
+      "Mandatos verificables",
+      "Liquidación"
+     ]
+    ],
+    "takeaway": "No compiten: cada uno cubre una capa distinta.",
+    "section": "Cómo funciona",
+    "number": 8
+   },
+   {
+    "title": "Prepará el starter kit",
+    "text": "Prepará el kit antes de la charla\ngit clone \\\n  https://github.com/federiconardelli7/x402-starter-kit.git\ncd x402-starter-kit\nnpm ci\ncp .env.example .env.local\n# Completar configuración fuera de la pantalla compartida.\nnpm run dev\nStarter kit de Federico Nardelli · Thirdweb · Avalanche Fuji.\nWallet y activo de prueba; gas para el facilitator.\n08 / 20\nx402 Starter Kit · README\n2 MIN",
+    "notes": "SLIDE 10 · PREPARACIÓN\nTIEMPO: 1.5 min | tramo 14:00–15:30 de 30:00\n\nEl repositorio suministrado documenta modo Human Payment y modos de agentes. Preparar un proyecto Thirdweb y las variables NEXT_PUBLIC_THIRDWEB_CLIENT_ID, THIRDWEB_SECRET_KEY, THIRDWEB_SERVER_WALLET_ADDRESS y MERCHANT_WALLET_ADDRESS. OPENROUTER_API_KEY corresponde al modo de IA. El README exige una dirección de smart account ERC-4337 para el facilitator y gas de prueba; no tratarlo como requisito universal de x402. npm ci es una elección para usar el lockfile. Revisar scripts y dependencias antes de instalar. No se instaló ni ejecutó el repositorio en este entorno de preparación.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 Starter Kit · README — https://github.com/federiconardelli7/x402-starter-kit\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "code",
+    "heading": "Prepará el starter kit",
+    "body": "git clone \\\n  https://github.com/federiconardelli7/x402-starter-kit.git\ncd x402-starter-kit\nnpm ci\ncp .env.example .env.local\n# Configurar fuera de la pantalla compartida.",
+    "takeaway": "Avalanche Fuji · Thirdweb · wallet y fondos de prueba. Variables en el anexo.",
+    "section": "Starter kit",
+    "number": 9
+   },
+   {
+    "title": "Un recurso. Un pago. Su evidencia.",
+    "text": "Demo 1 · recurso, pago y evidencia\nQué debe verse\nCondiciones de pago legibles.\nLa autorización antes del cobro.\nLiquidación confirmada y transacción real.\nUn fallo controlado sin entregar el recurso.\nRecorrido en la app\nAbrir Human Payment en Fuji.\nSolicitar el recurso y observar el 402.\nRevisar monto y destino; autorizar.\nVer recurso entregado y registro del pago.\nSolo fondos de prueba. La firma no es el comprobante final.\n09 / 20\nx402 Starter Kit · README  /  x402 · HTTP 402  /  x402 · Facilitator\n4 MIN",
+    "notes": "SLIDE 11 · DEMO EN VIVO\nTIEMPO: 5 min | tramo 15:30–20:30 de 30:00\n\nGuion de 4 minutos: 0:00–0:45 abrir app local y confirmar Fuji; 0:45–1:30 pedir recurso con Network abierto; 1:30–2:30 revisar condiciones y autorizar con wallet de prueba; 2:30–3:15 mostrar respuesta y, si existe, tx del intento actual en explorador; 3:15–4:00 cancelar un segundo intento o usar saldo de prueba insuficiente para observar error. No usar dinero real ni aprobar permisos ilimitados. El resultado exacto y los headers deben ensayarse antes. Si el servicio externo falla, ir al anexo ilustrativo: no inventar una tx ni decir que fue ejecutada.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 Starter Kit · README — https://github.com/federiconardelli7/x402-starter-kit\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "demo",
+    "heading": "Un recurso. Un pago. <em>Su evidencia.<\/em>",
+    "body": [
+     [
+      "01",
+      "Pedir",
+      "Ver el 402 en DevTools"
+     ],
+     [
+      "02",
+      "Autorizar",
+      "Revisar monto, red y destino"
+     ],
+     [
+      "03",
+      "Verificar",
+      "Recurso entregado y tx en el explorador"
+     ]
+    ],
+    "takeaway": "Fuji, fondos de prueba. La firma no es el recibo final.",
+    "section": "x402 en vivo",
+    "number": 10
+   },
+   {
+    "title": "Autonomía con límites verificables",
+    "text": "Autonomía con presupuesto, no acceso ilimitado\nLÍMITE\nCuánto puede gastar\nDESTINO\nDónde puede pagar\nEVIDENCIA\nQué debe registrar\nTope por llamada.\nTope total por sesión.\nPausa al agotarse.\nRed y activo permitidos.\nServicios y destinatarios\npreviamente aprobados.\nPedido y autorización.\nResultado y recibo.\nReintentos conciliados.\nUn presupuesto en la interfaz no prueba que el signer lo imponga.\n10 / 20\nx402 Starter Kit · README  /  Agent Payments Protocol\n2 MIN",
+    "notes": "SLIDE 12 · AGENTES\nTIEMPO: 2 min | tramo 20:30–22:30 de 30:00\n\nEl README del kit ofrece un modo de presupuesto preautorizado para agentes. No afirmar que todos los límites de esta slide estén implementados ahí: son criterios de diseño para revisar. Como ejemplo de ensayo, elegí un presupuesto pequeño de tokens de prueba y verificá qué pasa al agotarse. Separá política del modelo de enforcement en wallet/backend. Un agente no debe cambiar el destino o ampliar su propio presupuesto por instrucciones del servicio que está pagando.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 Starter Kit · README — https://github.com/federiconardelli7/x402-starter-kit\nAgent Payments Protocol — https://ap2-protocol.org/\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "cards",
+    "heading": "Autonomía, <em>con límites<\/em>",
+    "body": [
+     [
+      "Presupuesto",
+      "Cuánto",
+      "Tope por llamada y por sesión"
+     ],
+     [
+      "Destino",
+      "Dónde",
+      "Red, activo y servicio permitidos"
+     ],
+     [
+      "Evidencia",
+      "Qué pasó",
+      "Pedido, autorización y recibo"
+     ]
+    ],
+    "takeaway": "Los límites los impone el signer o el backend, no el prompt.",
+    "section": "Seguridad",
+    "number": 11
+   },
+   {
+    "title": "El pago continúa después de firmar",
+    "text": "El pago no termina en la firma\nDespués de enviar\nConfirmar la liquidación real.\nConciliar reintentos y evitar cobros duplicados.\nRegistrar evidencia sin filtrar secretos.\nAntes de autorizar\nComparar precio, activo, red y destino.\nRevisar expiración, nonce y permisos.\nMantener claves fuera del contexto del LLM.\nPago válido ≠ servicio confiable. Revisá la contraparte.\n11 / 20\nx402 · HTTP transport v2  /  x402 · Facilitator\n1.5 MIN",
+    "notes": "SLIDE 13 · SEGURIDAD\nTIEMPO: 1.5 min | tramo 22:30–24:00 de 30:00\n\nChecklist propuesto para este workshop: la respuesta HTTP de un proveedor es entrada no confiable, no una nueva instrucción de sistema. Una autorización debe coincidir con la intención original. Cuando hay timeout, no reintentar ciegamente un cobro; consultar y conciliar su estado. El nonce del esquema de pago ayuda contra replay, pero la idempotencia de un pedido también requiere diseño de aplicación. Evitar presentar testnet como garantía de seguridad en producción.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · HTTP transport v2 — https://github.com/x402-foundation/x402/blob/main/specs/transports-v2/http.md\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "pair",
+    "heading": "El pago sigue <em>después de firmar<\/em>",
+    "body": [
+     [
+      "Antes",
+      "Verificá precio, activo, red y destino.",
+      "Revisá expiración y nonce."
+     ],
+     [
+      "Después",
+      "Confirmá la liquidación.",
+      "Conciliá reintentos: nada de cobros dobles."
+     ]
+    ],
+    "takeaway": "Nonce: número de un solo uso que impide reutilizar una firma.",
+    "section": "Seguridad",
+    "number": 12
+   },
+   {
+    "title": "¿Y si pagamos en ARGt?",
+    "text": "¿Qué falta para unir x402 y Twin?\nLo necesario para integrarlos\nMisma red y activo soportado.\nEsquema de autorización compatible.\nFacilitator, liquidez y operación revisados.\nDos demos separadas\nx402 con el kit sobre Avalanche Fuji.\nLectura de ARGt en Base.\nDos recorridos independientes y verificables.\nSer ERC-20 no implica compatibilidad automática con x402.\n15 / 20\nx402 · HTTP 402  /  x402 · Facilitator  /  Twin · contratos  /  más en notas\n1.5 MIN",
+    "notes": "SLIDE 14 · INTEGRACIÓN\nTIEMPO: 1.5 min | tramo 24:00–25:30 de 30:00\n\nPropuesta conceptual, no una integración disponible: un servicio puede ofrecer pago en un activo admitido por su esquema y facilitator. Para usar ARGt hace falta verificar autorización soportada por el token, aprobaciones necesarias, red y soporte del proveedor. No asumir que el modo exact funciona con cualquier ERC-20 ni transportar un token entre redes de forma implícita. Si se usa conversión o bridge, son operaciones adicionales con permisos y riesgos propios. El objetivo del cierre es mostrar cómo evaluar factibilidad con evidencia.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\nTwin · contratos — https://docs.twin.finance/stablecoins/contracts\nERC-20 — https://eips.ethereum.org/EIPS/eip-20\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "pair",
+    "heading": "¿Y si pagamos <em>en ARGt<\/em>?",
+    "body": [
+     [
+      "Lo que mostramos",
+      "x402 en Avalanche Fuji.",
+      "ARGt (Workshop 01) en Base."
+     ],
+     [
+      "Lo que faltaría",
+      "Misma red y un activo soportado.",
+      "Facilitator y autorización compatibles."
+     ]
+    ],
+    "takeaway": "Ser ERC-20 no alcanza para ser compatible con x402. No hay integración confirmada.",
+    "section": "Integración",
+    "number": 13
+   },
+   {
+    "title": "Pagar es una capacidad. Autorizar es una decisión.",
+    "text": "Pagar es una capacidad.\nAutorizar es una decisión.\nCIERRE\n¿Qué permitirías pagar a tu agente y bajo qué límites?  /  Preguntas\n16 / 20\n3 MIN",
+    "notes": "SLIDE 15 · CIERRE\nTIEMPO: 4.5 min | tramo 25:30–30:00 de 30:00\n\nRecapitulá: x402 inserta un flujo de pago en el acceso HTTP; otros protocolos cubren métodos, sesiones o autorización; Twin aporta activos e infraestructura que deben validarse por red y contrato. Reservá el cierre para preguntas sobre el caso real de la audiencia. Remarcá que las demos de fondos fueron preparadas para testnet y que el recorrido Twin es read-only. Una integración productiva exige pruebas y revisión independientes.\n\nRecap de esta versión: 402 es un código HTTP reservado que x402 usa para pedir un pago; el flujo son seis pasos entre cliente, servidor y facilitator; la demo corre en Fuji con fondos de prueba; los límites viven en el signer. El cierre incluye el tiempo de preguntas.\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": false,
+    "layout": "hero",
+    "heading": "Pagar es una capacidad.<br><em>Autorizar es una decisión.<\/em>",
+    "body": "¿Qué permitirías pagar a tu agente y bajo qué límites?",
+    "takeaway": "",
+    "section": "",
+    "number": 14
+   },
+   {
+    "title": "Recorrido ilustrativo",
+    "text": "Anexo · recorrido ilustrativo\nRECORRIDO ILUSTRATIVO · No representa una ejecución ni un pago real.\n01 · Pedido\nCliente pide\nun recurso\n›\n02 · 402\nServidor informa\ncondiciones\n›\n03 · Firma\nSe autoriza\nel reintento\n›\n04 · Respuesta\nTras liquidar:\nrecurso + evidencia\nSi falla la red, explicar el protocolo. No inventar hashes ni saldos.\n17 / 20\nx402 · HTTP 402  /  x402 · Facilitator\nANEXO",
+    "notes": "SLIDE 16 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nUsar exclusivamente como respaldo didáctico cuando el servicio externo o la conexión no funcionen. No contiene datos de una transacción. Los errores posibles incluyen rechazo de firma, expiración, saldo insuficiente, falta de gas, token no soportado y fallos del proveedor. Describir el error observado; no mostrar una respuesta esperada como si fuera la obtenida.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": true,
+    "layout": "steps",
+    "heading": "Recorrido ilustrativo",
+    "body": [
+     [
+      "Pedido",
+      "Solicitar el recurso"
+     ],
+     [
+      "402",
+      "Leer condiciones"
+     ],
+     [
+      "Firma",
+      "Autorizar el reintento"
+     ],
+     [
+      "Respuesta",
+      "Liquidación + recurso"
+     ]
+    ],
+    "takeaway": "Respaldo didáctico. No representa una ejecución ni un pago real.",
+    "section": "",
+    "number": 15
+   },
+   {
+    "title": "Preflight del kit",
+    "text": "Anexo · preflight del kit\nThirdweb y destinatario\nNEXT_PUBLIC_THIRDWEB_CLIENT_ID · THIRDWEB_SECRET_KEY\nTHIRDWEB_SERVER_WALLET_ADDRESS · MERCHANT_WALLET_ADDRESS\nConfigurar fuera del escenario. No compartir .env.local.\nModo IA y pruebas\nOPENROUTER_API_KEY para la experiencia de IA.\nComprobar ERC-4337 del facilitator, gas y activo de prueba antes de ensayar.\n18 / 20\nx402 Starter Kit · README\nANEXO",
+    "notes": "SLIDE 17 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nEl README prescribe smart account ERC-4337 para el facilitator y advierte no usar ERC-7702 para ese caso del kit. No generalizar esta restricción a todo x402. Separar merchant, comprador y facilitator. Revisar exactamente qué activo acepta la app y qué credenciales necesita cada modo. Registrar commit y versiones probadas después del ensayo; no se fijó aquí un commit no verificado. No ejecutar instalaciones durante los cuatro minutos asignados a la demo.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 Starter Kit · README — https://github.com/federiconardelli7/x402-starter-kit\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": true,
+    "layout": "pair",
+    "heading": "Preflight del kit",
+    "body": [
+     [
+      "Thirdweb",
+      "Cliente, servidor y merchant configurados.",
+      "Smart account ERC-4337 para este kit."
+     ],
+     [
+      "Modo IA",
+      "OPENROUTER_API_KEY configurada.",
+      "Gas y activo de prueba comprobados."
+     ]
+    ],
+    "takeaway": "Configuración fuera del escenario. Nombres de variables en notas.",
+    "section": "",
+    "number": 16
+   },
+   {
+    "title": "Código y especificación",
+    "text": "Anexo · código y contratos\nx402 Starter Kit\nRepositorio usado para preparar la demo\nTwin · contratos\nRegistro oficial por red y activo\nx402 · MPP · AP2 · Twin · ERC-20 · ERC-4626\n20 / 20\nx402 Starter Kit · README  /  x402 · HTTP 402  /  x402 · HTTP transport v2  /  más en notas\nANEXO",
+    "notes": "SLIDE 18 · ANEXO / FUERA DE LOS 30 MIN\nANEXO: fuera de los 30 minutos; usar como apoyo o respaldo.\n\nEnlaces de consulta, no recomendaciones de inversión. Los QR apuntan al repositorio y al registro de contratos; no abren un flujo de pago. Fuentes revisadas el 3 de noviembre de 2026. Antes del evento verificar SDK, headers, direcciones, redes y disponibilidad del facilitator.\n\nFUENTES (consultadas el 3 de noviembre de 2026)\nx402 Starter Kit · README — https://github.com/federiconardelli7/x402-starter-kit\nx402 · HTTP 402 — https://docs.x402.org/core-concepts/http-402\nx402 · HTTP transport v2 — https://github.com/x402-foundation/x402/blob/main/specs/transports-v2/http.md\nx402 · Facilitator — https://docs.x402.org/core-concepts/facilitator\nMachine Payments Protocol — https://mpp.dev/\nAgent Payments Protocol — https://ap2-protocol.org/\nTwin · productos — https://www.twin.finance/\nTwin · contratos — https://docs.twin.finance/stablecoins/contracts\nTwin · reservas — https://www.twin.finance/transparency\nERC-20 — https://eips.ethereum.org/EIPS/eip-20\nERC-4626 — https://eips.ethereum.org/EIPS/eip-4626\n\nPREPARACIÓN: material técnico y demostrativo. Las demos no fueron ejecutadas end-to-end durante la creación del deck; ensayar con los servicios y credenciales del expositor. No mostrar secretos ni utilizar fondos reales en la demo de pagos.",
+    "annex": true,
+    "layout": "links",
+    "heading": "Código y especificación",
+    "body": [
+     [
+      "x402 Starter Kit",
+      "https://github.com/federiconardelli7/x402-starter-kit"
+     ],
+     [
+      "x402 · documentación",
+      "https://docs.x402.org/"
+     ],
+     [
+      "x402 · spec HTTP v2",
+      "https://github.com/x402-foundation/x402/blob/main/specs/transports-v2/http.md"
+     ]
+    ],
+    "takeaway": "Fuentes y detalles técnicos en las notas de cada diapositiva.",
+    "section": "",
+    "number": 17
+   }
+  ]
+ }
 ]</script>
 <script>
 'use strict';
@@ -854,14 +1075,17 @@ function content(s){const b=s.body;
  case 'steps':return `<div class="steps">${b.map((x,i)=>`<section class="step animate" style="--i:${i+2}"><span class="n">0${i+1}</span><h2>${esc(x[0])}</h2><p>${esc(x[1])}</p></section>`).join('')}</div>`;
  case 'code':return `<div class="code-wrap animate" style="--i:2"><div class="code-bar"><i></i><i></i><i></i><span>${s.annex?'REFERENCIA':'DEMO'}</span></div><pre>${esc(b)}</pre></div>`;
  case 'demo':return `<div class="demo-list">${b.map((x,i)=>`<section class="demo-row animate" style="--i:${i+2}"><span class="n">${esc(x[0])}</span><h2>${esc(x[1])}</h2><p>${esc(x[2])}</p></section>`).join('')}</div>`;
- case 'network':return `<div class="network-map"><div class="primary-box animate" style="--i:2"><p class="map-label">PRIMARY NETWORK</p><div class="chains"><div class="chain"><b>C-Chain</b><span>Contratos EVM</span></div><div class="chain"><b>P-Chain</b><span>Validadores y L1</span></div><div class="chain"><b>X-Chain</b><span>Activos nativos</span></div></div></div><div class="icm animate" style="--i:3">ICM</div><div class="l1s"><div class="l1 animate" style="--i:4">L1 A<span>Reglas y validadores propios</span></div><div class="l1 animate" style="--i:5">L1 B<span>Reglas y validadores propios</span></div></div></div>`;
- case 'sequence':return `<div class="sequence-grid"><div class="actor">CLIENTE</div><div class="actor">SERVIDOR</div><div class="actor">FACILITATOR</div>${[['Solicita recurso',''],['402 + condiciones','back'],['Reintenta + autorización',''],['Verificar + liquidar','right'],['Resultado','right back'],['Recurso + evidencia','back']].map((x,i)=>`<div class="message animate ${x[1]}" style="--i:${i+2}">${esc(x[0])}</div>`).join('')}</div>`;
+ case 'network':return `<div class="network-map"><div class="primary-box animate" style="--i:2"><p class="map-label">PRIMARY NETWORK · 3 BLOCKCHAINS</p><div class="chains"><div class="chain"><b>C-Chain</b><span>Contratos EVM: donde corren las apps</span></div><div class="chain"><b>P-Chain</b><span>Validadores y registro de L1s</span></div><div class="chain"><b>X-Chain</b><span>Activos nativos de Avalanche</span></div></div></div><div class="icm animate" style="--i:3">ICM</div><div class="l1s"><p class="map-label animate" style="--i:4">AVALANCHE L1s</p><div class="l1 animate" style="--i:4">Tu L1<span>Validadores, gas y reglas propias</span></div><div class="l1 animate" style="--i:5">Otra L1<span>Validadores, gas y reglas propias</span></div></div></div>`;
+ case 'sequence':return `<div class="sequence-grid"><div class="actor">CLIENTE · PAGA</div><div class="actor">SERVIDOR · COBRA</div><div class="actor">FACILITATOR · LIQUIDA</div>${[['Pide el recurso',''],['402 + precio y destino','back'],['Reintenta con el pago firmado',''],['Verificar y liquidar','right'],['Resultado on-chain','right back'],['200 + recurso + recibo','back']].map((x,i)=>`<div class="message animate ${x[1]}" style="--i:${i+2}"><span class="k">${i+1}</span>${esc(x[0])}</div>`).join('')}</div>`;
  case 'table':return `<table class="animate" style="--i:2"><thead><tr><th>Enfoque</th><th>Aporta</th><th>Requiere además</th></tr></thead><tbody>${b.map(x=>`<tr>${x.map(y=>`<td>${esc(y)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+ case 'stats':return `<div class="stats${b.length===1?' one':''}" style="--n:${b.length}">${b.map((x,i)=>`<section class="stat animate" style="--i:${i+2}"><b>${esc(x[0])}</b><div><span class="label">${esc(x[1])}</span><p>${esc(x[2])}</p></div></section>`).join('')}</div>`;
+ case 'define':return `<div class="define"><div class="term animate" style="--i:2">${esc(b[0])}</div><div class="animate" style="--i:3"><p class="def">${esc(b[1])}</p><ul>${b[2].map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div></div>`;
+ case 'chain':return `<div class="chainviz"><p class="def animate" style="--i:2">${esc(b.def)}</p><div class="blocks">${b.blocks.map((x,i)=>`${i?`<div class="link animate" style="--i:${i+3}">${esc(b.link)}</div>`:''}<section class="block animate" style="--i:${i+3}"><span class="label">${esc(x[0])}</span>${x[1].map(y=>`<code>${esc(y)}</code>`).join('')}${i<b.blocks.length-1?`<span class="hash">hash → ${esc(x[0].toLowerCase())}</span>`:''}</section>`).join('')}</div></div>`;
  case 'links':return `<div class="links">${b.map((x,i)=>`<a class="resource animate" style="--i:${i+2}" href="${esc(x[1])}" target="_blank" rel="noopener noreferrer">${esc(x[0])}<span>↗</span></a>`).join('')}</div>`;
  }
 }
 function readHash(){const m=location.hash.match(/^#([12])-(\d+)/);if(!m)return;const c=+m[1]-1,i=(c?D[0].slides.length:0)+ +m[2]-1;if(slides[i]?.chapter!==c)return;annex=location.hash.includes('annex=1')||slides[i].annex;current=i;}
-function render(){$('stage').classList.toggle('initial',firstRender);firstRender=false;const s=slides[current],q=seq(),p=q.indexOf(current);$('stage').innerHTML=`<article class="slide ${s.layout==='hero'?'hero':'layout-'+s.layout}"><div class="eyebrow animate"><span>${s.annex?'Anexo':s.layout==='demo'?'Demo':`Workshop 0${s.chapter+1}`}</span><span class="slide-number">${String(s.local+1).padStart(2,'0')}</span></div><h1 class="animate" style="--i:1">${s.heading}</h1><div class="content">${content(s)}</div>${s.takeaway?`<p class="takeaway animate" style="--i:7">${esc(s.takeaway)}</p>`:''}${s.layout==='hero'?`<span class="hero-index" aria-hidden="true">0${s.chapter+1}</span>`:''}</article>`;
+function render(){$('stage').classList.toggle('initial',firstRender);firstRender=false;const s=slides[current],q=seq(),p=q.indexOf(current);$('stage').innerHTML=`<article class="slide ${s.layout==='hero'?'hero':'layout-'+s.layout}"><div class="eyebrow animate"><span>${s.annex?'Anexo':s.layout==='demo'?'Demo':`Workshop 0${s.chapter+1}`}${s.section&&!s.annex?` · ${esc(s.section)}`:''}</span><span class="slide-number">${String(s.local+1).padStart(2,'0')}</span></div><h1 class="animate" style="--i:1">${s.heading}</h1><div class="content">${content(s)}</div>${s.takeaway?`<p class="takeaway animate" style="--i:7">${esc(s.takeaway)}</p>`:''}${s.layout==='hero'?`<span class="hero-index" aria-hidden="true">0${s.chapter+1}</span>`:''}</article>`;
  $('slideTitle').textContent=s.title;$('counter').textContent=`${String(p+1).padStart(2,'0')} / ${q.length}`;$('prev').disabled=p===0;$('next').disabled=p===q.length-1;$('progress').style.width=`${(p+1)/q.length*100}%`;
  $('noteTitle').textContent=s.title;$('noteText').textContent=s.notes;$('originalText').textContent=s.text;$('showAnnex').checked=annex;
  document.querySelectorAll('[data-chapter]').forEach(b=>b.setAttribute('aria-current',String(+b.dataset.chapter===s.chapter)));document.querySelectorAll('[data-slide]').forEach(b=>b.setAttribute('aria-current',String(+b.dataset.slide===current)));
