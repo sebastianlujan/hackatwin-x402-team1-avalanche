@@ -161,3 +161,6 @@ apps/docs/build/
 packages/contracts/out/
 packages/contracts/cache/
 packages/contracts/broadcast/
+
+# Next.js generated
+next-env.d.ts
