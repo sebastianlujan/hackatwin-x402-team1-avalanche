@@ -23,6 +23,16 @@ interface ISettlementReceiver {
   /// @param _allowed Whether the merchant is now allowed
   event MerchantSet(address indexed _merchant, bool _allowed);
 
+  /// @notice A merchant withdrew its credit
+  /// @param _merchant The merchant
+  /// @param _amount The withdrawn amount
+  event Withdrawn(address indexed _merchant, uint256 _amount);
+
+  /// @notice A merchant callback failed, ran out of gas or reentered
+  /// @param _paymentId The settled payment
+  /// @param _merchant The merchant whose callback failed
+  event CallbackFailed(bytes32 indexed _paymentId, address indexed _merchant);
+
   /// @notice The caller is not the configured token transferrer
   /// @param _caller The caller
   error SettlementReceiver_UnauthorizedCaller(address _caller);
@@ -51,6 +61,9 @@ interface ISettlementReceiver {
 
   /// @notice The payload is not 64 bytes of (payment id, merchant)
   error SettlementReceiver_InvalidPayload();
+
+  /// @notice The remaining gas cannot fund the full merchant callback
+  error SettlementReceiver_InsufficientCallbackGas();
 
   /// @notice The status change is not an edge of the state table
   /// @param _current The current status
@@ -91,4 +104,7 @@ interface ISettlementReceiver {
   /// @param _merchant The merchant
   /// @return _credit The credit
   function creditOf(address _merchant) external view returns (uint256 _credit);
+
+  /// @notice Pull the caller's whole credit
+  function withdraw() external;
 }
