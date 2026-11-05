@@ -68,6 +68,10 @@ export const copy = {
       kinds: { 'payment.status': 'payment', 'identity.feedback': 'feedback' },
     },
   },
+  path: {
+    nav: { label: 'Talk path', previous: 'Previous', next: 'Next' },
+  },
 } as const;
 
 export type Demo1Copy = typeof copy.demo1;
+export type PathCopy = typeof copy.path;
