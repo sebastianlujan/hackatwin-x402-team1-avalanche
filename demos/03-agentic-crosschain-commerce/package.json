@@ -1,9 +1,0 @@
-{
-  "name": "@hackatwin/demo-03-agentic-crosschain-commerce",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "typecheck": "tsc --noEmit"
-  }
-}
