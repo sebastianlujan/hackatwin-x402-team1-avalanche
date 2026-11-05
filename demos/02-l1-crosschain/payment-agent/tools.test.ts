@@ -1,33 +1,13 @@
-import { type AgentEvent, type CrossChainMessenger, type Hop, money, type PaymentStatus } from '@hackatwin/core';
+import { type AgentEvent, type CrossChainMessenger, money } from '@hackatwin/core';
 import { FakeAgentPolicy, FakeCrossChainMessenger } from '@hackatwin/core/testing';
 import { decodeAbiParameters } from 'viem';
 import { describe, expect, it } from 'vitest';
 import { a, world } from '../world.fixtures.ts';
+import { hop, RelayedMessenger } from './messenger.fixtures.ts';
 import { createPaymentTools } from './tools.ts';
 
 const AMOUNT = money(1_000_000n, 6, 'USD');
 const NOW = 1_700_000_000n;
-const hop = (index: number, status: PaymentStatus): Hop => ({
-  index,
-  transport: 'local',
-  chainId: 31337,
-  status,
-  txHash: `0x${index.toString(16).padStart(64, '0')}`,
-});
-
-// Each `track` call reveals the next batch, like the real tracker after its progress mark.
-class RelayedMessenger extends FakeCrossChainMessenger implements CrossChainMessenger {
-  private readonly batches: Hop[][];
-  tracks = 0;
-  constructor(batches: Hop[][]) {
-    super();
-    this.batches = batches;
-  }
-  override async *track(_messageId: string): AsyncIterable<Hop> {
-    yield* this.batches[Math.min(this.tracks++, this.batches.length - 1)] ?? [];
-  }
-}
-
 function setup(messenger: CrossChainMessenger, policy = new FakeAgentPolicy(), maxPolls = 5) {
   const events: AgentEvent[] = [];
   const sleeps: number[] = [];
