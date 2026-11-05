@@ -1,0 +1,11 @@
+GasSettlementReceiver
+└── when the receiver hot paths run on fresh state
+    ├── given a settled delivery to a merchant without code
+    │   └── it settles and the gas lands in the snapshot
+    ├── given a settled delivery to a merchant with a succeeding callback
+    │   ├── it settles and the gas lands in the snapshot
+    │   └── it fits the documented recipient gas limit
+    ├── given a rejected delivery
+    │   └── it rejects and the gas lands in the snapshot
+    └── given a credited merchant
+        └── it withdraws and the gas lands in the snapshot
