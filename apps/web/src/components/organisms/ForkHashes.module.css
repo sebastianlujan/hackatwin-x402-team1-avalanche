@@ -1,0 +1,25 @@
+.list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hk-space-2) var(--hk-space-3);
+  align-items: baseline;
+  padding: var(--hk-space-2) 0;
+  border-top: 1px solid var(--hk-line);
+}
+
+.kind {
+  color: var(--hk-fg-muted);
+  font-size: var(--hk-text-sm);
+}
+
+.empty {
+  margin: 0;
+  color: var(--hk-fg-muted);
+}

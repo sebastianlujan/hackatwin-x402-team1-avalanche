@@ -1,0 +1,33 @@
+.panel {
+  display: grid;
+  gap: var(--hk-space-3);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--hk-text-sm);
+}
+
+.table th,
+.table td {
+  padding: var(--hk-space-2) var(--hk-space-2) var(--hk-space-2) 0;
+  border-top: 1px solid var(--hk-line);
+  text-align: left;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.table thead th {
+  color: var(--hk-fg-muted);
+}
+
+.moved {
+  margin: 0;
+  color: var(--hk-accent);
+}
+
+.empty {
+  margin: 0;
+  color: var(--hk-fg-muted);
+}
