@@ -253,6 +253,51 @@ jobs:
           pnpm contracts:abi
           git diff --exit-code -- packages/contracts/abi
 
+  contracts-dry-run:
+    name: contracts dry-run
+    needs: changes
+    if: needs.changes.outputs.contracts == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: packages/contracts
+    env:
+      CHAIN_REGISTRY_DIR: ./test/fixtures/registry
+      DEPLOY_PARAMS_DIR: ./test/fixtures/params
+      DEPLOY_DEPLOYMENTS_DIR: ./test/fixtures/deployments
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+        working-directory: .
+      - uses: foundry-rs/foundry-toolchain@dba66c27052e63476d886f22216e119ba7e615bf # v1.9.2
+        with:
+          version: v1.5.1
+          cache: false
+      - name: Dry-run the L1 script on anvil
+        run: |
+          anvil --chain-id 100001 --silent &
+          until cast chain-id --rpc-url http://127.0.0.1:8545 > /dev/null 2>&1; do sleep 1; done
+          forge script script/DeployL1.s.sol:DeployL1 --fork-url http://127.0.0.1:8545
+          test "$(cast block-number --rpc-url http://127.0.0.1:8545)" = 0
+      - name: Dry-run the Fuji script on a Fuji fork (informational)
+        continue-on-error: true
+        env:
+          FUJI_FORK: '1'
+        run: forge test --match-contract UnitDeployFuji
+      - name: Check the dry-runs wrote nothing
+        working-directory: .
+        run: test -z "$(git status --porcelain)"
+
   docs-build:
     name: docs build
     needs: changes
@@ -281,7 +326,8 @@ jobs:
   ci-gate:
     name: ci-gate
     if: always()
-    needs: [pr-title, commits, branch-name, lint, changes, biome, typecheck, test, fork, contracts, docs-build]
+    needs:
+      [pr-title, commits, branch-name, lint, changes, biome, typecheck, test, fork, contracts, contracts-dry-run, docs-build]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions: {}

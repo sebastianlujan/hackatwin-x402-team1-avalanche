@@ -807,9 +807,9 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 - What: The Wonderland `dev` layout without its `.husky/`, `commitlint.config.js`, `.github/`, or `deploy:mainnet`,
   with dependencies per [standards § 4](standards/smart-contracts.md#4-dependencies).
 - Done when:
-  - [ ] `evm_version = 'cancun'`, one pinned `forge-std` tag, remappings proven by `forge build`
-  - [ ] CI runs `forge fmt --check`, build, test, lintspec, and Bulloak checks
-  - [ ] ABIs export as `as const` TypeScript for viem
+  - [x] `evm_version = 'cancun'`, one pinned `forge-std` tag, remappings proven by `forge build`
+  - [x] CI runs `forge fmt --check`, build, test, lintspec, and Bulloak checks
+  - [x] ABIs export as `as const` TypeScript for viem
 
 **T7.2 `chore(contracts): add own icm interfaces`**
 
@@ -829,9 +829,9 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 - Depends on: T7.1
 - What: `IPaymentHub`, `PaymentStateLib`, and `LaneParamsLib` per [standards § 2](standards/smart-contracts.md#2-state-pattern).
 - Done when:
-  - [ ] One Bulloak tree per transition
-  - [ ] A fuzz test shows only table edges pass `canTransition`
-  - [ ] lintspec passes on every external item
+  - [x] One Bulloak tree per transition
+  - [x] A fuzz test shows only table edges pass `canTransition`
+  - [x] lintspec passes on every external item
 
 **T7.4 `feat(contracts): add hub lanes and signed authorization`**
 
@@ -840,9 +840,9 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 - What: `enableMessenger` (Ownable2Step), permissionless `createLane`, and `setAuthorizationWithSig` with budget and
   deadline.
 - Done when:
-  - [ ] Lanes need an enabled messenger and are keyed by `Id`
-  - [ ] Authorization uses EIP-712, `SignatureChecker`, and `Nonces`, with an ERC-1271 test
-  - [ ] Replay and expiry are rejected with custom errors
+  - [x] Lanes need an enabled messenger and are keyed by `Id`
+  - [x] Authorization uses EIP-712, `SignatureChecker`, and `Nonces`, with an ERC-1271 test
+  - [x] Replay and expiry are rejected with custom errors
 
 **T7.5 `feat(contracts): add hub payment transitions`**
 
@@ -850,9 +850,9 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 - Depends on: T7.4
 - What: `pay`, `settle`, `dispatch`, and `refund` through `_transition`, with escrow and callbacks.
 - Done when:
-  - [ ] `SafeERC20` and `ReentrancyGuardTransient` are used; a failing callback cannot strand funds
-  - [ ] Invariants: terminal states absorb, only table edges occur, escrowed equals pending
-  - [ ] The budget cap stops `pay` above the remaining budget
+  - [x] `SafeERC20` and `ReentrancyGuardTransient` are used; a failing callback cannot strand funds
+  - [x] Invariants: terminal states absorb, only table edges occur, escrowed equals pending
+  - [x] The budget cap stops `pay` above the remaining budget
 
 **T7.6 `feat(contracts): add ictt messenger plug-in`**
 
@@ -861,9 +861,9 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 - What: `IcttMessenger` builds `SendAndCallInput` from constructor-injected transferrer, destination, receiver, gas
   limits, and fallback recipient.
 - Done when:
-  - [ ] It emits one event per hop
-  - [ ] Unit tests use a test transferrer that mirrors the ICTT allowance sweep
-  - [ ] No address or blockchain ID is hardcoded
+  - [x] It emits one event per hop
+  - [x] Unit tests use a test transferrer that mirrors the ICTT allowance sweep
+  - [x] No address or blockchain ID is hardcoded
 
 **T7.7 `feat(contracts): add settlement receiver`**
 
@@ -871,9 +871,9 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 - Depends on: T7.2, T7.3
 - What: `SettlementReceiver.receiveTokens` validates the source pair first, then settles or rejects.
 - Done when:
-  - [ ] It checks source blockchain ID, origin transferrer, origin sender, and token
-  - [ ] `Settled` pulls tokens and credits the merchant for withdrawal; `Rejected` pulls nothing
-  - [ ] Payments are keyed by ID; a test shows the rejected amount reaching `fallbackRecipient`
+  - [x] It checks source blockchain ID, origin transferrer, origin sender, and token
+  - [x] `Settled` pulls tokens and credits the merchant for withdrawal; `Rejected` pulls nothing
+  - [x] Payments are keyed by ID; a test shows the rejected amount reaching `fallbackRecipient`
 
 **T7.8 `feat(contracts): add ccip payment broker`**
 
@@ -881,14 +881,15 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 - Depends on: T7.5
 - What: `PaymentBroker`, a `CCIPReceiver` that turns allowlisted messages into hub payments.
 - Done when:
-  - [ ] Router is a constructor argument; it acts only in `_ccipReceive`
-  - [ ] Source selector and sender are allowlisted as a pair
-  - [ ] `CCIPLocalSimulator` tests cover accept, reject, and duplicate message IDs
+  - [x] Router is a constructor argument; it acts only in `_ccipReceive`
+  - [x] Source selector and sender are allowlisted as a pair
+  - [x] `CCIPLocalSimulator` tests cover accept, reject, and duplicate message IDs
 
 **T7.9 `feat(contracts): add sepolia payment sender`**
 
 - Branch: `feature/sepolia-payment-sender`
 - Depends on: T7.1; file only if O5 picks a contract
+- Status: Pending (file only if O5 picks a contract)
 - What: A minimal owner-gated sender for the data-only CCIP message.
 - Done when:
   - [ ] It checks `isChainSupported` and quotes `getFee` before `ccipSend`
@@ -901,14 +902,15 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 - Depends on: T7.6, T7.7, T7.8
 - What: `forge script` per chain with `--account`, reading `packages/chains` and writing deployment JSON back.
 - Done when:
-  - [ ] Scripts map `block.chainid` to registry parameters
-  - [ ] CI dry-runs them against Fuji and L1 forks
-  - [ ] Verification commands target Snowtrace (Fuji) and the Builder Hub verifier (L1)
+  - [x] Scripts map `block.chainid` to registry parameters
+  - [x] CI dry-runs them against Fuji and L1 forks (L1 on anvil; the Fuji fork run is a non-blocking step)
+  - [x] Verification commands target Snowtrace (Fuji) and the Builder Hub verifier (L1)
 
 **T7.11 `feat(contracts): add permit2 and x402 proxy deploy for the l1`**
 
 - Branch: `feature/l1-permit2-x402-proxy`
 - Depends on: T7.1, T6.4
+- Status: Pending (waits on T6.4)
 - What: Deploy Permit2 and the x402 exact proxy through the Arachnid deployer from vendored init codes with provenance.
 - Done when:
   - [ ] The script asserts each CREATE2 address equals the canonical one before broadcasting
@@ -920,6 +922,7 @@ the implementation, then refactor. The PR's commits show that order. TypeScript 
 
 - Branch: `feature/contracts-testnet-deploy`
 - Depends on: T7.10, T7.11, T6.7
+- Status: Pending (waits on T7.11, T6.7 and the testnet keystores)
 - What: Run the ethskills `security` and `audit` checklists, then deploy through a `workflow_dispatch` job on the
   `testnet` environment.
 - Done when:
