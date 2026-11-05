@@ -5,6 +5,7 @@ export * from './llm/claude-llm.ts';
 export * from './llm/errors.ts';
 export * from './llm/scripted-plan-llm.ts';
 export * from './policy/budget-policy.ts';
+export * from './runner/create-agent.ts';
 export * from './runner/event-channel.ts';
 export * from './runner/tool.ts';
 export * from './x402/engine.ts';
