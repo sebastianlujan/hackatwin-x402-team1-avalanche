@@ -30,6 +30,24 @@ rejected locally. CI still checks every commit, including ones made with `--no-v
 
 English, one issue each, small. The body follows the template and says `Closes #12`. Squash merge into `develop`.
 
+## Rulesets
+
+Branch policy lives in `.github/rulesets/` (`develop.json`, `main.json`) and requires only the `ci-gate` check.
+`.github/CODEOWNERS` sets the default owner. Needs repo admin.
+
+```sh
+R=sebastianlujan/hackatwin-x402-team1-avalanche
+# export a live ruleset (ids: develop 26496788, main 26496789)
+gh api repos/$R/rulesets/26496788 | jq '{name,target,enforcement,conditions,bypass_actors,rules}' > .github/rulesets/develop.json
+# semantic diff between live and committed
+diff <(jq -S . .github/rulesets/develop.json) <(gh api repos/$R/rulesets/26496788 | jq -S '{name,target,enforcement,conditions,bypass_actors,rules}')
+# apply
+gh api -X PUT repos/$R/rulesets/26496788 --input .github/rulesets/develop.json
+```
+
+Apply only after `ci-gate` has run green on `develop`, or every PR waits on a missing check. Repeat with `main.json`
+and id `26496789`.
+
 ## No AI attribution
 
 No AI attribution in commits, PRs, issues, or code: no `Co-Authored-By` trailers, no "Generated with ..." footers,
