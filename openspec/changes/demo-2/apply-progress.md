@@ -96,6 +96,15 @@ Notes: the Rejected hop carries the broker reason through a `TrackedHop.reason` 
 Tasks 13.1 and 13.2 are marked `[x]`. The first cut was one 447-line PR; it was split on the manifest seam after the review gate. 13a: `deployment.ts` (zod `world.json` schema, `parseWorld`) and the catalog `zod` dep. 13b: `scripts/setup.ts`: `setupTreasury` over a small `TreasuryChain` port (read, write, revertData, signTypedData, blockTimestamp); the lane is the merchant role on the enabled messenger with the L1 blockchain ID; the hub allowance and the broker budget come from `profile.budget.total`. D10 probe: `eth_call pay(lane, treasury, max, deadline)` from the broker decodes `LaneNotFound` (create the lane), `Unauthorized` (no budget, sign it) or `BudgetExceeded(remaining, ...)` (leave it). `pnpm demo2:setup` runs it with `local.env`. The carried "broker approval" item is the hub allowance (the hub pulls the USDC) plus the signed budget for the broker. Checked by hand on a live `demo2:local:up` world: first run 3 transactions, second run none, lane `Id` and 5.000000 USDC unchanged.
 Notes: anvil returns the revert data on the RPC error at the bottom of the cause chain, not as a viem `RawContractError`. An exhausted budget (remaining 0) is signed again by a later run. 13b adds workspace deps on chains and config.
 
+### Batch 11 (PR 14, T8.4 module part)
+
+| Task PR | Branch | Issue | PR | Red | Green | Authored lines |
+|---|---|---|---|---|---|---|
+| 14 | `feature/demo-2-module` (stacked on treasury-setup) | #257 | #258 | 7d3aa1c | d222831 | 259 added, 6 removed |
+
+Tasks 14.1 and 14.2 are marked `[x]`. `module.ts` `registerCrossChainModule` registers `Router`, `Lanes` and `Funding` and resolves nothing (the root registers `World` and `Hub`). `adapters/ictt-funding.ts` `createIcttFunding.fund(recipient, amount)` approves the token home when the allowance is short and calls home `send(SendTokensInput, amount)` toward the remote from the treasury; the relay delivers it. `labels.ts` holds `BANNER` (setup imports it; the e2e copy in `up.ts` stays because a demo cannot import e2e). The `world.json` schema gained `home`, `remote` and `selector`. Lane shape from PR 13 is unchanged.
+Notes: the L1 balance rise after relay is a `local` project check for PR 16; the unit test proves the approve and `send` calls. Commits need `npm_config_manage_package_manager_versions=false` and the pnpm 12.16.1 bin on PATH for the commit-msg hook.
+
 ## Deviations and notes
 
 - `WarpMessengerStub` defines its own `WarpMessage` struct and does not import an upstream `IWarpMessenger` (none exists under `src/interfaces/external/icm/`). Field layout `(bytes32 sourceChainID, address originSenderAddress, bytes payload)` and the `WarpMessageSent(bytes32 indexed messageID, bytes message)` event follow design D7; conformance with the upstream struct is verified by the PR 1 spike (PR 1 task 1.5).

@@ -116,8 +116,8 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 14: T8.4 module
 
-- [ ] 14.1 RED: Registration only (no token resolved), Fund an L1 address
-- [ ] 14.2 GREEN `module.ts`, `labels.ts`, `adapters/ictt-funding.ts`, `index.ts`
+- [x] 14.1 RED: Registration only (no token resolved), Fund an L1 address
+- [x] 14.2 GREEN `module.ts`, `labels.ts`, `adapters/ictt-funding.ts`, `index.ts`
 
 ## PR 15: T8.4 root and docs
 
