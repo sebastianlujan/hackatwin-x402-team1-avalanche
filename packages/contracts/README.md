@@ -26,6 +26,21 @@ Run from `packages/contracts`:
 | `pnpm test:bulloak:scaffold` | Scaffold tests from `.tree` files |
 | `pnpm test:bulloak:check` | Fail when a tree and its test drift |
 | `pnpm lint:sol` and `pnpm lint:spec` | solhint and lintspec |
-| `FOUNDRY_PROFILE=deep forge test` | Deep fuzz and invariant run |
+| `FOUNDRY_PROFILE=deep forge test` | Deep fuzz and invariant run (nightly in `contracts-nightly.yml`) |
+| `forge snapshot --check --tolerance 1 --match-path 'test/gas/*'` | Gas drift check; refresh with `forge snapshot --match-path 'test/gas/*'` |
+
+## Gas
+
+Measured with `forge snapshot` on `test/gas` (cold storage, whole test body, `.gas-snapshot`). `dispatch` includes the
+test messenger, so it is an upper bound for the hub work.
+
+| Path | Gas |
+|---|---|
+| `pay` (local lane, first payment) | 92795 |
+| `pay` (cross-chain lane, first payment) | 92761 |
+| `settle` (no callback) | 54652 |
+| `dispatch` (test messenger) | 210513 |
+| `refund` | 41394 |
+| `settle` then `withdraw` | 75835 |
 
 Nothing in this project broadcasts transactions.
