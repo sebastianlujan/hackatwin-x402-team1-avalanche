@@ -1,8 +1,0 @@
-UnitSettlementReceiverWithdraw
-└── when a merchant withdraws
-    ├── given a credited merchant
-    │   └── it transfers the credit and zeroes it and emits Withdrawn
-    ├── given two credited merchants
-    │   └── it pays each only its own credit
-    └── given a caller without credit
-        └── it reverts with SettlementReceiver_ZeroAmount

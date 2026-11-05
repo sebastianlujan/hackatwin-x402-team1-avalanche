@@ -1,8 +1,0 @@
-IntegrationBrokerSimulator
-└── when the simulator router delivers a message
-    ├── given a sender that is not allowlisted or malformed data
-    │   └── it fails with the outer ReceiverError wrapping the inner error and changes no hub state
-    ├── given a message that was already processed
-    │   └── it fails with PaymentBroker_MessageAlreadyProcessed when the router replays it
-    └── given an allowed sender with a funded budget
-        └── it moves the payment from None to Pending to Dispatched and records Accepted

@@ -5,10 +5,9 @@ Solidity 0.8.30, `evm_version = 'cancun'`. Dependencies come from pnpm only (no 
 
 ## Tools
 
-Install the pinned tools once:
+Install the pinned tool once:
 
 ```bash
-cargo install bulloak --version 0.9.2 --locked
 cargo install lintspec --version 0.20.0 --locked
 ```
 
@@ -23,8 +22,6 @@ Run from `packages/contracts`:
 |---|---|
 | `forge build` and `forge test` | Compile and test |
 | `forge fmt --check` | Format check (Wonderland settings) |
-| `pnpm test:bulloak:scaffold` | Scaffold tests from `.tree` files |
-| `pnpm test:bulloak:check` | Fail when a tree and its test drift |
 | `pnpm lint:sol` and `pnpm lint:spec` | solhint and lintspec |
 | `FOUNDRY_PROFILE=deep forge test` | Deep fuzz and invariant run |
 | `forge snapshot --check --tolerance 1 --match-path 'test/gas/*'` | Gas drift check; refresh with `forge snapshot --match-path 'test/gas/*'` |
