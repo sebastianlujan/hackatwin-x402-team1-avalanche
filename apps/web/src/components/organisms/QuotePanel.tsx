@@ -11,19 +11,19 @@ export interface QuotePanelProps {
 export function QuotePanel({ copy, quote }: QuotePanelProps) {
   if (quote === undefined) return <p className={styles.empty}>{copy.empty}</p>;
   const rows = [
-    [copy.source, quote.source],
+    [copy.source, { text: quote.source, full: quote.source }],
     [copy.rate, quote.rate],
     [copy.price, quote.price],
     [copy.amount, quote.amount],
-    [copy.validUntil, quote.validUntil],
+    [copy.validUntil, { text: quote.validUntil, full: quote.validUntil }],
   ] as const;
   return (
     <div className={styles.panel}>
       <dl className={styles.rows}>
-        {rows.map(([label, value]) => (
+        {rows.map(([label, shown]) => (
           <div key={label} className={styles.row}>
             <dt>{label}</dt>
-            <dd>{value}</dd>
+            <dd title={shown.full}>{shown.text}</dd>
           </div>
         ))}
       </dl>

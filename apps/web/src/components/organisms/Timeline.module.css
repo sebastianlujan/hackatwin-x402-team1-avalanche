@@ -66,3 +66,7 @@
     grid-template-columns: 2rem 1fr;
   }
 }
+
+.value {
+  font-variant-numeric: tabular-nums;
+}

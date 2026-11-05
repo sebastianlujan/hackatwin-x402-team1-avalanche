@@ -1,5 +1,6 @@
 import { type AgentEvent, formatMoney, type Hex, money } from '@hackatwin/core';
 import type { Envelope } from './envelope.ts';
+import { formatAmount, formatRate, type Shown, shownAmount } from './format.ts';
 
 export type TimelineKind =
   | 'llm.reasoning'
@@ -15,6 +16,7 @@ export interface TimelineEntry {
   readonly kind: TimelineKind;
   readonly detail: string;
   readonly value?: string;
+  readonly valueFull?: string;
   readonly failed: boolean;
 }
 
@@ -28,9 +30,9 @@ export interface Strip {
 
 export interface QuoteView {
   readonly source: 'curve' | 'chainlink';
-  readonly rate: string;
-  readonly amount: string;
-  readonly price: string;
+  readonly rate: Shown;
+  readonly amount: Shown;
+  readonly price: Shown;
   readonly validUntil: string;
   readonly guarded: boolean;
 }
@@ -74,7 +76,8 @@ function entryOf(seq: number, event: AgentEvent): TimelineEntry | undefined {
         seq,
         kind: event.type,
         detail: event.reason,
-        value: formatMoney(event.amount),
+        value: formatAmount(event.amount),
+        valueFull: formatMoney(event.amount),
         failed: !event.allowed,
       };
     case 'payment.required':
@@ -82,11 +85,19 @@ function entryOf(seq: number, event: AgentEvent): TimelineEntry | undefined {
         seq,
         kind: event.type,
         detail: event.quote.source,
-        value: formatMoney(event.quote.amount),
+        value: formatAmount(event.quote.amount),
+        valueFull: formatMoney(event.quote.amount),
         failed: false,
       };
     case 'payment.signed':
-      return { seq, kind: event.type, detail: event.intent.id, value: formatMoney(event.intent.amount), failed: false };
+      return {
+        seq,
+        kind: event.type,
+        detail: event.intent.id,
+        value: formatAmount(event.intent.amount),
+        valueFull: formatMoney(event.intent.amount),
+        failed: false,
+      };
     case 'resource.received':
       return { seq, kind: event.type, detail: String(event.status), failed: event.status !== 200 };
     case 'run.finished':
@@ -148,9 +159,12 @@ export function deriveDemo1(frames: readonly Envelope[]): Demo1View {
       : {
           quote: {
             source: required.quote.source,
-            rate: formatMoney(required.quote.rate),
-            amount: formatMoney(required.quote.amount),
-            price: formatMoney(required.quote.price),
+            rate: {
+              text: formatRate(required.quote.rate, required.quote.amount.currency),
+              full: formatMoney(required.quote.rate),
+            },
+            amount: shownAmount(required.quote.amount),
+            price: shownAmount(required.quote.price),
             validUntil: clock(required.quote.validUntil),
             guarded: required.quote.guarded,
           },
@@ -174,19 +188,23 @@ export interface BalancePair {
 }
 
 export interface PartyBalance {
-  readonly before: string;
-  readonly after?: string;
-  readonly change?: string;
+  readonly before: Shown;
+  readonly after?: Shown;
+  readonly change?: Shown;
 }
 
 export interface BalanceView {
   readonly agent: PartyBalance;
   readonly seller: PartyBalance;
-  readonly moved?: string;
+  readonly moved?: Shown;
 }
 
 const ARGT_DECIMALS = 18;
-const argt = (units: bigint): string => formatMoney(money(units, ARGT_DECIMALS, 'ARGt'));
+const argt = (units: bigint): Shown => shownAmount(money(units, ARGT_DECIMALS, 'ARGt'));
+const withSign = (sign: string, shown: Shown): Shown => ({
+  text: `${sign}${shown.text}`,
+  full: `${sign}${shown.full}`,
+});
 const units = (text: string): bigint | undefined => (/^\d+$/.test(text) ? BigInt(text) : undefined);
 
 function party(before: string, after: string | undefined): PartyBalance | undefined {
@@ -195,7 +213,7 @@ function party(before: string, after: string | undefined): PartyBalance | undefi
   const a = after === undefined ? undefined : units(after);
   if (a === undefined) return { before: argt(b) };
   const sign = a < b ? '-' : '+';
-  return { before: argt(b), after: argt(a), change: `${sign}${argt(a < b ? b - a : a - b)}` };
+  return { before: argt(b), after: argt(a), change: withSign(sign, argt(a < b ? b - a : a - b)) };
 }
 
 export function balanceView(before: BalancePair | undefined, after: BalancePair | undefined): BalanceView | undefined {

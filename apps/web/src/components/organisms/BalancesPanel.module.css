@@ -36,3 +36,19 @@
   overflow-wrap: normal;
   white-space: nowrap;
 }
+
+.table td,
+.table thead th:not(:first-child) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.table td {
+  padding-right: 0;
+  padding-left: var(--hk-space-3);
+  overflow-wrap: normal;
+}
+
+.moved code {
+  font-variant-numeric: tabular-nums;
+}

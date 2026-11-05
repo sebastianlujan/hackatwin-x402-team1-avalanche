@@ -23,6 +23,12 @@ export const copy = {
       title: 'Agent timeline',
       empty: 'The agent steps appear here once a run starts.',
       error: 'error',
+      decisions: {
+        within_budget: 'Within budget',
+        per_payment_cap: 'Over the per-payment cap',
+        total_cap: 'Over the total cap',
+        above_max_amount: 'Above the maximum amount',
+      } as Readonly<Record<string, string>>,
       kinds: {
         'llm.reasoning': 'reasoning',
         'llm.tool-call': 'tool call',
