@@ -93,6 +93,37 @@ describe('dependency rule', () => {
     expect(rules(make({}, manifest))).toEqual(['R2']);
   });
 
+  it('R2 lets only web server files with server-only import a demo module', () => {
+    const entry = "import 'server-only';\nimport { run } from '@hackatwin/demo-01-x402-twin/module';";
+    expect(rules(make({ 'apps/web/src/server/root.ts': entry }))).toEqual([]);
+    const manifest = {
+      'apps/web/package.json': { name: '@hackatwin/web', dependencies: { '@hackatwin/demo-01-x402-twin': '1' } },
+    };
+    expect(rules(make({}, manifest))).toEqual([]);
+    const elsewhere = { 'apps/web/src/lib/root.ts': entry };
+    expect(rules(make(elsewhere))).toEqual(['R2']);
+    const noMarker = { 'apps/web/src/server/root.ts': "import { run } from '@hackatwin/demo-01-x402-twin/module';" };
+    expect(rules(make(noMarker))).toEqual(['R2']);
+    const client = { 'apps/web/src/server/c.tsx': `'use client';\n${entry}` };
+    expect(rules(make(client))).toContain('R2');
+    const deep = {
+      'apps/web/src/server/root.ts':
+        "import 'server-only';\nimport { x } from '@hackatwin/demo-01-x402-twin/adapters/x';",
+    };
+    expect(rules(make(deep))).toEqual(['R2']);
+    const relative = {
+      'apps/web/src/server/root.ts':
+        "import 'server-only';\nimport { x } from '../../../../demos/01-x402-twin/module.ts';",
+    };
+    expect(rules(make(relative))).toEqual(['R2']);
+    const ui = {
+      'packages/ui/package.json': { name: '@hackatwin/ui', dependencies: { '@hackatwin/demo-01-x402-twin': '1' } },
+    };
+    expect(rules(make({}, ui))).toEqual(['R2']);
+    const pkg = { 'packages/pricing/src/x.ts': entry };
+    expect(rules(make(pkg))).toContain('R2');
+  });
+
   it('R3 allows Demo 3 to import module only', () => {
     const allowed = { [demo3]: "import { m } from '@hackatwin/demo-01-x402-twin/module';" };
     expect(rules(make(allowed))).toEqual([]);

@@ -69,6 +69,7 @@ export function extractSpecifiers(source: string): string[] {
   return SPECIFIER_PATTERNS.flatMap((pattern) => [...source.matchAll(pattern)].map((m) => m[1] as string));
 }
 
+const isWebManifest = (dir: string): boolean => dir === 'apps/web';
 const isTestFile = (file: string): boolean => /\.test\.tsx?$/.test(file);
 const usesProcessEnv = (source: string): boolean => /\bprocess\s*(?:\.\s*env\b|\[\s*['"]env['"]\s*\])/.test(source);
 const demoId = (specifier: string): string | undefined => /^(@hackatwin\/demo-[a-z0-9-]+)/.exec(specifier)?.[1];
@@ -98,7 +99,7 @@ export function checkDependencyRule(snapshot: Snapshot): Violation[] {
     const isLibrary = dir.startsWith('packages/') || dir.startsWith('apps/');
     for (const name of dependencyNames(manifest)) {
       if (!name.startsWith(DEMO_PREFIX)) continue;
-      if (isLibrary) add('R2', path, name, 'packages and apps must not depend on demos');
+      if (isLibrary && !isWebManifest(dir)) add('R2', path, name, 'packages and apps must not depend on demos');
       else if (dir.startsWith('demos/') && name !== manifest.name && !dir.startsWith('demos/03-')) {
         add('R3', path, name, 'only Demo 3 may depend on another demo');
       }
@@ -129,7 +130,14 @@ export function checkDependencyRule(snapshot: Snapshot): Violation[] {
         continue;
       }
       const demo = demoId(specifier);
-      if (demo !== undefined && fromLibrary) add('R2', file, specifier, 'packages and apps must not import demos');
+      const webServerEntry =
+        owner === 'apps/web' &&
+        file.startsWith(WEB_SERVER) &&
+        specifier === `${demo}/module` &&
+        !USE_CLIENT.test(source) &&
+        extractSpecifiers(source).includes('server-only');
+      if (demo !== undefined && fromLibrary && !webServerEntry)
+        add('R2', file, specifier, 'packages and apps must not import demos');
       else if (demo !== undefined && demo !== ownerName && (fromDemo || fromE2e)) {
         if (fromDemo && !owner.startsWith('demos/03-'))
           add('R3', file, specifier, 'only Demo 3 may import another demo');

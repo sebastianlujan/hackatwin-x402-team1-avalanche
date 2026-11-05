@@ -10,7 +10,9 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@hackatwin/config": "workspace:*",
     "@hackatwin/core": "workspace:*",
+    "@hackatwin/demo-01-x402-twin": "workspace:*",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

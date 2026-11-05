@@ -360,9 +360,15 @@ importers:
 
   apps/web:
     dependencies:
+      '@hackatwin/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@hackatwin/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@hackatwin/demo-01-x402-twin':
+        specifier: workspace:*
+        version: link:../../demos/01-x402-twin
       next:
         specifier: 'catalog:'
         version: 16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@opentelemetry/api@1.10.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)

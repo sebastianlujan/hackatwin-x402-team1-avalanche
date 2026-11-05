@@ -21,6 +21,7 @@ decisions stay in [Decisions](../decisions.md).
 | [0009](0009-own-ictt-interfaces.md) | We write our own minimal MIT ICTT interfaces instead of vendoring `icm-services` files | Accepted, O7 open |
 | [0010](0010-receiver-address-by-nonce-prediction.md) | The messenger gets the receiver address by deployer nonce prediction, both immutable | Accepted |
 | [0011](0011-deploy-params-out-of-registry.md) | Deploy scripts read facts from the registry and choices from params files, never wallets from the registry | Accepted |
+| [0012](0012-web-imports-demo-modules.md) | The web server imports demo modules through `module` only, from `server-only` files | Accepted |
 
 ## Add an ADR
 
