@@ -9,7 +9,18 @@ export default defineConfig({
         test: {
           name: 'default',
           include: ['test/**/*.test.ts', '{apps,packages,demos}/**/*.test.{ts,tsx}'],
-          exclude: ['**/node_modules/**', '**/*.nightly.test.ts'],
+          exclude: ['**/node_modules/**', '**/*.nightly.test.ts', '**/*.fork.test.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'fork',
+          include: ['{apps,packages,demos,e2e}/**/*.fork.test.ts'],
+          exclude: ['**/node_modules/**'],
+          testTimeout: 120_000,
+          hookTimeout: 120_000,
+          fileParallelism: false,
         },
       },
       {
