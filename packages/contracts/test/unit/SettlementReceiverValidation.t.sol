@@ -19,7 +19,8 @@ contract UnitSettlementReceiverValidation is Test {
   SettlementReceiverHarness internal _receiver;
 
   function setUp() external {
-    _receiver = new SettlementReceiverHarness(_transferrer, _SOURCE, _originTransferrer, _originSender, _token);
+    _receiver =
+      new SettlementReceiverHarness(_transferrer, _SOURCE, _originTransferrer, _originSender, _token, address(this));
   }
 
   modifier whenTheTransferrerDeliversTokens() {
@@ -32,7 +33,7 @@ contract UnitSettlementReceiverValidation is Test {
     _deliver(_transferrer, _SOURCE, _originTransferrer, _originSender, _token, 1, hex'00');
 
     _deliver(_transferrer, _SOURCE, _originTransferrer, _originSender, _token, 1, _payload());
-    assertEq(uint8(_receiver.statusOf(_PAYMENT)), uint8(ISettlementReceiver.Status.Received));
+    assertEq(uint8(_receiver.statusOf(_PAYMENT)), uint8(ISettlementReceiver.Status.Rejected));
   }
 
   function test_GivenACallerOrSourceValueThatDiffersFromTheConfiguration() external whenTheTransferrerDeliversTokens {
@@ -102,7 +103,7 @@ contract UnitSettlementReceiverValidation is Test {
       _PAYMENT, ISettlementReceiver.Status.None, ISettlementReceiver.Status.Received
     );
     _deliver(_transferrer, _SOURCE, _originTransferrer, _originSender, _token, 1, _payload());
-    assertEq(uint8(_receiver.statusOf(_PAYMENT)), uint8(ISettlementReceiver.Status.Received));
+    assertEq(uint8(_receiver.statusOf(_PAYMENT)), uint8(ISettlementReceiver.Status.Rejected));
   }
 
   function test_GivenAPaymentIdThatIsNotNone() external whenTheTransferrerDeliversTokens {

@@ -18,6 +18,11 @@ interface ISettlementReceiver {
   /// @param _to The new status
   event StatusChanged(bytes32 indexed _paymentId, Status _from, Status _to);
 
+  /// @notice A merchant was added to or removed from the allowlist
+  /// @param _merchant The merchant
+  /// @param _allowed Whether the merchant is now allowed
+  event MerchantSet(address indexed _merchant, bool _allowed);
+
   /// @notice The caller is not the configured token transferrer
   /// @param _caller The caller
   error SettlementReceiver_UnauthorizedCaller(address _caller);
@@ -37,6 +42,9 @@ interface ISettlementReceiver {
   /// @notice The delivered token is not the configured one
   /// @param _token The delivered token
   error SettlementReceiver_InvalidToken(address _token);
+
+  /// @notice The merchant is the zero address
+  error SettlementReceiver_ZeroAddress();
 
   /// @notice The delivered amount is zero
   error SettlementReceiver_ZeroAmount();
@@ -73,4 +81,14 @@ interface ISettlementReceiver {
   /// @param _paymentId The payment id
   /// @return _status The status, None for an unknown payment
   function statusOf(bytes32 _paymentId) external view returns (Status _status);
+
+  /// @notice Allow or disallow a merchant, owner only
+  /// @param _merchant The merchant
+  /// @param _allowed Whether payments for the merchant settle
+  function setMerchant(address _merchant, bool _allowed) external;
+
+  /// @notice The credited balance a merchant can withdraw
+  /// @param _merchant The merchant
+  /// @return _credit The credit
+  function creditOf(address _merchant) external view returns (uint256 _credit);
 }
