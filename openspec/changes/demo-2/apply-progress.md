@@ -76,6 +76,16 @@ Notes: `origin/develop` is a single initial commit, so the script diff guard com
 Tasks 11.1 and 11.2 are marked `[x]`. `adapters/sender.ts` `LocalCcipSender` (checks `isChainSupported`, `getFee`, then `ccipSend` with `value` = fee; message ID from the router `MessageExecuted` event; `transport = 'local'`), `adapters/extra-args.ts` `extraArgsV3`, `tokens.ts`. The router ABI is a viem `parseAbi` human-readable ABI (IRouterClient is not in the generated `src/` ABIs). The carried item is closed: guarded `write` passes `ContractCall.value`.
 Notes: `destinationChainId` maps to a selector through a `lanes` option; the message is data-only (amount travels in the payload). `track` throws until the hop tracker (PR 12). The demo package gained `@hackatwin/core` and `viem` dependencies and `types: ["node"]`. The lockfile is pnpm 12 format, so installs ran with the cached 12.16.1 binary.
 
+## Batch 9 (PR 12, split by the decode vs map seam): done
+
+| Task PR | Branch | Issue | PR | Red | Green | Authored lines |
+|---|---|---|---|---|---|---|
+| 12a decode | `feature/hop-decode` | #250 | #251 | 1cc4d22 | 1b3d1be | 341 added |
+| 12b map | `feature/hop-tracker` | #249 | #252 | e3047af | 6b203ab | about 505 added, 111 of them the recorded JSON fixture |
+
+Tasks 12.1 and 12.2 are marked `[x]`. 12a: `tracker-decode.ts` (`TrackedLog`, `LogReader`, `decodeLogs` with parseAbi event ABIs per contract role), `log-reader.ts` (`ClientLogReader`), `tracker.fixtures.ts` (log builders that encode like the node). 12b: `tracker.ts` (`HopTracker.track` yields hops, `events` yields `hop` agent events, `HopProgress` port with an in-memory default, `MessageNotFoundError`), `LocalCcipSender.track` delegates to an optional tracker.
+Notes: the Rejected hop carries the broker reason through a `TrackedHop.reason` extension, so core `Hop` is unchanged. A CallFailed log has no payment ID, so it is matched by its recipient (the receiver). The Resume scenario is tested with hops 0 to 2 already emitted (indices are skipped at or below the recorded progress), since the spec wording (hops 0 and 1 emitted, then 3 and 4) would skip index 2. Fixtures are encoded from the event ABIs, not captured from a live anvil; PR 16 records real ones. The DispatchFailed broker event keeps Pending and stops there. One pass per `track` call; polling is a repeated call.
+
 ## Deviations and notes
 
 - `WarpMessengerStub` defines its own `WarpMessage` struct and does not import an upstream `IWarpMessenger` (none exists under `src/interfaces/external/icm/`). Field layout `(bytes32 sourceChainID, address originSenderAddress, bytes payload)` and the `WarpMessageSent(bytes32 indexed messageID, bytes message)` event follow design D7; conformance with the upstream struct is verified by the PR 1 spike (PR 1 task 1.5).
