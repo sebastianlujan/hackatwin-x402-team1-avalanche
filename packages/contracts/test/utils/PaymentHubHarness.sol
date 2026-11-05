@@ -32,6 +32,10 @@ contract PaymentHubHarness is PaymentHub {
     _budgets[_authorizer][_authorized][_token] = _budget;
   }
 
+  function exposed_credit(address _token, address _merchant) external view returns (uint256 _credit) {
+    _credit = _credits[_token][_merchant];
+  }
+
   function exposed_budget(
     address _authorizer,
     address _authorized,
@@ -44,15 +48,7 @@ contract PaymentHubHarness is PaymentHub {
     _budget = _budgets[_authorizer][_authorized][_token];
   }
 
-  function settle(Id, bytes32) external pure {
-    revert();
-  }
-
   function dispatch(Id, bytes32) external pure {
-    revert();
-  }
-
-  function withdraw(address) external pure {
     revert();
   }
 }
