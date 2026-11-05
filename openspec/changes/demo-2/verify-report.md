@@ -1,26 +1,61 @@
 ```yaml
 schema: gentle-ai.verify-result/v1
-evidence_revision: sha256:be0f1a9b837afb79a6cdd4f830e5ee1cc00799f383d7cfb865408e7c3c0d9114
-verdict: fail
-blockers: 1
-critical_findings: 1
-requirements: 43/44
-scenarios: 110/113
+evidence_revision: sha256:9c565e9d74557150883d20b0b1f402e8b37a84d067fcdff17f3ea87de4b84914
+verdict: pass_with_warnings
+blockers: 0
+critical_findings: 0
+requirements: 44/44
+scenarios: 113/113
 test_command: pnpm vitest run --project default
 test_exit_code: 0
-test_output_hash: sha256:6ae8c7a7461c582b9a98c7c7bf597a650d7662206cb23fb1f4ca92edeaddc74d
+test_output_hash: sha256:9572f813a458b206e3b79d15dffc58e04dbc4763356b49b0e0bbc170b45092e3
 build_command: forge build
 build_exit_code: 0
-build_output_hash: sha256:68e4ed0c77bd2ec112abde6f2b3ac30b284fda822b59cc1e2e842d6427f78edf
+build_output_hash: sha256:a7bf693faba3ffecf7f3f6c8a9f1680d1b3de5fe7b94f17b8f37b9b8f022981d
 ```
 
-## Verification Report
+## Re-verify after C1 correction (PR #272, 5e640df)
+
+**Date**: 2026-11-04
+**Code under test**: `feature/labels-selector-guard` at `5e640df` (PR #272, issue #271), stacked on #270. Working tree clean. `git diff origin/feature/e2e-crosschain-relay HEAD` touches only `demos/02-l1-crosschain/labels.test.ts` (+32 lines).
+**Verdict**: PASS WITH WARNINGS. 0 CRITICAL, 6 WARNING, 6 SUGGESTION. C1 and W7 are closed.
+
+### Gates at 5e640df
+
+| Command | Result |
+|---|---|
+| `cd packages/contracts && forge build` | exit 0 |
+| `cd packages/contracts && forge test` | exit 0, 236 passed, 0 failed, 1 skipped (237), 38 suites |
+| `pnpm vitest run --project default` | exit 0, 113 files, 868 tests passed (866 before plus the 2 new cases) |
+| `pnpm test:local` (`pgrep -l anvil` empty before) | exit 0, 8 files, 37 tests passed, 31.3 s |
+| `pnpm -r --if-present typecheck` | exit 0 |
+| `pnpm biome check .` | exit 0, 423 files, no fixes |
+| `pgrep -l anvil` after | empty |
+
+### C1 and W7 resolution
+
+- C1 (Selector lookup banned): CLOSED. The new case "keeps the selector and chain-name lookups out of the local label code" reads `labels.ts`, `root.ts` and every non-test `payment-agent/*.ts` and asserts no `16015286601757825753`, no `sepolia` and no selector-to-name lookup pattern. The `sepolia` check skips `labels.ts` only. That exclusion is justified: `rg` shows the single `sepolia` occurrence in `labels.ts` is line 9, the `findLiveReferences` deny-list regex (`/sepolia|ccip\.chain\.link|snowtrace|https:\/\//gi`), which the spec itself requires. `root.ts` and `payment-agent/*.ts` stay fully covered, and `labels.ts` still gets the selector and lookup-pattern checks. RED proven independently: appending the selector in a comment to `root.ts` failed the case with `root.ts: expected ... not to contain '16015286601757825753'` (1 failed, 5 passed); reverted with `git checkout`, tree clean.
+- W7 (Same selector): CLOSED. The case "labels a profile with the Sepolia-equal source selector from the profile, never Sepolia" builds a profile with that selector, asserts the marker is the profile name `local-crosschain` and that the banner text has no `sepolia`. It is a modest unit check (the full run is still covered by the e2e Scan), but it now asserts the scenario directly. The apply-progress records its own temporary-break evidence for both assertions.
+
+### Re-classified findings
+
+- CRITICAL (0): none. C1 closed.
+- WARNING (6): W1 to W6 unchanged. W7 closed. W2 and W6 remain archive-time actions.
+- SUGGESTION (6): S1 to S6 unchanged.
+
+### Issues blocking archive
+
+None. Next: sdd-archive (amend the hop-tracking "Resume mid-flight" text for W2 and drop or repoint the pinned script-diff guard for W6 at archive).
+
+---
+
+## Original verification (superseded by the re-verify above)
 
 **Change**: demo-2 (PLAN M8, local cross-chain dev base)
 **Version**: N/A
 **Mode**: Strict TDD
 **Code under test**: `origin/feature/e2e-crosschain-relay` at `0984bcf` (PR #270, stack #226 to #270, 61 commits since `3a5c8c4`). Working tree clean.
-**Verdict**: FAIL on the strict rule (1 CRITICAL: a spec scenario with no covering test). The behavior itself holds by source search; the fix is one small guard test. 1 CRITICAL, 7 WARNING, 6 SUGGESTION.
+**Verdict**: FAIL on the strict rule (1 CRITICAL: a spec scenario with no covering test). The behavior itself holds by source search; the fix is one small guard test. 1 CRITICAL, 7 WARNING, 6 SUGGESTION (original counts; see the re-verify section for the current ones).
 
 ### Completeness
 
