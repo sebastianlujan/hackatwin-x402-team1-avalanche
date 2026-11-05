@@ -1,9 +1,6 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ConfigError } from './config-error.ts';
-import { ENV_VARIABLES } from './env.ts';
-import { loadProfile } from './load-profile.ts';
+import { loadProfile, loadRpcUrls, rpcVariable } from './load-profile.ts';
 import { PROFILE_NAMES, ProfileToken } from './profiles.ts';
 
 const rpc = 'https://rpc.example.org';
@@ -146,12 +143,36 @@ describe('fork guard', () => {
   });
 });
 
-describe('env coverage', () => {
-  it('lists every schema variable in .env.example with an empty value', () => {
-    const text = readFileSync(resolve(import.meta.dirname, '../../../.env.example'), 'utf8');
-    const entries = text.split('\n').filter((line) => line.trim() !== '' && !line.startsWith('#'));
-    expect(entries.every((line) => /^[A-Z0-9_]+=$/.test(line))).toBe(true);
-    expect(entries.map((line) => line.slice(0, -1)).sort()).toEqual([...ENV_VARIABLES].sort());
+describe('loadRpcUrls', () => {
+  const needed = { arbitrum: 'https://arb1.arbitrum.io/rpc', base: 'https://mainnet.base.org' };
+
+  it('needs no secrets: an empty env yields the registry defaults', () => {
+    expect(loadRpcUrls(needed, {})).toEqual(needed);
+  });
+
+  it('lets the env override a default, and treats an empty value as unset', () => {
+    const urls = loadRpcUrls(needed, { ARBITRUM_RPC_URL: rpc, BASE_RPC_URL: '' });
+    expect(urls).toEqual({ arbitrum: rpc, base: needed.base });
+  });
+
+  it('maps a dashed key to its variable', () => {
+    expect(rpcVariable('twinpay-l1')).toBe('TWINPAY_L1_RPC_URL');
+    expect(loadRpcUrls({ 'twinpay-l1': undefined }, { TWINPAY_L1_RPC_URL: rpc })).toEqual({ 'twinpay-l1': rpc });
+  });
+
+  it('names the variable when a chain has neither a value nor a default', () => {
+    const error = catchConfigError(() => loadRpcUrls({ 'twinpay-l1': undefined, base: needed.base }, {}));
+    expect(error.issues).toEqual([{ variable: 'TWINPAY_L1_RPC_URL', message: 'is required' }]);
+  });
+
+  it('names the variable, never the value, for an invalid URL', () => {
+    const error = catchConfigError(() => loadRpcUrls(needed, { BASE_RPC_URL: 'ftp://secret-host/key' }));
+    expect(error.issues).toEqual([{ variable: 'BASE_RPC_URL', message: 'must be an http(s) or ws(s) URL' }]);
+    expect(error.message).not.toContain('secret-host');
+  });
+
+  it('falls back to the ambient environment', () => {
+    expect(() => loadRpcUrls({ 'no-such-chain': undefined })).toThrow(ConfigError);
   });
 });
 

@@ -1,4 +1,5 @@
 import { ConfigError, type ConfigIssue } from './config-error.ts';
+import { isRpcUrl } from './env.ts';
 import { definitions, PROFILE_NAMES, type Profile, type ProfileName, staticValues } from './profiles.ts';
 
 export type Env = Readonly<Record<string, string | undefined>>;
@@ -41,4 +42,24 @@ export function loadProfile(name: string, env: Env = process.env): Profile {
     throw new ConfigError([...guarded, ...rest.filter((issue) => !seen.has(issue.variable))]);
   }
   return { name, ...statics, ...staticValues, env: result.data } as unknown as Profile;
+}
+
+// Maps each needed registry key to its RPC URL: env `<KEY>_RPC_URL` wins, else the registry default.
+export const rpcVariable = (key: string): string => `${key.toUpperCase().replaceAll('-', '_')}_RPC_URL`;
+
+export function loadRpcUrls(
+  needed: Readonly<Record<string, string | undefined>>,
+  env: Env = process.env,
+): Record<string, string> {
+  const urls: Record<string, string> = {};
+  const issues: ConfigIssue[] = [];
+  for (const [key, fallback] of Object.entries(needed)) {
+    const variable = rpcVariable(key);
+    const url = env[variable] || fallback;
+    if (!url) issues.push({ variable, message: 'is required' });
+    else if (!isRpcUrl(url)) issues.push({ variable, message: 'must be an http(s) or ws(s) URL' });
+    else urls[key] = url;
+  }
+  if (issues.length > 0) throw new ConfigError(issues);
+  return urls;
 }

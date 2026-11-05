@@ -20,9 +20,19 @@ export interface Receipt {
   readonly logs: readonly Log[];
 }
 
+export interface ReadOptions {
+  readonly blockNumber?: bigint;
+}
+
+export interface ReadResult<T> {
+  readonly value: T;
+  readonly blockNumber: bigint;
+}
+
 export interface ChainClient {
   readonly chainId: number;
-  read<T>(call: ContractCall): Promise<T>;
+  blockNumber(): Promise<bigint>;
+  read<T>(call: ContractCall, options?: ReadOptions): Promise<ReadResult<T>>;
   write(call: ContractCall): Promise<Hex>;
   waitForReceipt(txHash: Hex): Promise<Receipt>;
 }
