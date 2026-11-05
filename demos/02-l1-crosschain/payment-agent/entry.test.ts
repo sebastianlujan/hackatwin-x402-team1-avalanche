@@ -108,7 +108,7 @@ describe('runDemo2', () => {
     expect(lines[0]).toBe(BANNER);
     expect(lines[1]).toBe('run started: agent payer, profile local-crosschain, llm scripted');
     expect(lines).toContain(`hop 4: local Settled on chain 31338 tx ${hop(4, 'Settled').txHash}`);
-    expect(lines).toContain('policy decision: allowed 1.00 USD (within_budget)');
+    expect(lines).toContain('policy decision: allowed 1.000000 USD (within_budget)');
   });
 
   it('prints the banner first even when the run cannot start', async () => {

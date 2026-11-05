@@ -1,5 +1,4 @@
-import type { CrossChainMessenger, Hop, PaymentStatus } from '@hackatwin/core';
-import { FakeCrossChainMessenger } from '@hackatwin/core/testing';
+import type { CrossChainMessenger, Hop, PaymentStatus, Transfer } from '@hackatwin/core';
 
 export const hop = (index: number, status: PaymentStatus, chainId = 31337): Hop => ({
   index,
@@ -10,14 +9,18 @@ export const hop = (index: number, status: PaymentStatus, chainId = 31337): Hop 
 });
 
 // Each `track` call reveals the next batch, like the real tracker after its progress mark.
-export class RelayedMessenger extends FakeCrossChainMessenger implements CrossChainMessenger {
-  private readonly batches: Hop[][];
+export class RelayedMessenger implements CrossChainMessenger {
+  readonly sent: Transfer[] = [];
   tracks = 0;
+  private readonly batches: Hop[][];
   constructor(batches: Hop[][]) {
-    super();
     this.batches = batches;
   }
-  override async *track(_messageId: string): AsyncIterable<Hop> {
+  async send(transfer: Transfer): Promise<string> {
+    this.sent.push(transfer);
+    return `message-${this.sent.length}`;
+  }
+  async *track(_messageId: string): AsyncIterable<Hop> {
     yield* this.batches[Math.min(this.tracks++, this.batches.length - 1)] ?? [];
   }
 }
