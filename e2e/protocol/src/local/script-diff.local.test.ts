@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { runGit } from './icm-services.ts';
 import { repoRoot } from './teleporter.ts';
 
-const DEMO2_BASE = '3a5c8c4851ef82a4161461f7aa92f6f8682d1db7';
+const DEMO2_BASE = '4a6f791abeeefff46876cad65ccf4acbce433970';
 
 describe('Script diff', () => {
   // The demo-2 change adds no Solidity: drop this guard when the change is archived.
