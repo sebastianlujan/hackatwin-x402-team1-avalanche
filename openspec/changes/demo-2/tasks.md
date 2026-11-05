@@ -121,8 +121,8 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 15: T8.4 root and docs
 
-- [ ] 15.1 RED: One payment, No key, Run events, First line, Scan (`sepolia`, `ccip.chain.link`, `snowtrace`, `https://`), Commands exist
-- [ ] 15.2 GREEN `root.ts`, `payment-agent/*.ts`, banner, `docs/demos.md`
+- [x] 15.1 RED: One payment, No key, Run events, First line, Scan (`sepolia`, `ccip.chain.link`, `snowtrace`, `https://`), Commands exist
+- [x] 15.2 GREEN `root.ts`, `payment-agent/*.ts`, banner, `docs/demos.md`
 
 ## PR 16: T8.5 E2E
 
