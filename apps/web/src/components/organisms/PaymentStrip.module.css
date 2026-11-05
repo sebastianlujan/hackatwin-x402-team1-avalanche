@@ -1,0 +1,37 @@
+.strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: grid;
+  gap: var(--hk-space-1);
+  padding: var(--hk-space-3) var(--hk-space-3) var(--hk-space-3) 0;
+  border-top: 2px solid var(--hk-line);
+  color: var(--hk-fg-muted);
+}
+
+.name {
+  font-size: var(--hk-text-lg);
+  font-weight: 600;
+}
+
+.state {
+  font-size: var(--hk-text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.step[data-state="done"] {
+  border-top-color: var(--hk-accent);
+  color: var(--hk-fg);
+}
+
+.step[data-state="stopped"] {
+  border-top-style: dashed;
+  border-top-color: var(--hk-accent);
+  color: var(--hk-accent);
+}
