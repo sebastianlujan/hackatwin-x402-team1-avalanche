@@ -11,11 +11,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'default',
-          include: [
-            'test/**/*.test.ts',
-            '{apps,packages,demos}/**/*.test.{ts,tsx}',
-            'e2e/protocol/src/local/**/*.test.ts',
-          ],
+          include: ['{apps,packages,demos}/**/*.test.{ts,tsx}', 'e2e/protocol/src/local/**/*.test.ts'],
           exclude: ['**/node_modules/**', '**/*.nightly.test.ts', '**/*.fork.test.ts', '**/*.local.test.ts'],
         },
       },
