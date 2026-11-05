@@ -1104,6 +1104,267 @@ export const abis = {
       ]
     }
   ],
+  'src/SettlementReceiver.sol:SettlementReceiver': [
+    {
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "_transferrer",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_sourceBlockchainId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_originTransferrer",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_originSender",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_token",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "ORIGIN_SENDER",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "ORIGIN_TRANSFERRER",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "SOURCE_BLOCKCHAIN_ID",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "TOKEN",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "TRANSFERRER",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "receiveTokens",
+      "inputs": [
+        {
+          "name": "_sourceBlockchainID",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_originTokenTransferrerAddress",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_originSenderAddress",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_token",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_amount",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "_payload",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "statusOf",
+      "inputs": [
+        {
+          "name": "_paymentId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "_status",
+          "type": "uint8",
+          "internalType": "enum ISettlementReceiver.Status"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "event",
+      "name": "StatusChanged",
+      "inputs": [
+        {
+          "name": "_paymentId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_from",
+          "type": "uint8",
+          "indexed": false,
+          "internalType": "enum ISettlementReceiver.Status"
+        },
+        {
+          "name": "_to",
+          "type": "uint8",
+          "indexed": false,
+          "internalType": "enum ISettlementReceiver.Status"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InvalidOriginSender",
+      "inputs": [
+        {
+          "name": "_originSender",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InvalidOriginTransferrer",
+      "inputs": [
+        {
+          "name": "_originTransferrer",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InvalidPayload",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InvalidSourceBlockchain",
+      "inputs": [
+        {
+          "name": "_sourceBlockchainId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InvalidToken",
+      "inputs": [
+        {
+          "name": "_token",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InvalidTransition",
+      "inputs": [
+        {
+          "name": "_current",
+          "type": "uint8",
+          "internalType": "enum ISettlementReceiver.Status"
+        },
+        {
+          "name": "_to",
+          "type": "uint8",
+          "internalType": "enum ISettlementReceiver.Status"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_UnauthorizedCaller",
+      "inputs": [
+        {
+          "name": "_caller",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_ZeroAmount",
+      "inputs": []
+    }
+  ],
   'src/interfaces/IIcttMessenger.sol:IIcttMessenger': [
     {
       "type": "function",
@@ -1917,7 +2178,198 @@ export const abis = {
       "inputs": []
     }
   ],
-  'src/interfaces/ISettlementReceiver.sol:ISettlementReceiver': [],
+  'src/interfaces/ISettlementReceiver.sol:ISettlementReceiver': [
+    {
+      "type": "function",
+      "name": "ORIGIN_SENDER",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "_sender",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "ORIGIN_TRANSFERRER",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "_transferrer",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "SOURCE_BLOCKCHAIN_ID",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "_id",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "TOKEN",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "_token",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "TRANSFERRER",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "_transferrer",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "statusOf",
+      "inputs": [
+        {
+          "name": "_paymentId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "_status",
+          "type": "uint8",
+          "internalType": "enum ISettlementReceiver.Status"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "event",
+      "name": "StatusChanged",
+      "inputs": [
+        {
+          "name": "_paymentId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_from",
+          "type": "uint8",
+          "indexed": false,
+          "internalType": "enum ISettlementReceiver.Status"
+        },
+        {
+          "name": "_to",
+          "type": "uint8",
+          "indexed": false,
+          "internalType": "enum ISettlementReceiver.Status"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InvalidOriginSender",
+      "inputs": [
+        {
+          "name": "_originSender",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InvalidOriginTransferrer",
+      "inputs": [
+        {
+          "name": "_originTransferrer",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InvalidPayload",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InvalidSourceBlockchain",
+      "inputs": [
+        {
+          "name": "_sourceBlockchainId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InvalidToken",
+      "inputs": [
+        {
+          "name": "_token",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_InvalidTransition",
+      "inputs": [
+        {
+          "name": "_current",
+          "type": "uint8",
+          "internalType": "enum ISettlementReceiver.Status"
+        },
+        {
+          "name": "_to",
+          "type": "uint8",
+          "internalType": "enum ISettlementReceiver.Status"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_UnauthorizedCaller",
+      "inputs": [
+        {
+          "name": "_caller",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SettlementReceiver_ZeroAmount",
+      "inputs": []
+    }
+  ],
   'src/interfaces/external/icm/IERC20SendAndCallReceiver.sol:IERC20SendAndCallReceiver': [
     {
       "type": "function",
