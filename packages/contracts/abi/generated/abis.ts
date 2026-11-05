@@ -767,6 +767,31 @@ export const abis = {
       ]
     }
   ],
+  'src/interfaces/IPaymentCallback.sol:IPaymentCallback': [
+    {
+      "type": "function",
+      "name": "onPaymentSettled",
+      "inputs": [
+        {
+          "name": "_paymentId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_token",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_amount",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    }
+  ],
   'src/interfaces/IPaymentHub.sol:IPaymentHub': [
     {
       "type": "function",
@@ -1408,5 +1433,6 @@ export const abis = {
     }
   ],
   'src/libraries/LaneParamsLib.sol:LaneParamsLib': [],
+  'src/libraries/PaymentCallbackLib.sol:PaymentCallbackLib': [],
   'src/libraries/PaymentStateLib.sol:PaymentStateLib': [],
 } as const;
