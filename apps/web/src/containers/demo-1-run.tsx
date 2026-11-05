@@ -1,75 +1,24 @@
 'use client';
 
 import { useEffect, useReducer, useRef, useState } from 'react';
-import type { Envelope } from '../lib/envelope.ts';
-import {
-  CLAUDE_DISABLED_REASON,
-  createStarter,
-  initialStream,
-  type Llm,
-  modeBadge,
-  type StreamState,
-  streamReducer,
-} from '../lib/starter.ts';
-
-export interface Demo1RunViewProps {
-  readonly stream: StreamState;
-  readonly claudeAvailable: boolean;
-  readonly busy: boolean;
-  readonly postError?: string | undefined;
-  readonly onStart: (llm: Llm) => void;
-}
-
-const line = ({ seq, event }: Envelope): string => {
-  switch (event.type) {
-    case 'llm.reasoning':
-      return `${seq} reasoning: ${event.text}`;
-    case 'resource.received':
-      return `${seq} resource.received ${event.status}`;
-    case 'run.finished':
-      return `${seq} run.finished ${event.reason}${event.message ? `: ${event.message}` : ''}`;
-    default:
-      return `${seq} ${event.type}`;
-  }
-};
-
-export function Demo1RunView({ stream, claudeAvailable, busy, postError, onStart }: Demo1RunViewProps) {
-  const badge = modeBadge(stream.frames);
-  return (
-    <main>
-      <h1>Demo 1</h1>
-      <div>
-        <button type="button" disabled={busy || !claudeAvailable} onClick={() => onStart('claude')}>
-          Run with Claude
-        </button>
-        <button type="button" disabled={busy} onClick={() => onStart('scripted')}>
-          Run scripted
-        </button>
-        {claudeAvailable ? null : <p>Claude is off: {CLAUDE_DISABLED_REASON}</p>}
-      </div>
-      {badge === undefined ? null : <p>{badge}</p>}
-      {postError === undefined ? null : <p role="alert">{postError}</p>}
-      {stream.status === 'reconnecting' ? <p role="status">Reconnecting</p> : null}
-      {stream.status === 'error' ? <p role="alert">{stream.error}</p> : null}
-      <ol>
-        {stream.frames.map((frame) => (
-          <li key={frame.seq}>{line(frame)}</li>
-        ))}
-      </ol>
-    </main>
-  );
-}
+import { Demo1Screen } from '../components/templates/Demo1Screen.tsx';
+import type { Demo1Copy } from '../content/copy.ts';
+import { balanceView, deriveDemo1 } from '../lib/demo-1-state.ts';
+import { parseRunRecord, type RunRecord } from '../lib/run-record.ts';
+import { createStarter, initialStream, type Llm, modeBadge, streamReducer } from '../lib/starter.ts';
 
 export interface Demo1RunProps {
+  readonly copy: Demo1Copy;
   readonly initialRunId?: string | undefined;
   readonly claudeAvailable: boolean;
 }
 
-export function Demo1Run({ initialRunId, claudeAvailable }: Demo1RunProps) {
+export function Demo1Run({ copy, initialRunId, claudeAvailable }: Demo1RunProps) {
   const [runId, setRunId] = useState(initialRunId);
   const [stream, dispatch] = useReducer(streamReducer, initialStream);
   const [posting, setPosting] = useState(false);
   const [postError, setPostError] = useState<string>();
+  const [record, setRecord] = useState<RunRecord>({});
   const source = useRef<EventSource>(undefined);
   const starter = useRef(
     createStarter((llm) =>
@@ -98,6 +47,20 @@ export function Demo1Run({ initialRunId, claudeAvailable }: Demo1RunProps) {
     starter.release();
   }, [stream.status, starter]);
 
+  // Balances live on the run record: before is there from the start, after once the run finished.
+  const finished = stream.status === 'finished';
+  useEffect(() => {
+    if (runId === undefined) return;
+    let current = true;
+    fetch(`/api/runs/${runId}`)
+      .then((response) => (response.ok ? response.json() : undefined))
+      .then((body: unknown) => current && setRecord(parseRunRecord(body)))
+      .catch(() => undefined);
+    return () => {
+      current = false;
+    };
+  }, [runId, finished]);
+
   const start = (llm: Llm): void => {
     setPosting(true);
     setPostError(undefined);
@@ -110,8 +73,12 @@ export function Demo1Run({ initialRunId, claudeAvailable }: Demo1RunProps) {
 
   const streaming = stream.status === 'live' || stream.status === 'reconnecting';
   return (
-    <Demo1RunView
+    <Demo1Screen
+      copy={copy}
+      view={deriveDemo1(stream.frames)}
+      balances={balanceView(record.before, record.after)}
       stream={stream}
+      scripted={modeBadge(stream.frames) !== undefined}
       claudeAvailable={claudeAvailable}
       busy={posting || streaming}
       postError={postError}
