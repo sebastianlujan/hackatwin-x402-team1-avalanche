@@ -126,9 +126,9 @@ Runtime harness: PRs 1, 6 to 16 run on two real anvils (PRs 2 to 5, 11 to 15 als
 
 ## PR 16: T8.5 E2E
 
-- [ ] 16.1 `demo-2.local.test.ts`: Hub, Receiver, One event per hop (`None`, `Pending`, `Dispatched`, `Received`, `Settled`), Full track
-- [ ] 16.2 `Rejected` (Not allowlisted), Fallback balance, broker rejection, Resume
-- [ ] 16.3 Scan in suite, Teardown (no anvil pid), Clean tree (`git status --porcelain` empty), no anvil left running
+- [x] 16.1 `demo-2.local.test.ts`: Hub, Receiver, One event per hop (`None`, `Pending`, `Dispatched`, `Received`, `Settled`), Full track
+- [x] 16.2 `Rejected` (Not allowlisted), Fallback balance, broker rejection, Resume
+- [x] 16.3 Scan in suite, Teardown (no anvil pid), Clean tree (`git status --porcelain` empty), no anvil left running
 
 ## PLAN Done-when mapping (docs/PLAN.md M8)
 
