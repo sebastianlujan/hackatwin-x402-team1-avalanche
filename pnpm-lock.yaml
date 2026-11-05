@@ -362,9 +362,24 @@ importers:
 
   e2e/protocol:
     dependencies:
+      '@hackatwin/agent-kit':
+        specifier: workspace:*
+        version: link:../../packages/agent-kit
+      '@hackatwin/chains':
+        specifier: workspace:*
+        version: link:../../packages/chains
+      '@hackatwin/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@hackatwin/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@hackatwin/demo-01-x402-twin':
         specifier: workspace:*
         version: link:../../demos/01-x402-twin
+      viem:
+        specifier: 'catalog:'
+        version: 2.57.16(typescript@7.0.2)(zod@4.6.7)
 
   e2e/smoke: {}
 
