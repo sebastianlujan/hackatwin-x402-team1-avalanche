@@ -179,6 +179,7 @@ export async function createGuardedClients({
             abi: call.abi as Abi,
             functionName: call.functionName,
             args: call.args as readonly unknown[],
+            ...(call.value !== undefined && { value: call.value }),
           });
         },
         async waitForReceipt(txHash: Hex): Promise<Receipt> {

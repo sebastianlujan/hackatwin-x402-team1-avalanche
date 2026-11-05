@@ -16,6 +16,7 @@ function node(chainId: number, clientVersion = 'anvil/v1.5.1') {
       requests.push({ method, params });
       if (method === 'eth_chainId') return toHex(chainId);
       if (method === 'web3_clientVersion') return clientVersion;
+      if (method === 'eth_sendTransaction') return `0x${'ab'.repeat(32)}`;
       return null;
     },
   });
@@ -30,6 +31,16 @@ describe('guarded clients on a local chain', () => {
     expect(guarded.chainId).toBe(31337);
     await guarded.cheats().setBalance(who, 5n);
     expect(rpc.methods()).toContain('anvil_setBalance');
+  });
+
+  it('passes the call value to the wallet write', async () => {
+    const rpc = node(31337);
+    const guarded = await createGuardedClients({ chain: hub, rpcUrl: LOCAL, transport: rpc.transport });
+    const account = { address: who, type: 'json-rpc' } as const;
+    const abi = [{ type: 'function', name: 'f', stateMutability: 'payable', inputs: [], outputs: [] }] as const;
+    await guarded.chainClient(account).write({ address: who, abi, functionName: 'f', value: 7n });
+    const sent = rpc.requests.find((r) => r.method === 'eth_sendTransaction')?.params?.[0] as { value?: string };
+    expect(sent.value).toBe('0x7');
   });
 
   it('installs code with anvil_setCode', async () => {
