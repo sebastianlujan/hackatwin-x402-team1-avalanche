@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
+import { Ownable2Step } from '@openzeppelin/contracts/access/Ownable2Step.sol';
 import { Script } from 'forge-std/Script.sol';
 import { VmSafe } from 'forge-std/Vm.sol';
 
@@ -69,6 +70,16 @@ abstract contract Deploy is Script {
   {
     _requireParam(_json, _key, _entry);
     _value = vm.parseJsonUint(_json, string.concat('.', _entry));
+  }
+
+  /// @notice Offer ownership of a contract to the owner, a no-op when the owner is the deployer
+  function _offerOwnership(address _target, address _deployer, address _owner) internal {
+    if (_owner != _deployer) Ownable2Step(_target).transferOwnership(_owner);
+  }
+
+  /// @notice The pending owner of a contract, zero when none
+  function _pendingOwnerOf(address _target) internal view returns (address _pending) {
+    _pending = Ownable2Step(_target).pendingOwner();
   }
 
   /// @notice Write the deployment record, only in the script broadcast context

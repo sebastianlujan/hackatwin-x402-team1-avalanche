@@ -20,6 +20,8 @@ the messenger as its only valid origin sender. Both are immutable, so one must b
 - The L1 script asserts the deployer nonce equals the predicted one before broadcasting and asserts the deployed address
   after.
 - A burned nonce means a new messenger, because nothing is mutable.
+- Contracts are constructed with the deployer as owner and ownership is offered to the params owner afterwards. The
+  offer is a transaction after the receiver deployment, so the receiver deployer nonce prediction is unchanged.
 
 Rejected: a set-once receiver field on the messenger (mutable trust in a window after deployment); CREATE3 (needs a
 factory contract on each chain).

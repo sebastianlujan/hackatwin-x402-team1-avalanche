@@ -72,6 +72,11 @@ forge script script/DeployL1.s.sol:DeployL1 --fork-url http://127.0.0.1:8545
 FUJI_FORK=1 forge test --match-contract UnitDeployFuji   # reads Fuji through the registry RPC, sends nothing
 ```
 
+Every contract is constructed with the deployer as its owner, the `onlyOwner` config runs as the deployer, then the
+scripts call `transferOwnership(owner)` unless `owner` equals the deployer. The record holds `pendingOwner` (the zero
+address when no transfer is pending). The owner must then call `acceptOwnership()` on the hub, the broker and the
+receiver (Ownable2Step) from its own account; until it does, the deployer stays the owner.
+
 The broadcast gate stays closed: no script or workflow enables it, and signers are keystores selected with
 `--account <keystore-name>` (never a key in the environment or an argument). Real params arrive with the testnet deploy
 (T7.12): until then the committed params files lack the deployer, owner and fallback recipient and a real run reverts
@@ -80,7 +85,7 @@ The broadcast gate stays closed: no script or workflow enables it, and signers a
 ## Verification templates
 
 Reuse the build settings (solc `0.8.30`, `cancun`, optimizer on with 10000 runs). Constructor arguments come from
-`cast abi-encode` with the same values the script used.
+`cast abi-encode` with the same values the script used (the owner argument is the deployer, ownership moves afterwards).
 
 Fuji, Snowtrace (served by Routescan; its Etherscan-compatible read API answered `getabi` for the Fuji USDC contract on
 2026-11-04, a verification submit has not been run):
@@ -89,7 +94,7 @@ Fuji, Snowtrace (served by Routescan; its Etherscan-compatible read API answered
 forge verify-contract <address> src/PaymentHub.sol:PaymentHub --chain-id 43113 \
   --verifier-url 'https://api.routescan.io/v2/network/testnet/evm/43113/etherscan' --etherscan-api-key verifyContract \
   --compiler-version 0.8.30 --evm-version cancun --optimizer-runs 10000 \
-  --constructor-args "$(cast abi-encode 'constructor(address)' <owner>)"
+  --constructor-args "$(cast abi-encode 'constructor(address)' <deployer>)"
 ```
 
 L1, Builder Hub verifier (UNVERIFIED: the L1 and its explorer do not exist yet, so this command has never run;
