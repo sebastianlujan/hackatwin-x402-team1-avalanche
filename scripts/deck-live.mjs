@@ -51,7 +51,10 @@ let world;
 const portOpen = (p) =>
   new Promise((resolve) => {
     const s = connect(p, '127.0.0.1');
-    s.on('connect', () => resolve(!s.destroy()));
+    s.on('connect', () => {
+      s.destroy();
+      resolve(true);
+    });
     s.on('error', () => resolve(false));
   });
 
