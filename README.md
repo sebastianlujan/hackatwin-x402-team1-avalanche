@@ -24,6 +24,7 @@ anvils and a CCIP simulator instead. A small web app runs Demo 1 from the browse
 | `packages/agent-kit` | Agent building blocks: ERC-8004 identity, spending policy, x402 client, LLM, and runner |
 | `packages/ui` | Design tokens and shared React atoms |
 | `docs` | `demos.md` (full runbooks), `decisions.md` (decisions and verified addresses), and diagrams |
+| `Avalanche_Workshops.html` | The workshop slides in Spanish: one HTML file, open it in a browser, works offline |
 | `.claude`, `.mcp.json`, `AGENTS.md` | Agent tooling: skills and MCP servers used to build the repo |
 
 Each package keeps its tests in its own `test/` folder.
