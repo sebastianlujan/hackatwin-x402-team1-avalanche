@@ -1135,28 +1135,28 @@
  "text": "Demo 1: un agente paga una API.\nDemo 2: un pago cruza a una L1.\nNodos: qué responde cada cadena.\nL1 real: cómo se conecta.",
  "notes": "LAS DEMOS\n\nPresentá el recorrido antes de correrlas. Cada slide siguiente tiene una terminal: con el servidor en vivo (http://127.0.0.1:8790) el botón ▶ ejecutar en vivo corre los comandos reales; abierto como archivo muestra corridas grabadas.",
  "annex": false,
- "layout": "cards",
+ "layout": "demo",
  "heading": "Cuatro demos, <em>un recorrido<\/em>",
  "body": [
   [
-   "DEMO 1",
-   "Un agente paga una API",
-   "Pide un dato, recibe un 402 con el precio, firma un Permit2 con el SDK x402 y el facilitator liquida en ARGt real sobre un fork de C-Chain."
+   "01",
+   "Demo 1",
+   "Un agente paga una API: 402 → firma Permit2 (SDK x402) → el facilitator liquida en ARGt real"
   ],
   [
-   "DEMO 2",
-   "Un pago cruza a una L1",
-   "Paga en el hub; ICTT manda USDC y la instrucción en un mensaje ICM, y el relayer lo entrega en la L1, donde se liquida."
+   "02",
+   "Demo 2",
+   "El pago cruza a una L1: hub → ICTT + mensaje ICM → el relayer lo entrega y se liquida"
   ],
   [
-   "NODOS",
-   "Qué responde cada cadena",
-   "Con cast le preguntamos a cada nodo su chain ID, su software y su último bloque, y leemos el recibo de la transacción."
+   "03",
+   "Nodos",
+   "Qué responde cada cadena: chain ID, último bloque y el recibo de la transacción"
   ],
   [
-   "L1 REAL",
-   "Cómo se conecta una L1",
-   "La receta para pasar de los nodos locales a Fuji y a una L1 propia: platform-cli, validador, relayer ICM y deploy."
+   "04",
+   "L1 real",
+   "Cómo se conecta: platform-cli, validador, relayer ICM y deploy en Fuji + L1"
   ]
  ],
  "takeaway": "Cada demo corre en vivo desde la terminal de su slide.",
@@ -1491,6 +1491,31 @@
     "section": "",
     "number": 14
    },
+{
+ "title": "Gracias",
+ "text": "Gracias\nX · @delegate_call\nGitHub · sebastianlujan\nRepo del workshop",
+ "notes": "CIERRE\n\nAgradecé y mostrá dónde seguir: X, GitHub y el repo del workshop con las demos y el deck.",
+ "annex": false,
+ "layout": "links",
+ "heading": "¡Gracias! <em>Sigamos en contacto<\/em>",
+ "body": [
+  [
+   "X · @delegate_call",
+   "https://x.com/delegate_call"
+  ],
+  [
+   "GitHub · sebastianlujan",
+   "https://github.com/sebastianlujan"
+  ],
+  [
+   "Repo del workshop",
+   "https://github.com/sebastianlujan/hackatwin-x402-team1-avalanche"
+  ]
+ ],
+ "takeaway": "Sebastian Lujan · WakeUp Labs · Avalanche Team1",
+ "section": "",
+ "number": 0
+},
    {
     "title": "Recorrido ilustrativo",
     "text": "Anexo · recorrido ilustrativo\nRECORRIDO ILUSTRATIVO · No representa una ejecución ni un pago real.\n01 · Pedido\nCliente pide\nun recurso\n›\n02 · 402\nServidor informa\ncondiciones\n›\n03 · Firma\nSe autoriza\nel reintento\n›\n04 · Respuesta\nTras liquidar:\nrecurso + evidencia\nSi falla la red, explicar el protocolo. No inventar hashes ni saldos.\n17 / 20\nx402 · HTTP 402  /  x402 · Facilitator\nANEXO",
