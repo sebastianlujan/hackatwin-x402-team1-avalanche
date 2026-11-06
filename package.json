@@ -12,6 +12,7 @@
     "test": "vitest run --coverage --project default",
     "build": "pnpm -r --if-present build",
     "contracts:policy": "node packages/contracts/scripts/check-policy.ts",
+    "fuji:tx": "bash packages/contracts/scripts/fuji-tx.sh",
     "quote": "node packages/pricing/scripts/quote.ts",
     "test:fork": "vitest run --project fork",
     "test:local": "vitest run --project local",
