@@ -1,8 +1,3 @@
----
-title: Demos
-sidebar_position: 3
----
-
 # Demos
 
 Runbooks for the three talk demos. Why each choice was made: [Decisions](decisions.md). Commands marked
@@ -23,8 +18,6 @@ are pinned during implementation.
 USD, quoted in ARGt from live market data, and paid in the real ARGt token over x402. No custom contract (Q4).
 
 ![Demo 1 flow](diagrams/demo-1.svg)
-
-Edit: `docs/diagrams/demo-1.excalidraw`
 
 **How it works**
 
@@ -85,9 +78,9 @@ Edit: `docs/diagrams/demo-1.excalidraw`
      origin; curl, which sends no `Origin`, still works.
 4. Rehearsal and fallback
    - `pnpm demo1 --scripted` runs the same path with zero secrets: the fork, the real ARGt, Permit2, the facilitator,
-     ERC-8004 and the policy are all live, and only the LLM is replaced by a labeled scripted plan
-     ([ADR 0008](adr/0008-scripted-llm-mode.md)). `run.started` shows `llm scripted`. Use it for development, CI and
-     rehearsal. Stage use waits on the open decision O13.
+     ERC-8004 and the policy are all live, and only the LLM is replaced by a labeled scripted plan.
+     `run.started` shows `llm scripted`. Use it for development, CI and rehearsal. Stage use waits on the open
+     decision O13.
    - If a precondition is missing, the command stops before writing anything and names the script to run.
    - No recorded fallback by decision (Q2); the demo only needs a local fork.
    - Start the fork before the talk and keep it running. If the public RPC fails at startup, try the backup RPC
@@ -100,8 +93,6 @@ Edit: `docs/diagrams/demo-1.excalidraw`
 through Chainlink CCIP and Avalanche ICM/ICTT (Q7).
 
 ![Demos 2 and 3 flow](diagrams/demo-2-3.svg)
-
-Edit: `docs/diagrams/demo-2-3.excalidraw`
 
 **How it works**
 

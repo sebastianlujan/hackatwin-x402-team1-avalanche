@@ -5,10 +5,9 @@ Solidity 0.8.30, `evm_version = 'cancun'`. Dependencies come from pnpm only (no 
 
 ## Tools
 
-Install the pinned tools once:
+Install the pinned tool once:
 
 ```bash
-cargo install bulloak --version 0.9.2 --locked
 cargo install lintspec --version 0.20.0 --locked
 ```
 
@@ -23,10 +22,8 @@ Run from `packages/contracts`:
 |---|---|
 | `forge build` and `forge test` | Compile and test |
 | `forge fmt --check` | Format check (Wonderland settings) |
-| `pnpm test:bulloak:scaffold` | Scaffold tests from `.tree` files |
-| `pnpm test:bulloak:check` | Fail when a tree and its test drift |
 | `pnpm lint:sol` and `pnpm lint:spec` | solhint and lintspec |
-| `FOUNDRY_PROFILE=deep forge test` | Deep fuzz and invariant run (nightly in `contracts-nightly.yml`) |
+| `FOUNDRY_PROFILE=deep forge test` | Deep fuzz and invariant run |
 | `forge snapshot --check --tolerance 1 --match-path 'test/gas/*'` | Gas drift check; refresh with `forge snapshot --match-path 'test/gas/*'` |
 
 ## Gas
@@ -61,7 +58,7 @@ recorded as a final `Rejected`.
 ## Deploy dry-runs
 
 `script/DeployFuji.s.sol` (hub, messenger, broker) and `script/DeployL1.s.sol` (receiver) read chain facts from
-`../chains/registry` and choices from `script/params/<chainKey>.json` (ADR 0011). Directories are overridable with
+`../chains/registry` and choices from `script/params/<chainKey>.json`. Directories are overridable with
 `CHAIN_REGISTRY_DIR`, `DEPLOY_PARAMS_DIR` and `DEPLOY_DEPLOYMENTS_DIR`; dry-runs use `test/fixtures`:
 
 ```bash

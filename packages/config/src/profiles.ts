@@ -1,4 +1,4 @@
-import { money, token } from '@hackatwin/core';
+import { money } from '@hackatwin/core';
 import { z } from 'zod';
 import { type EnvVariable, envSchemas } from './env.ts';
 
@@ -90,8 +90,6 @@ export type Profile<N extends ProfileName = ProfileName> = N extends ProfileName
       readonly env: z.output<(typeof definitions)[N]['schema']> & { readonly ANTHROPIC_API_KEY?: string };
     } & (typeof definitions)[N]['statics']
   : never;
-
-export const ProfileToken = token<Profile>('Profile');
 
 export const staticValues = { budget } as const;
 export const llmConfig = (provider: LlmProvider): LlmConfig => (provider === 'claude' ? claude : { provider });

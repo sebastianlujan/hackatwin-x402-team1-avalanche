@@ -3,19 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "exports": {
-    ".": "./abi/index.ts"
-  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "forge:build": "forge build",
     "test:contracts": "forge test",
-    "test:bulloak:scaffold": "bulloak scaffold -s 0.8.30 -w 'test/**/*.tree'",
-    "test:bulloak:check": "bulloak check 'test/**/*.tree'",
     "lint:fmt": "forge fmt --check",
     "lint:sol": "solhint 'src/**/*.sol' 'test/**/*.sol' 'script/**/*.sol'",
-    "lint:spec": "lintspec",
-    "abi:export": "node scripts/export-abi.ts"
+    "lint:spec": "lintspec"
   },
   "devDependencies": {
     "@chainlink/contracts": "catalog:",

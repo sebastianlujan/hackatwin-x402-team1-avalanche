@@ -51,8 +51,6 @@ const planned = z.strictObject({
 });
 const entry = z.discriminatedUnion('status', [live, planned]);
 
-export type ContractEntry = z.infer<typeof contract>;
-export type ContractCheck = z.infer<typeof check>;
 export type LiveChain = z.infer<typeof live>;
 export type PlannedChain = {
   readonly key: string;
@@ -93,8 +91,6 @@ const VIEM: Readonly<Record<number, Chain>> = {
   42161: arbitrum,
   8453: base,
 };
-
-export const listChains = (): readonly ChainEntry[] => entries;
 
 export function chain(key: string): ChainEntry {
   const found = entries.find((candidate) => candidate.key === key);

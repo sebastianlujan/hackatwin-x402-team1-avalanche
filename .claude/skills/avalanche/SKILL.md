@@ -82,5 +82,4 @@ Register with `register(string agentURI)`; the Validation registry is not finali
 
 ## References
 
-- `docs/plan-prompt.md`: project context and known facts.
-- `docs/references/twin-finance-contracts.md`: Twin token addresses (unverified, read-only).
+- `docs/decisions.md`: project decisions and verified facts, including Twin token addresses.

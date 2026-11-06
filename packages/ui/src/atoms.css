@@ -87,11 +87,3 @@
   font-size: var(--hk-text-sm);
   overflow-wrap: anywhere;
 }
-
-.hk-code {
-  padding: 0 var(--hk-space-1);
-  border-radius: var(--hk-radius);
-  background: var(--hk-surface);
-  font-family: var(--hk-font-mono);
-  font-size: var(--hk-text-sm);
-}

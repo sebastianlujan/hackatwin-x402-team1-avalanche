@@ -14,14 +14,7 @@ catalog:
   '@chainlink/local': 0.3.1
   '@commitlint/cli': 21.2.4
   '@commitlint/config-conventional': 21.2.4
-  '@docusaurus/core': 3.10.2
-  '@docusaurus/faster': 3.10.2
-  '@docusaurus/preset-classic': 3.10.2
-  '@docusaurus/theme-mermaid': 3.10.2
-  '@docusaurus/tsconfig': 3.10.2
-  '@docusaurus/types': 3.10.2
   '@hono/node-server': 2.1.6
-  '@mdx-js/react': 3.1.1
   '@openzeppelin/contracts': 5.7.0
   '@openzeppelin/contracts-4.8.3': npm:@openzeppelin/contracts@4.8.3
   '@openzeppelin/contracts-5.3.0': npm:@openzeppelin/contracts@5.3.0
@@ -33,12 +26,10 @@ catalog:
   '@x402/core': 2.29.0
   '@x402/evm': 2.29.0
   '@x402/hono': 2.29.0
-  clsx: 2.1.1
   forge-std: github:foundry-rs/forge-std#v1.9.4
   hono: 4.13.16
   husky: 9.1.7
   next: 16.4.3
-  prism-react-renderer: 2.4.1
   react: 19.3.1
   react-dom: 19.3.1
   server-only: 0.0.1

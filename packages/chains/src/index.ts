@@ -4,5 +4,4 @@ export * from './chain-error.ts';
 export * from './guarded-clients.ts';
 export * from './local.ts';
 export * from './registry.ts';
-export * from './verify-registry.ts';
 export { type Access, isLoopback, writeRefusal } from './write-guard.ts';
