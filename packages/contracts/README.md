@@ -1,6 +1,6 @@
 # @hackatwin/contracts
 
-Foundry project for `PaymentHub`, `IcttMessenger`, `SettlementReceiver` and `PaymentBroker`.
+Foundry project for `PaymentHub`, `IcttMessenger`, `SettlementReceiver`, `PaymentBroker` and `RevenueSplitter`.
 Solidity 0.8.30, `evm_version = 'cancun'`. Dependencies come from pnpm only (no submodules, no `forge install`).
 
 ## Tools
@@ -74,6 +74,9 @@ scripts call `transferOwnership(owner)` unless `owner` equals the deployer. The 
 address when no transfer is pending). The owner must then call `acceptOwnership()` on the hub, the broker and the
 receiver (Ownable2Step) from its own account; until it does, the deployer stays the owner.
 
+`script/DeployRevenueSplitter.s.sol` deploys `RevenueSplitter` on Fuji from `script/params/fuji-revenue-splitter.json`
+(`deployer`, `seller`, `platform`, `platformBps`) and records `fuji-revenue-splitter.json`. The splitter has no owner.
+
 The broadcast gate stays closed: no script or workflow enables it, and signers are keystores selected with
 `--account <keystore-name>` (never a key in the environment or an argument). Real params arrive with the testnet deploy
 (T7.12): until then the committed params files lack the deployer, owner and fallback recipient and a real run reverts
@@ -93,6 +96,9 @@ forge verify-contract <address> src/PaymentHub.sol:PaymentHub --chain-id 43113 \
   --compiler-version 0.8.30 --evm-version cancun --optimizer-runs 10000 \
   --constructor-args "$(cast abi-encode 'constructor(address)' <deployer>)"
 ```
+
+`foundry.toml` holds that placeholder key under `[etherscan]`, but forge 1.5.1 still sends chain 43113 to Etherscan
+unless `--verifier-url` is passed (checked 2026-11-06).
 
 L1, Builder Hub verifier (UNVERIFIED: the L1 and its explorer do not exist yet, so this command has never run;
 confirm the verifier URL in Builder Hub before use):

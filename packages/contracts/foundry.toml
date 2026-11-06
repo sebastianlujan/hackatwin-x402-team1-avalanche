@@ -43,3 +43,7 @@ sort_imports = true
 
 [rpc_endpoints]
 fuji = '${FUJI_RPC_URL}'
+
+# Snowtrace (Routescan) takes any non-empty key; forge 1.5 verifies there only when --verifier-url repeats this url
+[etherscan]
+fuji = { key = 'verifyContract', chain = 43113, url = 'https://api.routescan.io/v2/network/testnet/evm/43113/etherscan' }
