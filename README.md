@@ -62,6 +62,17 @@ pnpm web:demo1
 
 `pnpm web` starts the web app alone when the services already run.
 
+## Workshop deck
+
+```bash
+node scripts/deck-live.mjs   # then open http://127.0.0.1:8790/
+```
+
+`Avalanche_Workshops.html` opens offline and replays recorded demo runs. Served by `scripts/deck-live.mjs`, its
+terminal slides show "▶ ejecutar en vivo" and run the real commands: only an allowlist of read-only queries and the
+local demos. Demo 1 needs its services up; Demo 2 starts its own local cluster. Set `PNPM` when `pnpm` is not on the
+PATH.
+
 ## Demo 2: local run
 
 Development only: every line is labeled `SIMULATED (local-crosschain)`.
